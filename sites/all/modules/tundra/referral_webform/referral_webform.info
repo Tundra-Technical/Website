@@ -1,0 +1,7 @@
+name = Referral Webform
+description = Hooks for referral webform
+core = 7.x
+
+files[] = referral_webform.module
+
+package = Tundra Technical

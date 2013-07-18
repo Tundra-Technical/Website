@@ -1,0 +1,8 @@
+<div id="footer" class="<?php print $variables['classes']; ?>">
+  <?php if($plugin = context_get_plugin('reaction','block')): ?>
+    <div class="region region-content-menu">
+    <?php print render($plugin->block_get_blocks_by_region('content_menu')); ?>
+    </div> <!-- /.region-content-menu -->
+  <?php endif; ?>
+  <?php print $variables['content']; ?>
+</div>

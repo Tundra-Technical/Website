@@ -1,0 +1,3 @@
+<?php
+dpm(get_defined_vars());
+print render($content);

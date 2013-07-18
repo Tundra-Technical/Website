@@ -1,0 +1,15 @@
+diff --git context_addassets/context_addassets.module context_addassets/context_addassets.module
+index 1bdee6f..6ca71ea 100755
+--- context_addassets/context_addassets.module
++++ context_addassets/context_addassets.module
+@@ -309,8 +309,8 @@ function _context_addassets_scandir($filetype = NULL, $where='themes') {
+ 
+       // Grab every set file path
+       while ($path = variable_get('context_addassets_index_path' . $path_index, NULL)) {
+-        $dir = realpath('.') . base_path() . $path;
+-				$mask = "/.+\." . $filetype."/";
++        $dir = $path;
++        $mask = "/.+\." . $filetype."/";
+         $files_raw[$path] = file_scan_directory($dir, $mask);
+         $path_index += 1;
+       }

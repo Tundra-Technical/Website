@@ -1,0 +1,13 @@
+name = Responsive Menus
+description = Responsify any menu using CSS Selectors.
+package = User interface
+core = 7.x
+files[] = responsive_menus.module
+configure = admin/config/user-interface/responsive_menus
+
+; Information added by drupal.org packaging script on 2013-07-07
+version = "7.x-1.2"
+core = "7.x"
+project = "responsive_menus"
+datestamp = "1373183451"
+

@@ -1,0 +1,559 @@
+<?php
+
+/**
+ * Implementation of hook_menu()
+ */
+function bullhorn_job_board_menu() {
+    $items = array();
+    
+    $items['job-board/%/apply'] = array(
+                'title'            => '',
+                'page callback'    => 'bullhorn_job_board_apply',
+                'page arguments'   => array(1),
+                'access arguments' => array('access content')
+            );
+    
+    return $items;
+}
+
+/**
+ * bullhorn job board apply
+ * @param int $job_order_id
+ *     An Integer representing the Bullhorn Job Order ID
+ * @return string
+ */
+function bullhorn_job_board_apply($job_order_id) {
+    global $language;
+    
+    
+    $return_path = 'job-board';
+    
+    if($language->language == 'fr') {
+        $return_path = 'carri�res';
+    }
+    
+    // If a session for a candidate is not set redirect them to the candidates login page
+    if(!isset($_SESSION['bullhorn']['candidate']) || empty($_SESSION['bullhorn']['candidate'])) {
+        drupal_goto('candidates',array('query' => drupal_get_destination()));
+    }
+    
+    // Sanitize our Job Order ID
+    if(empty($job_order_id) || !is_numeric($job_order_id)) {
+        drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
+        watchdog('bullhorn job board',"Job Order application failed, Job Order ID (:job_order_id) was empty or not numeric. Function :function.", array(':job_order_id' => $job_order_id,':function' => __FUNCTION__),WATCHDOG_ERROR);
+        drupal_goto($return_path);
+    }
+    
+    
+    // Set some candidate variables
+    $cuid       = $_SESSION['bullhorn']['candidate']['cuid'];
+    $cid        = $_SESSION['bullhorn']['candidate']['cid'];
+    $first_name = $_SESSION['bullhorn']['candidate']['first_name'];
+    $last_name  = $_SESSION['bullhorn']['candidate']['last_name'];
+    $email      = $_SESSION['bullhorn']['candidate']['email'];
+    
+    // Sanitize our Bullhorn Candidate User ID
+    if(empty($cuid) || !is_numeric($cuid)) {
+        drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
+        watchdog('bullhorn job board',"Job Order application failed, Canididate Bullhorn User ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        drupal_goto($return_path);
+    }
+    
+    // Sanitize our Candidate ID
+    if(empty($cid) || !is_numeric($cid)) {
+        drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
+        watchdog('bullhorn job board',"Job Order application failed, Candidate ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        drupal_goto($return_path);
+    }
+    
+    // Report these variables if they are empty
+    if(empty($first_name)) {
+        watchdog('bullhorn job board',"Candidate's first name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+    }
+    if(empty($last_name)) {
+        watchdog('bullhorn job board',"Candidate's last name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+    }
+    
+    // Get all the current Jobs from the bullhorn_job_order_data variable 
+    $jobs = variable_get('bullhorn_job_order_data');
+    
+    // Get the Job we are applying for by job order id
+    foreach($jobs as $job) {
+        if($job->jobOrderID == $job_order_id) {
+            $data = $job;
+            break;
+        }
+    }
+    
+    // If the job is found in the bullhorn_job_order_data continue
+    // There's the possibility that a Candidate will apply for a
+    // Job Order that no longer exists in the bullhorn_job_order_data 
+    // variable because the variable has updated and the Job Order was
+    // deleted. Handle this gracefully and display a message
+    if(!empty($data)) {
+        //$job_order_id  = $data->jobOrderID; //redundant
+        $title = $data->title;
+        
+        drupal_set_title($title);
+//        $breadcrumb[] = l('Home','<front>');
+//        $breadcrumb[] = l('Job Board','job-board');
+//        $breadcrumb[] = $title;
+//        drupal_set_breadcrumb($breadcrumb);
+        
+        // If the Candidate has already applied for the position let's 
+        // redirect them back to the Job Board with a friendly message
+        if(isset($_SESSION['bullhorn']['candidate']['applied']) && in_array($job_order_id,$_SESSION['bullhorn']['candidate']['applied'])) {
+            drupal_set_message(t('Thank you for applying for the position of :title.',array(':title' => $title)),'status');
+            drupal_goto($return_path);
+        }
+        
+        // Save a JobSubmission via the Bullhorn SOAP API
+        $result = _job_order_submit($job_order_id, $cuid);
+        
+        if(!$result || !isset($result->return->dto) || empty($result->return->dto)) {
+            drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
+            watchdog('bullhorn job board', 'Job Submission failed.',array(),WATCHDOG_ERROR);
+            drupal_goto($return_path);
+        }
+        
+        // Get the JobSubmissionID
+        $jsid = $result->return->dto->jobSubmissionID;
+        
+        // Get the jid for the job in the {bullhorn_job_orders} database table
+        $jid = db_query('SELECT j.jid FROM {bullhorn_job_orders} j WHERE j.job_order_id = :job_order_id',array(':job_order_id' => $job_order_id))->fetchField();
+        
+        // If the job is not yet recorded, attempt save it
+        if(!$jid) {
+            $jid = _job_order_save($job_order_id,$title);
+            if(!$jid) {
+                drupal_set_message(t('A technical error occured and we were unable to complete your request. A report is being filed. Please try again later.'),'error');
+                watchdog('bullhorn job board','Failed to create {bullhorn_job_orders} record for :title (:job_order_id).', array(
+                                ':title' => $title,
+                                ':job_order_id'  => $job_order_id
+                            ),
+                            WATCHDOG_ERROR
+                        );
+                drupal_goto($return_path);
+            }
+        }
+        
+        // If a jid exists or is created successfully create 
+        // a record associating it to the current Candidate
+        if($jid) {
+            $aid = _job_order_application_save($jid, $cid,$jsid);
+            if(!$aid) {
+                drupal_set_message(t('A technical error occured and we were unable to complete your request. A report is being filed. Please try again later.'),'error');
+                watchdog('bullhorn job board','Failed to create {bullhorn_job_order_applications} record for Candidate (:first_name :last_name) for Job Order (:title :job_order_id).',array(':first_name' => $first_name,':last_name' => $last_name,':title' => $title, ':job_order_id' => $job_order_id),WATCHDOG_ERROR);
+                drupal_goto($return_path);
+            } else {
+                // Add the Job Order ID to the current users session
+                $_SESSION['bullhorn']['candidate']['applied'][] = $job_order_id;
+                //TODO send email confirmation to Candidate
+            }
+        }
+        
+        $values = array('first_name' => $first_name,'last_name' => $last_name,'email' => $email,'job_title' => $title);
+        bullhorn_job_board_candidate_mail_send($values);
+        bullhorn_job_board_employee_mail_send($values);
+        drupal_set_message(t('Thank you for applying for the position of :title.',array(':title' => $title)),'status');
+        drupal_goto($return_path);
+    } else {
+        drupal_set_message(t('For technical reasons we are unable to process your request. Please try again later.'),'error');
+        drupal_goto($return_path);
+    } 
+    return '';
+}
+
+/**
+ * Submit the JobSubmission via the Bullhorn SOAP API
+ * @param int $job_order_id
+ * @param int $cuid
+ * 
+ * IMPORTANT: The definition of a JobSubmission can be
+ * found here: http://developer.bullhorn.com/doc/version_2-0/entities/entity-jobsubmission.htm
+ * despite the definition if a JobSubmission 'status' 
+ * is set to 'New Lead' then it is New and not a 
+ * Completed Job Submission
+ */
+function _job_order_submit($job_order_id,$cuid) {
+    // Create a SOAP client to the Bullhorn API
+    $client = bullhorn_start_client();
+    
+    $jobSubmission = new stdClass();
+    $jobSubmission->candidateID   = $cuid;
+    $jobSubmission->dateAdded     = date('m/j/Y g:i:s');
+    $jobSubmission->isDeleted     = false;
+    $jobSubmission->jobOrderID    = $job_order_id;
+    $jobSubmission->sendingUserID = $client->userId;
+    $jobSubmission->status        = 'New Lead';
+    
+    $job_submission = new SoapVar($jobSubmission,SOAP_ENC_OBJECT,'jobSubmissionDto','http://job.entity.bullhorn.com/');
+    
+    $save_array = array(
+                'session' => $client->session,
+                'dto'     => $job_submission,
+            );
+    
+    $save_request = new SoapVar($save_array,SOAP_ENC_OBJECT,'save','http://save.entity.bullhorn.com/');
+    
+    try {
+        $result = $client->save($save_request);
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn job board','Bullhorn JobSubmission failed. Last Request: :last_request, Fault string: :faultstring',array(':last_request' => $client->__getLastRequest(),':faultstring' => $fault->faultstring));
+        return false;
+    }
+    
+    return $result;
+}
+
+/**
+ * Save the Job Order to the database
+ * @param int $job_order_id
+ * @param string $title
+ */
+function _job_order_save($job_order_id,$title) {
+        try {
+            $jid = db_insert('bullhorn_job_orders')
+            ->fields(array(
+                        'job_order_id' => $job_order_id,
+                        'title' => $title
+                    ))
+                    ->execute();
+            return $jid;
+        } catch(Exception $e) {
+            //debug($e);
+            watchdog('bullhorn job board','Failed to save job order :title (:job_order_id). Exception: :exception',array(':title' => $title,':job_order_id' => $job_order_id, ':exception' => $e));
+            return false;
+        }
+}
+
+/**
+ * Save the application to the database
+ * @param unknown_type $jid
+ *     {bullhorn_job_orders}.jid
+ * @param unknown_type $cid
+ *     {bullhorn_candidates}.cid
+ * @param $jsid
+ *     Bullhorn JobSubmissionID
+ * @return Ambigous <The, NULL, number, DatabaseStatementInterface, void, string, PDOStatement>|boolean
+ */
+function _job_order_application_save($jid,$cid,$jsid) {
+    try {
+        $aid = db_insert('bullhorn_job_order_applications')
+        ->fields(array(
+                    'cid'  => $cid,
+                    'jid'  => $jid,
+                    'jsid' => $jsid
+                ))
+                ->execute();
+        
+        return $aid;
+    } catch(Exception $e) {
+        //debug($e);
+        watchdog('bullhorn job board','Failed to save job order application. Job Order ID (:jid), Candidate ID (:cid). Exception: :exception',array(':jid' => $jid,':cid' => $cid, ':exception' => $e));
+        return false;
+    }
+}
+
+/**
+ * Implementation of hook_node_view($node,$view_mode,$langcode)
+ * @param $node
+ * @param $view_mode
+ * @param $langcode
+ */
+function bullhorn_job_board_node_view($node,$view_mode,$langcode) {
+    if($node->type === 'job_order' && $view_mode === 'full') {
+//        $breadcrumb = array();
+//        $breadcrumb[] = l(t('Home'),'<front>');
+//        $breadcrumb[] = l(t('Job Board'),'job-board');
+////        $breadcrumb[] = l(drupal_get_title(),  base_path().request_uri());
+//        drupal_set_breadcrumb($breadcrumb);
+        $applied = false;
+        $job_order_id = $node->field_job_order_id['und'][0]['value'];
+        if(isset($_SESSION['bullhorn']['candidate']['applied']) && !empty($_SESSION['bullhorn']['candidate']['applied'])) {
+            $applied = in_array($job_order_id,$_SESSION['bullhorn']['candidate']['applied']);
+        }
+        
+        if(!$applied) {
+            $node->content['field_application_link'] = array(
+                        '#theme'   => 'link',
+                        '#text'    => t('Apply'),
+                        '#path'    => 'job-board/' . $job_order_id . '/apply',
+                        '#weight'  => -10,
+                        '#options' => array(
+                                    'attributes' => array(
+                                                'class' => 'apply-link',
+                                            ),
+                                    'html'       => FALSE
+                                )
+                    );
+        } else {
+            $node->content['field_application_link'] = array(
+                        '#theme'       => 'field',
+                        '#title'       => 'Appication',
+                        '#access'      => TRUE,
+                        '#view_mode'   => 'full',
+                        '#language'    => 'und',
+                        '#field_name'    => 'field_application_link',
+                        '#field_type'    => 'text',
+                        '#bundle'        => 'job_order',
+                        '#entity_type'   => 'node',
+                        '#items'         => array(
+                                            array(
+                                                    'value' => t('Applied'),
+                                                    'format' => NULL,
+                                                    'save_value' => 'Applied'
+                                                    )
+                                        ),
+                        '#options'       => array(
+                                    'attributes' => array(
+                                                'class' => 'applied-text',
+                                            ),
+                                    'html'       => FALSE,
+                                ),
+                        '#formatter'     => 'text_default',
+                        '#label_display' => 'hidden',
+                        array(
+                                '#markup' => 'Applied',
+                                ),
+                        '#weight'        => -10
+                    );
+        }
+    }
+}
+
+/**
+ * Implementation of hook_mail
+ * @param string $key
+ * @param string $message
+ * @param mixed $params
+ */
+function bullhorn_job_board_mail($key,&$message,$params) {
+    // Each message is associated with a language, which may or may not be the
+    // current user's selected language, depending on the type of e-mail being
+    // sent. This $options array is used later in the t() calls for subject
+    // and body to ensure the proper translation takes effect.
+    $options = array(
+            'langcode' => $message['language']->language,
+    );
+    
+    switch ($key) {
+        // Send a simple message from the contact form.
+        case 'candidate_message':
+            $message['subject'] = t('@site-name: @job_title', array('@site-name' => variable_get('site_name', 'Tundra Technical'),'@job_title' => $params['job_title']), $options);
+            // Note that the message body is an array, not a string.
+            //$message['body'][] = t('@name sent you the following message:', array('@name' => $user->name), $options);
+            // Because this is just user-entered text, we do not need to translate it.
+            $message['body'][] = t('Hello @first_name @last_name,
+ 
+Thank you for applying for the position of @job_title.
+
+Networking pays off in many ways. And at Tundra Technical Solutions, your network of great business colleagues and contacts can pay off for you in a big way. Our industry exclusive referral program, the \'Tundra Referral Incentive program\' (T.R.I.P) pays you a cash reward for helping us place your referrals.
+    
+- For every person you provide who accepts a position, you\'ll receive a $250 Cash Bonus.
+- For every third successfully-placed referrals, you\'ll receive a trip to the Caribbean.
+- Visit the T.R.I.P page to learn more about our program and the terms and conditions. Or click here.',array('@first_name' => $params['first_name'],'@last_name' => $params['last_name'],'@job_title' => $params['job_title']));
+
+            // Since user-entered text may have unintentional HTML entities in it like
+            // '<' or '>', we need to make sure these entities are properly escaped,
+            // as the body will later be transformed from HTML to text, meaning
+            // that a normal use of '<' will result in truncation of the message.
+            if(isset($params['message']) && !empty($params['message'])) {
+                $message['body'][] = check_plain($params['message']);
+            }
+            break;
+        case 'employee_message':
+            $message['subject'] = t('@site-name: @job_title',array('@site-name' => variable_get('site_name','Tundra Technical'),'@job_title' => $params['job_title']),$options);
+            
+            $message['body'][] = t("@first_name @last_name has applied for the position of @job_title.",array('@first_name' => $params['first_name'],'@last_name' => $params['last_name'],'@job_title' => $params['job_title']));
+            if(isset($params['message']) && !empty($params['message'])) {
+                $message['body'][] = check_plain($params['message']);
+            }
+            break;
+    }
+}
+
+/**
+ * Sends an e-mail.
+ *
+ * @param $form_values
+ *   An array of values from the contact form fields that were submitted.
+ *   There are just two relevant items: $form_values['email'] and
+ *   $form_values['message'].
+ */
+function bullhorn_job_board_candidate_mail_send($values) {
+    global $language;
+    // All system mails need to specify the module and template key (mirrored from
+    // hook_mail()) that the message they want to send comes from.
+    $module = 'bullhorn_job_board';
+    $key = 'candidate_message';
+
+    // Specify 'to' and 'from' addresses.
+    $to = $values['email'];
+    $site_name = variable_get('site_name','Tundra Technical');
+    $from = $site_name . ' <noreply@tundratechnical.ca>'; //variable_get('site_mail', 'noreply@tundratechnical.ca');
+
+    // "params" loads in additional context for email content completion in
+    // hook_mail(). In this case, we want to pass in the values the user entered
+    // into the form, which include the message body in $form_values['message'].
+    $params = $values;
+    
+    
+    // The language of the e-mail. This will one of three values:
+    // * user_preferred_language(): Used for sending mail to a particular website
+    //   user, so that the mail appears in their preferred language.
+    // * global $language: Used when sending a mail back to the user currently
+    //   viewing the site. This will send it in the language they're currently
+    //   using.
+    // * language_default(): Used when sending mail to a pre-existing, 'neutral'
+    //   address, such as the system e-mail address, or when you're unsure of the
+    //   language preferences of the intended recipient.
+    //
+    // Since in our case, we are sending a message to a random e-mail address that
+    // is not necessarily tied to a user account, we will use the site's default
+    // language.
+//    $language = $language;
+
+    // Whether or not to automatically send the mail when drupal_mail() is
+    // called. This defaults to TRUE, and is normally what you want unless you
+    // need to do additional processing before drupal_mail_send() is called.
+    $send = TRUE;
+    // Send the mail, and check for success. Note that this does not guarantee
+    // message delivery; only that there were no PHP-related issues encountered
+    // while sending.
+    $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+//    if ($result['result'] == TRUE) {
+//        drupal_set_message(t('Your message has been sent.'));
+//    }
+//    else {
+//        drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+//    }
+    if($result['result'] == false) {
+        watchdog('drupal_mail', "Email failed:\n@message",array('@message' => $params['body']));
+    } 
+
+}
+
+/**
+ * Sends an e-mail.
+ *
+ * @param $form_values
+ *   An array of values from the contact form fields that were submitted.
+ *   There are just two relevant items: $form_values['email'] and
+ *   $form_values['message'].
+ */
+function bullhorn_job_board_employee_mail_send($values) {
+    global $language;
+    // All system mails need to specify the module and template key (mirrored from
+    // hook_mail()) that the message they want to send comes from.
+    $module = 'bullhorn_job_board';
+    $key = 'employee_message';
+
+    // Specify 'to' and 'from' addresses.
+    $to = 'John Napoleone <jnapoleone@hotmail.com>';//'Julian Schwaiger <jschwaiger@tundratechnical.ca>'; //$values['email'];
+    $site_name = variable_get('site_name','Tundra Technical');
+    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
+    $domain_pos = (strpos($site_mail,'@')+1);
+    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
+    $from = $site_name . ' <noreply@'.$domain.'>'; //variable_get('site_mail', 'noreply@tundratechnical.ca');
+
+    // "params" loads in additional context for email content completion in
+    // hook_mail(). In this case, we want to pass in the values the user entered
+    // into the form, which include the message body in $form_values['message'].
+    $params = $values;
+    
+    
+    // The language of the e-mail. This will one of three values:
+    // * user_preferred_language(): Used for sending mail to a particular website
+    //   user, so that the mail appears in their preferred language.
+    // * global $language: Used when sending a mail back to the user currently
+    //   viewing the site. This will send it in the language they're currently
+    //   using.
+    // * language_default(): Used when sending mail to a pre-existing, 'neutral'
+    //   address, such as the system e-mail address, or when you're unsure of the
+    //   language preferences of the intended recipient.
+    //
+    // Since in our case, we are sending a message to a random e-mail address that
+    // is not necessarily tied to a user account, we will use the site's default
+    // language.
+//    $language = $language;
+
+    // Whether or not to automatically send the mail when drupal_mail() is
+    // called. This defaults to TRUE, and is normally what you want unless you
+    // need to do additional processing before drupal_mail_send() is called.
+    $send = TRUE;
+    // Send the mail, and check for success. Note that this does not guarantee
+    // message delivery; only that there were no PHP-related issues encountered
+    // while sending.
+    $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+//    debug($result);
+//    if ($result['result'] == TRUE) {
+//        drupal_set_message(t('Your message has been sent.'));
+//    }
+//    else {
+//        drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+//    }
+    
+    if($result == false) {
+        watchdog('drupal_mail', "Email failed:\n@message",array('@message' => $result['body']));
+    }
+
+}
+
+/**
+ * Implements hook_mail_alter()
+ * @param type $message
+ */
+function bullhorn_job_board_mail_alter(&$message) {
+    $site_name  = variable_get('site_name','Tundra Technical');
+    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
+    $domain_pos = (strpos($site_mail,'@')+1);
+    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
+    $message['headers']['Return-Path'] = $site_name . ' <noreply@'.$domain.'>';
+    $message['headers']['Sender']      = $site_name . ' <noreply@'.$domain.'>';
+    $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
+}
+
+/**
+ * Impliments hook_form_FORM_ID_form_alter()
+ * @global type $_domain
+ * @param type $form
+ * @param type $form_state
+ */
+
+function bullhorn_job_board_form_views_exposed_form_alter($form,&$form_state) {
+    global $_domain;
+    if(!isset($form_state['view']->exposed_input['field_country_tid'])) {
+        switch($_domain['domain_id']) {
+            case '1': // Canada
+                $terms = taxonomy_get_term_by_name('canada');
+                $term = reset($terms);
+                if(isset($term->tid)) {
+                    $form_state['input']['field_country_tid'] = $term->tid;
+                }
+
+                break;
+            case '2': // United States
+                $terms = taxonomy_get_term_by_name('united states');
+                $term = reset($terms);
+                if(isset($term->tid)) {
+                    $form_state['input']['field_country_tid'] = $term->tid;
+                }
+                break;
+            case '3': // India
+                $terms = taxonomy_get_term_by_name('india');
+                $term = reset($terms);
+                if(isset($term->tid)) {
+                    $form_state['input']['field_country_tid'] = $term->tid;
+                }
+                break;
+            case '4': // United Kingdom
+                $terms = taxonomy_get_term_by_name('united kingdom');
+                $term = reset($terms);
+                if(isset($term->tid)) {
+                    $form_state['input']['field_country_tid'] = $term->tid;
+                }
+                break;
+        }
+    }
+}

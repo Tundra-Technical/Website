@@ -1,0 +1,6 @@
+name = SidrJS
+description = "Impliments a mobile navigation menu based off the Sidr jQuery plugin."
+core = 7.x
+package = "User Interface"
+dependencies[] = libraries
+stylesheets[all][] = sidrjs.css

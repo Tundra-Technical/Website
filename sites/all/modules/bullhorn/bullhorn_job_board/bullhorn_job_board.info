@@ -1,0 +1,12 @@
+name = Bullhorn Job Board
+description = A custom module that alters Job Order nodes and Job Order application requests. Job Order nodes are altered by producing a contextual link to Apply for the Job Order based on whether or not a Candidate is signed in and has already applied for it. Furthermore this module also handles the actual request of applying for a Job Order.
+core = 7.x
+
+package = bullhorn
+
+dependencies[] = bullhorn
+dependencies[] = bullhorn_job_order
+
+files[] = bullhorn_job_board.module
+
+version = 7.x-0.1-beta

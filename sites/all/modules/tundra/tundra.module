@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * Implementation of hook_permission()
+ */
+
+function tundra_permission() {
+    return array (
+            'administer tundra' => array(
+                    'title' => t('Administer Tundra Technical'),
+                    'description' => t('Perform administration tasks for the Tundra Technical module')
+            )
+    );
+}
+
+// function tundra_menu() {
+//     $items = array();
+//     $items['admin/config/tundra'] = array(
+//                 'title' => 'Tundra Technical',
+//                 'page callback' => 'drupal_get_form',
+//                 'page arguments' => array('tundra_form'),
+//                 'access arguments' => array('administer tundra'),
+//             );
+//    return $items;
+// }
+
+// function tundra_form($form,&$form_state) {
+//     $form = array();
+//     $form['tundra'] = array(
+//                 '#markup' => '<p>Tundra Technical</p>',
+//             );
+//     return $form;
+// }

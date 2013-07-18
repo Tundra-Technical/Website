@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file 
+ * Install file for quojs module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function sidrjs_requirements($phase) {
+  module_load_include('module', 'sidrjs');
+  $requirements = array();
+  $requirements['sidrjs'] = array(
+    'title' => 'sidr.js library',
+  );
+  switch ($phase) {
+    case 'install':
+    case 'runtime':
+      $lib = sidrjs_get_library();
+      if (!$lib) {
+        $requirements['sidrjs']['description'] = 'You need to install the Sidr JS library in the Libraries folder, "libraries/sidrjs';
+        $requirements['sidrjs']['severity'] = REQUIREMENT_ERROR;
+      }
+      else {
+        $requirements['sidrjs']['value'] = 'Installed correctly';
+        $requirements['sidrjs']['severity'] = REQUIREMENT_OK;
+      }
+  }
+  return $requirements;
+}

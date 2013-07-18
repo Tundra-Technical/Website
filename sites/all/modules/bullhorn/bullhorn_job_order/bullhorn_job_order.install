@@ -1,0 +1,478 @@
+<?php
+
+/**
+ * @file
+ * Install/Uninstall process to set up the Bullhorn Job Order module
+ * TODO create URL aliases for Job Order content paths (would require setting pathauto as a dependency)
+ * TODO create URL aliases for Cities taxonomy term paths (would require setting pathauto as a dependency)
+ * TODO create URL aliases for Countries taxonomy term paths (would require setting pathauto as a dependency)
+ * TODO create URL aliases for Employment Types taxonomy term paths (would require setting pathauto as a dependency)
+ * TODO Set 'Content Types > Job Order > Display settings (Tab)' to NOT 'Display author and date information'
+ * TODO Set URL Alias
+ */
+
+// Load the include file
+module_load_include('inc', 'bullhorn_job_order');
+
+/**
+ * Implementation of hook_install()
+ */
+
+function bullhorn_job_order_install() {
+    
+    $t = get_t();
+    
+    // Create the vocabularies that we require for this module
+    // from an multidimentional Array of Arrays keyed according to the 
+    // parameters required and optional for taxonomy_vocabulary_save()
+    foreach(_job_order_vocabularies() as $vocabulary) {
+        bullhorn_job_order_vocabulary_create((object) $vocabulary);
+    }
+    
+    // Define new node type
+    $job_order = array(
+                'type'        => 'job_order',
+                'name'        => $t('Job Order'),
+                'base'        => 'node_content',
+                //'base'        => 'job_order',
+                'description' => $t('This is a Bullhorn Job Order node type. It is created when you install the Bullhorn module. This Content Type is designed to work optimally with the version of Bullhorn you currently have installed and it is not recommended that you alter it in any way.'),
+                'body_label'  => $t('Content')
+            );
+    
+    // Set defaults
+    $content_type = node_type_set_defaults($job_order);
+    
+    // Add the body field (not part of defaults)
+    node_add_body_field($content_type);
+    
+    // Save the Job Order content type
+    $status = node_type_save($content_type);
+    
+    // Create Job Order fields
+    foreach(_bullhorn_job_order_installed_fields() as $field) {
+        field_create_field($field);
+    }
+    
+    // Create instance of Job Order fields
+    foreach(_bullhorn_job_order_installed_instances() as $instance) {
+       $instance['entity_type'] = 'node';
+       $instance['bundle']      = $job_order['type'];
+       field_create_instance($instance);
+    }
+    
+    // Set a message to the user and create a report when this
+    // Content Type has been created.
+    if($status == SAVED_UPDATED) {
+        drupal_set_message(st('The Content Type %name has successfully been updated.',array('%name'=>$content_type->name)),'status');
+        watchdog('bullhorn job order','The Content Type %name was successfully updated.',array('%name' => $content_type->name),WATCHDOG_NOTICE);
+    }
+    elseif($status == SAVED_NEW) {
+        drupal_set_message(st('The Content Type %name has successfully been created.',array('%name'=>$content_type->name)),'status');
+        watchdog('bullhorn job order','The Content Type %name was successfully created.',array('%name' => $content_type->name),WATCHDOG_NOTICE);
+    }
+}
+
+/**
+ * Return an array of fields to be used during the install and uninstall process
+ * @return multitype:multitype:string number
+ */
+
+function _bullhorn_job_order_installed_fields() {
+    return array(
+                'field_job_order_id' => array(
+                            'field_name'  => 'field_job_order_id',
+                            'type'        => 'number_integer',
+                            'cardinality' => 1
+                        ),
+                'field_rate' => array(
+                            'field_name'  => 'field_rate',
+                            'type'        => 'number_decimal',
+                            'cardinality' => 1
+                        ),
+                'field_published' => array(
+                            'field_name'  => 'field_published',
+                            'type'        => 'datetime',
+                            'cardinality' => 1
+                    ),
+                'field_expires' => array(
+                            'field_name'  => 'field_expires',
+                            'type'        => 'datetime',
+                            'cardinality' => 1
+                    ),
+                'field_city' => array(
+                            'field_name'  => 'field_city',
+                            'type'        => 'taxonomy_term_reference',
+                            'cardinality' => 1,
+                            'instance_settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'cities'
+                                    ),
+                            ),
+                        ),
+                'field_country' => array(
+                            'field_name'  => 'field_country',
+                            'type'        => 'taxonomy_term_reference',
+                            'cardinality' => 1,
+                            'instance_settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'countries'
+                                    ),
+                            ),
+                    ),
+                'field_employment_type' => array(
+                            'field_name'  => 'field_employment_type',
+                            'type'        => 'taxonomy_term_reference',
+                            'cardinality' => 1,
+                            'instance_settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'employment_types'
+                                    ),
+                            ),
+                    ),
+                'field_category' => array(
+                            'field_name'  => 'field_category',
+                            'type'        => 'taxonomy_term_reference',
+                            'cardinality' => 1,
+                            'instance_settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'categories'
+                                    ),
+                            ),
+                    ),
+                'field_skills'   => array( // TODO break this comma separated list into taxonomy terms for additional searchability on website
+                            'field_name'  => 'field_skills',
+                            'type'        => 'text',
+                            'cardinality' => 1
+                        ),
+            );
+}
+
+/**
+ * Return an array of instances to be used during the install and uninstall process
+ * @return multitype:multitype:string NULL multitype:string
+ */
+function _bullhorn_job_order_installed_instances() {
+    $t = get_t();
+    return array(
+                'field_job_order_id' => array(
+                            'field_name' => 'field_job_order_id',
+                            'label'      => $t('Job Order ID'),
+                            'type'       => 'number_integer',
+                            'widget'     => array(
+                                        'type' => 'number'
+                                    ),
+                            'display'    => array(
+                                        'default' => array(
+                                                    'label' => 'hidden',
+//                                                     'type'  => 'hidden',
+                                                ),
+                                    ),
+                        ),
+                'field_rate' => array(
+                            'field_name' => 'field_rate',
+                            'label'      => $t('Rate'),
+                            'type'       => 'number_decimal',
+                            'widget'     => array(
+                                        'type' => 'number'
+                                    ),
+                            'settings'   => array(
+                                        'prefix' => '$'
+                                    ),
+                            'display'    => array(
+                                        'default' => array(
+                                                    'label' => 'hidden',
+                                                    'type'  => 'number_decimal',
+                                                    'settings' => array(
+                                                                'thousand_separator' => ','
+                                                            ),
+                                                ),
+                                    ),
+                        ),
+                'field_published' => array(
+                            'field_name' => 'field_published',
+                            'label'      => $t('Published'),
+                            'type'       => 'datetime',
+                            'widget'     => array(
+                                        'type' => 'date_text'
+                                    ),
+                            'display'    => array(
+                                        'default' => array(
+                                                    'label' => 'hidden',
+                                                ),
+                                    ),
+                        ),
+                'field_expires' => array(
+                            'field_name' => 'field_expires',
+                            'label'      => $t('Expires'),
+                            'type'       => 'datetime',
+                            'widget'     => array(
+                                    'type' => 'date_text'
+                            ),
+                            'display'    => array(
+                                    'default' => array(
+                                            'label' => 'hidden',
+                                    ),
+                            ),
+                    ),
+                'field_city' => array(
+                            'field_name' => 'field_city',
+                            'label'      => $t('City'),
+                            'type'       => 'taxonomy_term_reference',
+                            'widget'     => array(
+                                        'type' => 'options_select'
+                                    ),
+                            'settings'   => array(
+                                        'allowed_values' => array(
+                                                    'vocabulary' => 'cities'
+                                                ),
+                                    ),
+                            'display'    => array(
+                                        'default' => array(
+                                                    'label' => 'hidden',
+                                                    'type'  => 'taxonomy_term_reference_plain'
+                                                ),
+                                    ),
+                        ),
+                'field_country' => array(
+                            'field_name' => 'field_country',
+                            'label'      => $t('Country'),
+                            'type'       => 'taxonomy_term_reference',
+                            'widget'     => array(
+                                    'type' => 'options_select'
+                            ),
+                            'settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'countries'
+                                    ),
+                            ),
+                            'display'    => array(
+                                        'default' => array(
+                                                'label' => 'hidden',
+                                                'type'  => 'taxonomy_term_reference_plain'
+                                        ),
+                                ),
+                    ),
+                'field_employment_type' => array(
+                            'field_name' => 'field_employment_type',
+                            'label'      => $t('Employment Type'),
+                            'type'       => 'taxonomy_term_reference',
+                            'widget'     => array(
+                                    'type' => 'options_select'
+                            ),
+                            'settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'employment_types'
+                                    ),
+                            ),
+                            'display'    => array(
+                                        'default' => array(
+                                                'label' => 'hidden',
+                                                'type'  => 'taxonomy_term_reference_plain'
+                                        ),
+                                ),
+                    ),
+                'field_category' => array(
+                            'field_name' => 'field_category',
+                            'label'      => $t('Category'),
+                            'type'       => 'taxonomy_term_reference',
+                            'widget'     => array(
+                                    'type' => 'options_select'
+                            ),
+                            'settings'   => array(
+                                    'allowed_values' => array(
+                                            'vocabulary' => 'categories'
+                                    ),
+                            ),
+                            'display'    => array(
+                                    'default' => array(
+                                            'label' => 'hidden',
+                                            'type'  => 'taxonomy_term_reference_plain'
+                                    ),
+                            ),
+                    ),
+                'field_skills'    => array(
+                            'field_name' => 'field_skills',
+                            'label'      => $t('Skills'),
+                            'type'       => 'text',
+                            'widget'     => array(
+                                        'type' => 'text_textfield',
+                                    ),
+                            'display'    => array(
+                                        'default' => array(
+                                                    'label' => 'hidden',
+                                                ),
+                                    ),
+                        ),
+            );
+}
+
+/**
+ * Create a vocabulary from an object with the following properties
+ * @param object $vocabulary
+ *     name: The human-readable name of the vocabulary
+ *     machine_name: The machine name of the vocabulary
+ *     Plus and of the other optional parameters, see:
+ *     http://api.drupal.org/api/drupal/modules%21taxonomy%21taxonomy.module/function/taxonomy_vocabulary_save/7
+ */
+
+function bullhorn_job_order_vocabulary_create($vocabulary) {
+    // Find the vid for the vocabulary we want to create
+    $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name=:machine_name",array(':machine_name' => $vocabulary->machine_name))->fetchField();
+    
+    // Continue creating the vocabulary if it doesn't already exist
+    if(!$vid) {
+        // Create the vocabulary and get the status of the action
+        $status = taxonomy_vocabulary_save($vocabulary);
+        
+        // Set a message and report the result of the action
+        if($status == SAVED_UPDATED) {
+            drupal_set_message(st('The Bullhorn module was installed and the Vocabulary %vocabulary has been updated.',array('%vocabulary' => $vocabulary->name)),'status');
+        }
+        elseif($status == SAVED_NEW) {
+            drupal_set_message(st('The Bullhorn module was installed and the Vocabulary %vocabulary has been created.',array('%vocabulary' => $vocabulary->name)),'status');
+            watchdog('bullhorn job order','The Vocabulary %vocabulary has been created.',array('%vocabulary' => $vocabulary->name),WATCHDOG_INFO);
+        }
+    } else { // The Vocabulary already exists 
+        drupal_set_message(st('It appears that a Vocabulary for %vocabulary already exists. For the Bullhorn Job Order module to work correctly it requires this Vocabulary to exist.',array('%vocabulary' => $vocabulary->name)),'warning');
+    }
+}
+
+/**
+ * Implementation of hook_uninstall()
+ */
+    
+function bullhorn_job_order_uninstall() {
+    
+    // Delete vocabularies created by this module
+    foreach(_job_order_vocabularies() as $vocabulary) {
+        bullhorn_job_order_vocabulary_delete((object) $vocabulary);
+    }
+    
+    // Gather all the content that was created while this
+    // module was enabled. 
+    $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+    $result = db_query($sql,array(':type' => 'job_order'));
+    $nids = array();
+    
+    foreach($result as $row) {
+        $nids[] = $row->nid;
+    }
+    
+    // Delete all the nodes at once
+    node_delete_multiple($nids);
+    
+    // Delete fields
+    foreach(array_keys(_bullhorn_job_order_installed_fields()) as $field) {
+        field_delete_field($field);
+    }
+    
+    // Delete field instances
+    $instances = field_info_instances('node','job_order');
+    foreach($instances as $instance) {
+        field_delete_instance($instance);
+    }
+    
+    // Delete the Job Order Content Type
+    node_type_delete('job_order');
+    
+    // Purge all remaining field info
+    field_purge_batch(1000);
+}
+
+
+
+/**
+ * Delete vocabularies from an object with the following property
+ * @param object $vocabulary
+ *     machine_name: The machine name of the vocabulary
+ */
+function bullhorn_job_order_vocabulary_delete($vocabulary) {
+    // Find the vid for the vocabulary we want to delete
+    $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name=:machine_name",array(':machine_name' => $vocabulary->machine_name))->fetchField();
+    
+    // Continue deleting the vocabulary if the vid exists
+    if($vid) {
+        // Delete the vocabulary and get the status of the action
+        $status = taxonomy_vocabulary_delete($vid);
+
+        // Set a message and report the status of the action
+        if($status == SAVED_DELETED) {
+            drupal_set_message(st('The Bullhorn module was uninstalled and the Vocabulary %vocabulary has been deleted.',array('%vocabulary' => $vocabulary->machine_name)),'status');
+        }
+        else {
+            drupal_set_message(st('The Bullhorn module was uninstalled and the Vocabulary %vocabulary failed to delete.',array('%vocabulary' => $vocabulary->machine_name)),'status');
+            watchdog('bullhorn job order','The Vocabulary %vocabulary has been created.',array('%vocabulary' => $vocabulary->machine_name),WATCHDOG_INFO);
+        }
+    }
+}
+
+/**
+ * Implementation of hook_schema()
+ */
+
+function bullhorn_job_order_schema() {
+    $schema['bullhorn_job_order_applications'] = array(
+            'description' => 'A table that records Candidate Job Order applications.',
+            'fields'      => array(
+                    'aid' => array(
+                                'description' => 'The primary identifier for a Candidate Job Order application',
+                                'type'        => 'serial',
+                                'unsigned'    => TRUE,
+                                'not null'    => TRUE,
+                            ),
+                    'cid' => array(
+                                'description' => 'The primary identifier for a Candidate as defined and returned by Bullhorn when a Candidate logs in.',
+                                'type'        => 'int',
+                                'unsigned'    => TRUE,
+                                'not null'    => TRUE
+                        ),
+                    'jid'   => array(
+                                'description' => 'The primary identifier for a Job order as defined and returned by Bullhorn when Job Order is listed.',
+                                'type'        => 'int',
+                                'unsigned'    => TRUE,
+                                'not null'    => TRUE,
+                        ),
+                    'jsid'  => array(
+                                'description' => 'The Bullhorn JobSubmissionID return when saving to the JobSubmission entity.',
+                                'type'        => 'int',
+                                'unsigned'    => TRUE,
+                                'not null'    => TRUE
+                            ),
+            ),
+            'indexes'     => array(
+                    'uid' => array('cid')
+            ),
+            'primary key' => array('aid')
+    );
+    
+    $schema['bullhorn_job_orders'] = array(
+                'description' => 'A table that collects basic information about Bullhorn Job Orders.',
+                'fields'      => array(
+                            'jid' => array(
+                                        'description' => 'The primary identifier for a Job Order.',
+                                        'type'        => 'serial',
+                                        'not null'    => TRUE,
+                                        'unsigned'    => TRUE
+                                    ),
+                            'job_order_id' => array(
+                                        'description' => 'The Bullhorn primary identifier for a Job Order.',
+                                        'type'        => 'int',
+                                        'unsigned'    => TRUE,
+                                        'not null'    => TRUE,
+                                        'default'     => 0
+                                    ),
+                            'title' => array(
+                                        'description' => 'The Bullhorn title for the Job Order.',
+                                        'type'        => 'varchar',
+                                        'length'      => 255,
+                                        'not null'    => TRUE,
+                                        'default'     => '',
+                                    ),
+                        ),
+                'primary key' => array('jid'),
+                'indexes'     => array(
+                            'job_order_id' => array('job_order_id')
+                        )
+            );
+    return $schema;
+}

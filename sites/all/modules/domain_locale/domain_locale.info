@@ -1,0 +1,10 @@
+name = Domain Locale
+description = Adds language handling functionality per domain basis.
+package = Domain Access
+core = 7.x
+dependencies[] = domain
+dependencies[] = domain_conf
+dependencies[] = locale
+
+version = "7.x-dev"
+core = "7.x"

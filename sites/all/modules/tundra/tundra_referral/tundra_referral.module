@@ -1,0 +1,314 @@
+<?php
+
+// /**
+//  * Implementation of hook_permission()
+//  */
+
+// function tundra_referral_permission() {
+//     return array (
+//                 'administer tundra' => array(
+//                             'title' => t('Administer Tundra Technical'),
+//                             'description' => t('Perform administration tasks for the Tundra Technical module')
+//                         )
+//             );
+// }
+
+/**
+ * Imliplenataion of hook_menu()
+ */
+
+function tundra_referral_menu() {
+    $items = array();
+    
+    $items['admin/config/tundra'] = array(
+                'title'            => 'Tundra Technical',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('tundra_referral_admin_form'),
+                'access arguments' => array('administer tundra'),
+                'type'             => MENU_NORMAL_ITEM
+            );
+    
+    $items['admin/config/tundra/referral'] = array(
+                'title'            => 'Refer a friend admin',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('tundra_referral_admin_form'),
+                'access arguments' => array('administer tundra'),
+                'type'             => MENU_DEFAULT_LOCAL_TASK
+            );
+    
+    $items['job-board/%/referral'] = array(
+                'title'            => 'Refer a friend',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('tundra_referral_form',1),
+                'access arguments' => array('access content'),
+                'type'             => MENU_SUGGESTED_ITEM
+            );
+    
+    return $items;
+}
+
+function tundra_referral_admin_form($form,&$form_state) {
+    $form = array();
+    
+    $form['tundra_referral'] = array(
+                '#type'        => 'fieldset',
+                '#title'       => t('Maximum Referrals'),
+                '#description' => t('Set the maximum number of referrals per JobOrder.'),
+                '#collapsible' => TRUE,
+                '#collapsed'   => FALSE
+            );
+    $form['tundra_referral']['tundra_referral_max_referrals'] = array(
+                '#type' => 'textfield',
+                '#title' => t('Referral Max Number'),
+                '#required' => true,
+                '#default_value' => variable_get('tundra_referral_max_referrals',5),
+            );
+    
+    return system_settings_form($form);
+}
+
+function tundra_referral_form($form,&$form_state,$job_order_id) {
+    
+//    dpm($form_state);
+    
+    // Get the maximum number of referrals otherwise set it to 5
+    $max_referrals = variable_get('tundra_referral_max_referrals',5);
+    
+    $form = array();
+    
+    $form['description'] = array(
+                '#type'   => 'markup',
+                '#markup' => '<p>Networking  pays off in many ways. And at Tundra Technical Solutions, your network of great  business colleagues and contacts can pay off for you in a big way. Our industry  exclusive referral program \' Tundra Referral Rewards program\' pays you a cash reward for helping us place your referrals.</p><ul><li>For every  person you provide who accepts a position, you\'ll receive a $250 Cash Bonus.</li><li>For every third successfully-placed referrals, you\'ll receive a trip to the Caribbean.</li><li>Visit the "Referral Rewards" page to learn more about our program and the terms and conditions.  Or click '.l('here','take-trip-tundra').'.</li></ul>',
+            );
+    
+//     $form['referral_container']['referrer_name'] = array(
+    $form['referrer_name'] = array(
+            '#type'     => 'textfield',
+            '#title'    => t('Your Name'),
+            '#size'     => 25,
+            '#prefix'   => '<div class="col1">',
+            '#suffix'   => '</div>',
+            '#required' => TRUE,
+    );
+    
+//     $form['referral_container']['referrer_email'] = array(
+    $form['referrer_email'] = array(
+            '#type'     => 'textfield',
+            '#title'    => t('Your Email'),
+            '#size'     => 25,
+            '#prefix'   => '<div class="col2">',
+            '#suffix'   => '</div>',
+//             '#element_validate' => array('_referral_email_validate'),
+            '#required' => TRUE,
+    );
+    
+    $form['#tree'] = TRUE;
+    
+    $form['referral_container'] = array(
+                '#type' => 'container',
+                '#title' => t('Refer your friends.'),
+                '#attributes' => array(
+                            'id' => 'referral-container-wrapper'
+                        ),
+            );
+    
+    if(empty($form_state['num_referrals'])) {
+        $form_state['num_referrals'] = 1;
+    }
+    
+    for($i = 0; $i < $form_state['num_referrals']; $i++) {
+    
+//         $form['referral_container'][$i] = array(
+//                     '#prefix' => '<div class="two-col">',
+//                     '#suffix' => '</div>',
+//                 );
+        $form['referral_container'][$i]['referral_name'] = array(
+                    '#type'     => 'textfield',
+                    '#title'    => t('Friend\'s Name'),
+                    '#prefix'   => '<div class="col1">',
+                    '#suffix'   => '</div>',
+                    '#size'     => 25,
+                    '#required' => TRUE,
+                );
+//         if($i>0) {
+//             $form['referral_container'][$i]['referral_name']['#states'] = array(
+//                                     'required' => array(
+//                                             ':input[name="referral_container['.$i.'][referral_email]"]' => array(
+//                                                     'filled' => TRUE,
+//                                             ),
+//                                     ),
+//                     );
+//         } else {
+//             $form['referral_container'][$i]['referral_name']['#required'] = TRUE;
+//         }
+        
+        $form['referral_container'][$i]['referral_email'] = array(
+                    '#type'             => 'textfield',
+                    '#title'            => t('Friend\'s Email'),
+                    '#prefix'           => '<div class="col2">',
+                    '#suffix'           => '</div>',
+                    '#size'             => 25,
+//                     '#element_validate' => array('_referral_email_validate'),
+                    '#required'         => TRUE,
+                    
+                );
+//         if($i>0){
+//             $form['referral_container'][$i]['referral_email']['#states'] = array(
+//                             'required' => array(
+//                             ':input[name="referral_container['.$i.'][referral_name]"]' => array(
+//                                 'filled' => TRUE,
+//                             ),
+//                         ),
+//                     );
+//         } else {
+//             $form['referral_container'][$i]['referral_email']['#required'] = TRUE;
+//         }
+    }
+    
+    if($form_state['num_referrals'] < $max_referrals) {
+        $form['referral_container']['add_referral'] = array(
+//         $form['add_referral'] = array(
+                    '#type' => 'submit',
+                    '#value' => t('Add'),
+                    '#submit' => array('tundra_referral_add'),
+//                     '#limit_validation_errors' => array(array('referral_container')),
+                    '#limit_validation_errors' => array(),
+                    '#ajax'   => array(
+                                'callback' => 'tundra_referral_add_callback',
+                                'wrapper'  => 'referral-container-wrapper',
+                                'effect'   => 'fade',
+//                                 'prevent'  => 'click mousedown',
+                            ),
+//                     '#attributes' => array(
+//                             'class' => array('colorbox-load'),
+//                         ),
+                );
+    }
+    if($form_state['num_referrals']>1) {
+        $form['referral_container']['remove_referral'] = array(
+//         $form['remove_referral'] = array(
+                    '#type' => 'submit',
+                    '#value' => t('Remove'),
+                    '#submit' => array('tundra_referral_remove'),
+                    '#limit_validation_errors' => array(),
+                    '#ajax'   => array(
+                                'callback' => 'tundra_referral_add_callback',
+                                'wrapper'  => 'referral-container-wrapper',
+                                'effect'   => 'fade',
+//                                 'prevent'  => 'click mousedown',
+                            ),
+//                     '#attributes' => array(
+//                         'class' => array('colorbox-load')
+//                     ),
+                );
+    }
+    $form['submit'] = array(
+                '#type' => 'submit',
+                '#value' => t('Submit'),
+                '#name'  => 'submit',
+//                 '#attributes' => array(
+//                         'class' => array('colorbox-load')
+//                     )
+            );
+    return $form;
+}
+
+function tundra_referral_add_callback($form,$form_state) {
+    return $form['referral_container'];
+}
+
+function tundra_referral_add($form,&$form_state) {
+//     dpm($form,'FORM');
+//     dpm($form_state,'FORM STATE');
+//     $i = $form_state['num_referrals']-1;
+//     $referral_name = $form_state['input']['referral_container'][$i]['referral_name'];
+//     $referral_email = $form_state['input']['referral_container'][$i]['referral_email'];
+//     if(empty($referral_name) || empty($referral_email) || !valid_email_address($referral_email)) {
+//         if(empty($referral_name)) {
+//             form_set_error('referral_container]['.$i.'][referral_name','Friend\'s Name field is required.');
+//         } 
+//         if(empty($referral_email)) {
+//             form_set_error('referral_container]['.$i.'][referral_email','Friend\'s Email field is required.');
+//         }
+//         if(!valid_email_address($referral_email)) {
+//                 form_set_error('referral_container]['.$i.'][referral_email','Friend\'s Email is not a valid email address');
+//         }
+//     } else {
+//         $form_state['num_referrals']++;
+//     }
+    $form_state['num_referrals']++;
+    $form_state['rebuild'] = TRUE;
+}
+
+function tundra_referral_remove($form,&$form_state) {
+    if($form_state['num_referrals'] > 1) {
+        $form_state['num_referrals']--;
+    }
+    $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Implementation of _validate()
+ * @param $element
+ * @param $form_state
+ * @param $form
+ */
+
+function _referral_email_validate($element,&$form_state,$form) {
+   dpm($element,'ELEMENT');
+   dpm($form_state,'FORM STATE');
+   
+//     if(($form_state['triggering_element']['#value'] == 'Add' || $form_state['triggering_element']['#value'] == 'Submit')  && !valid_email_address($element['#value'])) {
+//         $num = (isset($element['#parents'][1]) && is_numeric($element['#parents'][1])) ? ($element['#parents'][1]+1) : '';
+//         form_error($element,t($element['#title'] . ' ' . $num . ' must be a valid email address.'));
+//     }
+    
+//     if($form_state['triggering_element']['#value'] == 'Remove' && in_array('referral_email',$element['#parents']) && empty($element['#value'])) {
+//         dpm($element);
+//         $element['#required'] = FALSE;
+//     }
+
+    if(!empty($element['#value']) && !valid_email_address($element['#value'])) {
+        $num = (isset($element['#parents'][1]) && is_numeric($element['#parents'][1])) ? ($element['#parents'][1]+1) : '';
+        form_set_error('referral_container][' . $element['#parents'][1] . '][referral_email',t($element['#title'] . ' ' . $num . ' must be a valid email address.'));
+    }
+    
+    if(isset($element['#parents']) && $element['#parents'][0] == 'referral_container'){
+        $num = (isset($element['#parents'][1]) && is_numeric($element['#parents'][1])) ? ($element['#parents'][1]+1) : 0;
+        foreach($form_state['values']['referral_container'] as $var => $referral) {
+            if(($var != $element['#parents'][1]) && ($element['#value'] == $referral['referral_email'])) {
+                form_set_error($element['#name'],t($element['#title'] . ' '. $num .' is a duplicate email address.'));
+            }
+        }
+    }
+
+    //dpm($element);
+    $form_state['values']['emails'][$element['#id']] = $element['#value'];
+}
+
+function tundra_referral_form_validate($form,&$form_state) {
+    dpm($form,'FORM');
+    dpm($form_state,'FORM STATE');
+    $referrals = array($form_state['values']['referrer_email']);
+    foreach($form_state['values']['referral_container'] as $referral) {
+        
+    }
+}
+
+/**
+ * Allow other modules to control access to forms opening in Colorbox.
+ *
+ * Implements hook_colorbox_form_access().
+ *
+ * @param $form_id
+ *   The unique string identifying the current form.
+ */
+function tundra_referral_colorbox_form_access($form_id) {
+  $access = FALSE;
+
+  if ($form_id == 'tundra_referral_view') {
+    return user_access('access content');
+  }
+
+  return $access;
+}

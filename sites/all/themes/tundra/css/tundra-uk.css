@@ -1,0 +1,50 @@
+/* 
+    Document   : tundra-uk
+    Created on : May 6, 2013, 8:45:21 PM
+    Author     : jnapoleone
+    Description:
+        The purpose of this style sheet is the temporary landing page for
+Tundra Technical UK until further notice
+*/
+
+root { 
+    display: block;
+}
+
+.domain-drupal-tundratechnical-co-uk #page {
+    width: 960px;
+    max-width:710px;
+}
+
+.domain-drupal-tundratechnical-co-uk #main {
+    background-color: #f1f1f1;
+    /*max-width: 710px;*/
+}
+
+.domain-drupal-tundratechnical-co-uk #header .region-header {
+    /*position: relative;*/
+    width: 100%;
+}
+
+.domain-drupal-tundratechnical-co-uk #header .social-networking-badges {
+    margin-top: 64px;
+/*    float: none;
+    position: absolute;
+    right: 0;
+    bottom: 10px;*/
+}
+
+.domain-drupal-tundratechnical-co-uk #content img {
+    display: block;
+    margin: 0 auto;;
+    width: 710px;
+    height: auto;
+    /*box-shadow: 5px 5px 3px #e6e6e6;*/
+}
+
+.domain-drupal-tundratechnical-co-uk #content h2 {
+    font-size: 1.5em;
+    background-color: transparent;
+    padding: 0;
+    text-align: center;
+}

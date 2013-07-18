@@ -1,0 +1,12 @@
+name = Bullhorn Job Order
+description = A custom module that queries the Bullhorn JobOrder entity via their SOAP API and returns results for a company's username, password and API Key combination. The results from a query for Job Order data are parsed and saved as Job Orders nodes. The module creates the Content Type 'Job Orders' for saving Job Order data and Vocabularies for City, Country, Employment Type and Categories. In addition this module also creates two database tables one for tracking Job Orders and the other for tracking applications.
+core = 7.x
+package = Bullhorn
+
+dependencies[] = bullhorn
+dependencies[] = date
+
+files[] = bullhorn_job_order.module
+files[] = bullhorn_job_order.install
+
+version = 7.x-0.1-beta

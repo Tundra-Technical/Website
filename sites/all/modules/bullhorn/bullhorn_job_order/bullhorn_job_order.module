@@ -1,0 +1,738 @@
+<?php
+// Load the include file
+module_load_include('inc','bullhorn_job_order');
+
+/**
+ * Implementation of hook_menu()
+ */
+
+function bullhorn_job_order_menu() {
+    $items = array();
+    $items['admin/config/bullhorn/job-order'] = array(
+                'title'            => 'JobOrder',
+//                'page callback'    => 'drupal_get_form',
+//                'page arguments'   => array('bullhorn_job_order_form'),
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 0,
+                'type'             => MENU_NORMAL_ITEM,
+            );
+    $items['admin/config/bullhorn/job-order/data-save'] = array(
+                'title'            => 'Step 1: Save Job Orders',
+                'page callback'    => 'bullhorn_job_order_data_save',
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 1,
+                'type'             => MENU_NORMAL_ITEM
+            );
+    $items['admin/config/bullhorn/job-order/category-save'] = array(
+                'title'            => 'Step 2: Save Categories',
+                'page callback'    => 'bullhorn_job_order_category_save',
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 2,
+                'type'             => MENU_NORMAL_ITEM
+            );
+    $items['admin/config/bullhorn/job-order/country-save'] = array(
+                'title'            => 'Step 3: Save Countries',
+                'page callback'    => 'bullhorn_job_order_country_save',
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 3,
+                'type'             => MENU_NORMAL_ITEM
+            );
+    $items['admin/config/bullhorn/job-order/vacabularies-save'] = array(
+                'title'            => 'Step 4: Save Vocabularies',
+                'page callback'    => 'bullhorn_job_order_vocabularies_save',
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 4,
+                'type'             => MENU_NORMAL_ITEM
+            );
+    $items['admin/config/bullhorn/job-order/nodes-save'] = array(
+                'title'            => 'Step 5: Save Nodes',
+                'page callback'    => 'bullhorn_job_order_nodes_save',
+                'access arguments' => array('administer bullhorn module'),
+                'weight'           => 5,
+                'type'             => MENU_NORMAL_ITEM
+            );
+    return $items;
+}
+
+/**
+ * Bullhorn Job Order Data Save
+ * 
+ * Query Bullhorn's JobOrder Entity for Job Order data via their SOAP API.
+ * This is step one in a multi step process to conserve overhead and avoid
+ * PHP request timeouts.
+ * 
+ * The result is Class data type which is saved in Drupal variable table.
+ * 
+ * This query is done in two steps to extract exactly the same amount of
+ * records that are viewable through the Bullhorn Admin. Unfortunately at this
+ * time using the OR operator and combining the queries with more than one status
+ * field condition fails to accomplish the same as two queries.
+ *  
+ * @global type $client
+ */
+function bullhorn_job_order_data_save() {
+    global $client;
+    
+    // Create a client instance to the Bullhorn API
+    bullhorn_start_client();
+    
+    if(!$client) {
+        debug($client,'Client');
+        exit();
+    }    
+    
+    // In the event that this step fails let's empty bullhorn_job_order_data
+    // so the following steps will not proceed
+    //variable_set('bullhorn_job_order_data_new',0);
+    
+    // Create an Array of jobs
+    $job_order_data = array();
+    
+    //
+    // Query Job Orders with status of 'Accepting Candidates'
+    //
+    
+    $entity = 'JobOrder';
+    $condition = 'isDeleted=0 AND isOpen=1 AND isPublic=1 AND (status=\'Candidate Submitted\' OR status=\'Accepting Candidates\')';
+    $result = bullhorn_query($entity, $condition);
+    
+    $job_order_ids = $result->return->ids;
+    
+    // Save Job Order ids to save Category and Country data later
+    variable_set('bullhorn_job_order_ids',$job_order_ids);
+    
+//    debug($job_order_ids);
+    
+    // Combine result chunks
+    $job_order_id_chunks = array_chunk($job_order_ids,20);
+    
+//    debug($job_order_id_chunks);
+    
+    foreach($job_order_id_chunks as $chunk) {
+        $findResult = bullhorn_find_multiple($chunk, $entity);
+        $job_order_data = array_merge($job_order_data,(array) $findResult->return->dtos);
+    }
+//    debug(count($job_order_data));
+    //debug($job_order_data,"Job Order Data " . __FUNCTION__);
+    
+    ob_start();
+    print "<pre>\n";
+    print '<h2> Job Order Data' . __FUNCTION__ . "</h2>\n";
+    var_dump($job_order_data);
+    print "</pre>\n";
+    $return = ob_get_clean();
+    
+    variable_set('bullhorn_job_order_data_new',$job_order_data);
+    return $return;
+}
+
+/**
+ * Bullhorn Job Order Category Save
+ * 
+ * Query Bullhorn's Category Entity by getAssociationIDs for Category data via 
+ * their SOAP API. This is the second step in a multistep process.
+ * 
+ * Category is a field in the JobOrder Entity represented by and ID. Using data 
+ * collected and stored in the variables bullhorn_job_order_ids and 
+ * bullhorn_job_order_data from the previous step (bullhorn_job_order_save_data),
+ * query and find Category data i.e. Category name, for each JobOrder.
+ * 
+ * @global type $client
+ */
+
+function bullhorn_job_order_category_save(){
+    global $client;
+    
+    /**
+     * Get bullhorn_job_order_ids and bullhorn_job_order_data to test if the previous
+     * step bullhorn_job_order_data_save successfully completed and for building on
+     * that step
+     * 
+     * In the event that this step fails, let's empty the bullhorn_job_order_data and 
+     * the following steps in this process will not proceed
+     */
+    
+    $job_order_ids  = variable_get('bullhorn_job_order_ids',0);
+    $job_order_data = variable_get('bullhorn_job_order_data_new',0);
+    //variable_set('bullhorn_job_order_data_new',0); //Empty stored variable
+    
+    if(!$job_order_ids || empty($job_order_ids) || !$job_order_data || empty($job_order_data)) {
+        //TODO send email!
+        exit();
+    }
+    
+    // Create a client instance to the Bullhorn API
+    bullhorn_start_client();
+    
+    // Get the ID for the default $category_id
+    
+    $entity      = 'Category';
+    $condition   = 'name=\'Other Area(s)\'';
+    $parameters  = array();
+    $distinct    = false;
+    $max_results = 1;
+    $defaultCatQueryResult = bullhorn_query($entity, $condition, $parameters, $distinct, $max_results);
+    
+    if(isset($defaultCatQueryResult->return->ids) && !empty($defaultCatQueryResult->return->ids)) {
+        $default_category_id = $defaultCatQueryResult->return->ids;
+    } else {
+        $default_category_id = 1;
+    }
+
+    $client->session = $defaultCatQueryResult->return->session;
+    
+    // Find the Category IDs for each Job Order ID using the getAssociatoionIDs method
+    
+    // Create an Array of CategoryIds indexed by jobOrderIds
+    $category_ids = array();
+    
+    foreach($job_order_ids as $id) {
+        $category_ids[$id] = $default_category_id;
+        
+        $entity = 'JobOrder';
+        $assoc_name = 'categories';
+        $getAssocIdResult = bullhorn_get_association_id($id, $entity, $assoc_name);
+        
+        if($getAssocIdResult) {
+            $category_ids[$id] = $getAssocIdResult;
+        }        
+    }
+    
+//    debug($category_ids,'Category IDs');
+   
+    // Split the IDs into chunks and run through findMultiple
+    $category_chunks = array_chunk($category_ids, 20,TRUE);
+    
+//    debug($category_chunks,'Category Chunks');
+    
+    //Find the Category occupation name for each Category ID and push it onto the categories Array
+    
+    $categories = array();
+    foreach($category_chunks as $chunk) {
+        $entity = 'Category';
+        $categoryResult = bullhorn_find_multiple($chunk, $entity);
+        $categories = array_merge($categories, (array) $categoryResult->return->dtos);
+//        debug($categoryResult);
+        
+    }
+    
+//    debug($categories,'Categories IDs + Name');
+    
+    // Combine Category Data with Job Order IDs
+    $job_order_ids_categories = array_combine($job_order_ids,$categories);
+    
+//    debug($job_order_ids_categories);
+    
+    /**
+     * Create a default category using the default category data retrieved
+     * earlier
+     * TODO figure out why some category results are empty
+     */
+    $default_category = array(
+        'categoryID' => $default_category_id,
+        'name'       => 'Other Area(s)',
+        'occupation' => 'Other Area(s)',
+    );
+    
+    // Push the category data on the jobs Array    
+    foreach($job_order_data as $job) {
+        if(is_null($job_order_ids_categories[$job->jobOrderID])) {
+            $job->category = (object) $default_category;
+        } else {
+            $job->category = (object) $job_order_ids_categories[$job->jobOrderID];
+        }
+    }
+    
+//    debug($job_order_data,"Job Order data " . __FUNCTION__);
+    ob_start();
+    print "<pre>";
+    var_dump($job_order_data);
+    print "<pre>";
+    $return = ob_get_clean();
+    
+    variable_set('bullhorn_job_order_data_new',$job_order_data);
+    return $return;
+}
+
+/**
+ * Bullhorn Job Order Category Save
+ * 
+ * Query Bullhorn's Category Entity by getAssociationIDs for Category data via 
+ * their SOAP API. This is the second step in a multistep process.
+ * 
+ * Category is a field in the JobOrder Entity represented by and ID. Using data 
+ * collected and stored in the variables bullhorn_job_order_ids and 
+ * bullhorn_job_order_data from the previous step (bullhorn_job_order_save_data),
+ * query and find Category data i.e. Category name, for each JobOrder.
+ * 
+ * @global type $client
+ */
+
+function bullhorn_job_order_country_save() {
+    global $client;
+    
+    /**
+     * Get bullhorn_job_order_data to test if the previous
+     * steps bullhorn_job_order_data_save & bullhorn_job_order_category_save 
+     * successfully completed and for building on those steps
+     * 
+     * In the event that this step fails, let's empty the bullhorn_job_order_data and 
+     * the following steps in this process will not proceed
+     */
+    
+    $job_order_data = variable_get('bullhorn_job_order_data_new',0);
+    //variable_set('bullhorn_job_order_data_new',0);
+    
+    if(!$job_order_data || empty($job_order_data)) {
+        //TODO send email!
+        exit();
+    }
+    
+    // Create a client instance to the Bullhorn API
+    bullhorn_start_client();
+    
+    // Loop through the $job_order_data and get the Country Code and Country Name for all Country IDs
+    foreach($job_order_data as $key => $value) {
+        
+        $id = $job_order_data[$key]->address->countryID;
+        
+        $entity = 'Country';
+        $findResult = bullhorn_find($entity, $id);
+        if($findResult) {
+            $job_order_data[$key]->address->country = (object) array(
+                'country_code' => $findResult->return->dto->code,
+                'country_name' => $findResult->return->dto->name,
+            );
+        } else {
+            $job_order_data[$key]->address->country = (object) array(
+                'country_code' => 'CA',
+                'country_name' => 'Canada',
+            );
+        }
+        
+        $client->session = $findResult->return->session;
+    }
+    
+//    debug($job_order_data,"Job Order Data " . __FUNCTION__);
+    ob_start();
+    print "<pre>";
+    var_dump($job_order_data);
+    print "<pre>";
+    $return = ob_get_clean();
+    
+    variable_set('bullhorn_job_order_data_new',$job_order_data);
+    return $return;
+}
+
+/**
+ * Bullhorn Job Order Vocabulary Save
+ * 
+ * Save Vocabularies related to the Job Order Content Type by extracting them
+ * from the previous three steps: bullhorn_job_order_data_save
+ * bullhorn_job_order_category_save and bullhorn_job_order_country_save.
+ * 
+ * This is the fourth step in a multistep process. It should not proceed if
+ * the $job_order_data variable is empty. It should be run before saving nodes
+ * to account for all Vocabularies being up to date.
+ * 
+ * Maintence of the Vocabularies is also performed here and terms that are not
+ * in the must current set of Job Order data are pruned.
+ */
+
+function bullhorn_job_order_vocabularies_save() {
+    /**
+     * Get bullhorn_job_order_data to test if the previous
+     * steps bullhorn_job_order_data_save, bullhorn_job_order_category_save & 
+     * bullhorn_job_order_country_save successfully have completed and for 
+     * building on those steps
+     * 
+     * In the event that this step fails, let's empty the bullhorn_job_order_data and 
+     * the following steps in this process will not proceed
+     */
+    
+    $job_order_data = variable_get('bullhorn_job_order_data_new',0);
+    //variable_set('bullhorn_job_order_data_new',0);
+//    debug($job_order_data,'Job Order Data');
+    
+    if(!$job_order_data || empty($job_order_data)) {
+        //TODO send email!
+        exit();
+    }
+    
+    
+    // Add the Vocabulary ID to our vocabularies Array
+    $vocabularies = _job_order_vocabularies();
+    foreach($vocabularies as &$vocabulary) {
+        $_vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary['machine_name']);
+        $vocabulary['vid'] = $_vocabulary->vid;
+    }
+    unset($vocabulary);
+//    debug($vocabularies,'VOCABULARIES');
+
+    // Set up an array to store our JobOrder terms
+    $job_terms = array();
+    foreach($vocabularies as $vocabulary) {
+        $job_terms[$vocabulary['machine_name']] = array();
+    }
+//    debug($job_terms,'JOBTERMS');
+    
+    // Create a unique list of all the current JobOrder city, country and job type terms
+    foreach($job_order_data as $job) {
+        //$city = ucwords(strtolower(trim($job->address->city)));
+        $city = trim($job->address->city);
+        if(isset($job_terms['cities']) && !(in_array($city,$job_terms['cities']))){
+            $job_terms['cities'][] = $city;
+        }
+        //$country = ucwords(strtolower(trim($job->address->country->country_name)));
+        $country = trim($job->address->country->country_name);
+        if(isset($job_terms['countries']) && !(in_array($country,$job_terms['countries']))){
+            $job_terms['countries'][] = $country;
+        } 
+        //$employment_type = ucwords(strtolower(trim($job->employmentType)));
+        $employment_type = trim($job->employmentType);
+        if(isset($job_terms['employment_types']) && !(in_array($employment_type,$job_terms['employment_types']))){
+            $job_terms['employment_types'][] = $employment_type;
+        }
+        //$category = ucwords(strtolower(trim($job->category->category_name)));
+        $category = trim($job->category->name);
+        if(isset($job_terms['categories']) && !(in_array($category,$job_terms['categories']))){
+            $job_terms['categories'][] = $category;
+        }
+    }
+//    debug($job_terms,'JOBTERMS');
+    
+    // Set up an Array to store our Vocabulary terms
+    $vocabulary_terms = array();
+    foreach($vocabularies as $vocabulary) {
+        $vocabulary_terms[$vocabulary['machine_name']] = array();
+    }
+    
+    // Create a list of all the current city, country and job type Vocabulary terms
+    foreach($vocabularies as $vocabulary) {
+        $_vocabulary = taxonomy_get_tree($vocabulary['vid']);
+        foreach($_vocabulary as $name) {
+            $vocabulary_terms[$vocabulary['machine_name']][] = $name->name;
+        }
+    }
+//    debug($vocabulary_terms);
+    
+    // Get the terms that need to be removed from each Vocabulary
+    foreach($vocabularies as $vocabulary) {
+        $vocabularies_delete[$vocabulary['vid']] = array_diff($vocabulary_terms[$vocabulary['machine_name']],$job_terms[$vocabulary['machine_name']]);
+    }
+//    debug($vocabularies_delete,'VOCABULARIESDELETE');
+    
+    // Start by removing any terms from our Vocabulary that no longer exist in our JobOrders
+    foreach($vocabularies_delete as $vid => $terms) {
+        foreach($terms as $term) {
+            if(!empty($term)){
+                $query = new EntityFieldQuery();
+                $result = $query
+                    ->entityCondition('entity_type', 'taxonomy_term')
+                    ->propertyCondition('name', $term)
+                    ->propertyCondition('vid', $vid)
+                    ->execute();
+                foreach($result['taxonomy_term'] as $_term){
+                    $status = taxonomy_term_delete($_term->tid);
+                    if($status != SAVED_DELETED) {
+                        watchdog('bullhorn job order','Failed to delete term %term (%term_id)',array('%term' => $term, '%term_id' => $_term->tid),WATCHDOG_ERROR);
+                    } else {
+                        drupal_set_message(t('Vocabulary term %term (%term_id) deleted.',array('%term' => $term, '%term_id' => $_term->tid)),'warning');
+                    }
+                }
+            }
+        }
+    }
+    
+    // Get the terms that need to be add to each Vocabulary
+    foreach($vocabularies as $vocabulary) {
+        $vocabularies_save[$vocabulary['vid']] = array_diff($job_terms[$vocabulary['machine_name']],$vocabulary_terms[$vocabulary['machine_name']]);
+    }
+//    debug($vocabularies_save,'VOCABULARIESSAVE');
+    
+    // Add any terms to our Vocabulary that do no already exist from our JobOrders
+    foreach($vocabularies_save as $vid => $terms) {
+        foreach($terms as $term) {
+            if(!empty($term)) {
+                $tid = taxonomy_get_term_by_name($term);
+                if(empty($tid)){
+                    $new_term       = new stdClass();
+                    $new_term->vid  = $vid;
+                    $new_term->name = $term;
+                    $status = taxonomy_term_save($new_term);
+                    if($status) {
+                        drupal_set_message(t('Vocabulary term %term saved to vocabulary (%vid).',array('%term' => $term, '%vid' => $vid)),'status');
+                    } else {
+                        watchdog('bullhorn job order','Failed to save the term %term to the vocabulary (%vid).',array('%term' => $term,'%vid' => $vid));
+                    }
+                }
+            }
+        }
+    }
+    return '';
+}
+
+/**
+ * Bullhorn Job Order Nodes Save
+ * TODO create {bullhorn_job_order} records with the data collected and processed here ?
+ */
+function bullhorn_job_order_nodes_save() {
+    /**
+     * Get bullhorn_job_order_ids and bullhorn_job_order_data to test if the previous
+     * step bullhorn_job_order_data_save successfully completed and for building on
+     * that step
+     * 
+     * In the event that this step fails, let's empty the bullhorn_job_order_data and 
+     * the following steps in this process will not proceed
+     */
+    
+    $job_order_data = variable_get('bullhorn_job_order_data_new',0);
+    //variable_set('bullhorn_job_order_data_new',0);
+//    debug($job_order_data,'Job Order Data');
+    
+    if(!$job_order_data || empty($job_order_data)) {
+        //TODO send email!
+        exit();
+    }
+    
+    // Get Job Order IDs from job order data
+    $job_ids = array();
+    foreach($job_order_data as $job) {
+        $job_ids[] = $job->jobOrderID;
+    }
+//    debug($job_ids,'JOB IDS');
+    
+    // Get Job Order IDs from job order nodes
+    $node_job_ids = array();
+    
+    // Get the list, if any, of all the node entity types
+    // of the job_order type
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type','node')
+    ->propertyCondition('type', 'job_order');
+    $result = $query->execute();
+    
+    // Get the nids from the Array keys of the previous query result
+    // and store them in an Array of NID keys and JobOrderID values
+    $node_job_ids =  array();
+    if(!empty($result)) {
+        $nids = array_keys($result['node']);
+    
+    
+        // Load all the nodes
+        $nodes = node_load_multiple($nids);
+        
+        // Get the Job Order IDs for all the existing nodes
+        foreach($nodes as $key => $node) {
+            $node_job_ids[$key] = $node->field_job_order_id[LANGUAGE_NONE][0]['value'];
+        }
+        
+    }
+    
+//    debug($node_job_ids,'NODE JOB IDS');
+    
+    // Get the nodes to delete from the existing node Job Order IDs
+    // that no longer exist in the new Job Order data
+    $nodes_delete = array_diff($node_job_ids,$job_ids);
+//    debug($nodes_delete,'NODES TO DELETE');
+    
+    $nids_delete = array_keys($nodes_delete);
+//    debug($nids_delete,'NIDS TO DELETE');
+    
+    // Delete all the non-existing nids
+    node_delete_multiple($nids_delete);
+    
+    // Get the nodes to save from the Job Order data that do not
+    // exist in the existing Job Order nodes by Job Order ID
+    $nodes_save = array();
+    $nids_save = array_diff($job_ids,$node_job_ids);
+    foreach($nids_save as $key => $nids) {
+        $nodes_save[] = $job_order_data[$key];
+    }
+//    debug($nids_save,'NIDS TO SAVE');
+//    debug(count($nodes_save),'NODES TO SAVE COUNT');
+//    debug($nodes_save,'NODES TO SAVE');
+    
+    $nodes = array();
+    foreach($nodes_save as $job) {
+        $node = _job_order_node_prepare($job);
+        try {
+            node_save($node);
+            $nodes[] = $node;
+            drupal_set_message('Node title ('. $node->title .') saved.', 'status');
+        } catch (Exception $e) {
+            watchdog('bullhorn job order','Failed to save node. Exception: :e',array(':e' => $e),WATCHDOG_ERROR);
+        }
+    }
+    
+    // Save translations
+    $default_language = language_default();
+    $languages        = language_list('enabled');
+    
+    foreach($nodes as $node) {
+        foreach($languages[1] as $lang) {
+            if($lang->language != $default_language->language) {
+                $trans_node = _job_order_node_translation_prepare($node, $lang, $default_language);
+                try {
+                    node_save($trans_node);
+                    drupal_set_message('Node translation title ('. $node->title .') saved.', 'status');
+                } catch (Exception $e) {
+                    watchdog('bullhorn job order','Failed to save node translation. Exception: :e',array(':e' => $e),WATCHDOG_ERROR);
+                }
+            }
+        }
+    }
+    
+    variable_set('bullhorn_job_order_data',$job_order_data);
+    return '';
+}
+
+function bullhorn_job_order_get_update_events() {
+    global $client;
+    
+    bullhorn_start_client();
+    
+    $update_request = array(
+        'session'        => $client->session,
+        'subscriptionId' => 'Tundra Updated JobOrder Events',
+        'maxEvents'      => 20,
+    );
+    
+    try {
+        $update_result = $client->eventsGetEvents($update_request);
+        debug($update_result);
+    } catch(SoapFault $fault) {
+        debug($client->__getLastRequest());
+        debug($client->__getLastResponse());
+        debug($fault->faultstring);
+    }
+    
+    $update_events = (isset($update_result->return->result->events) && !empty($update_result->return->result->events)) ?$update_result->return->result->events : FALSE;
+    
+    if($udpate_events) {
+        $update_event_ids = array();
+        foreach($update_events as $event) {
+            if(!$event->isDeleted && $event->isOpen && $event->isPublic == 1 && ($event->status == 'Accepting Candidates' || $event->status == 'Candidate Submitted')) {
+                $update_event_ids[] = $event->entityId;
+            }
+        }
+        
+        if(count($update_event_ids)) {
+            $entity = 'JobOrder';
+            $findResult = bullhorn_find_multiple($update_event_ids, $entity);
+
+            if($findResult) {
+                $job_order_dtos = $findResult->return->dtos;
+                _job_order_categories_find(&$job_order_dtos);
+            }
+        }
+    }
+}
+
+function _job_order_category_id_default() {
+    global $client;
+    
+    $entity      = 'Category';
+    $condition   = 'name=\'Other Area(s)\'';
+    $parameters  = array();
+    $distinct    = false;
+    $max_results = 1;
+    $defaultCatQueryResult = bullhorn_query($entity, $condition, $parameters, $distinct, $max_results);
+    
+    if(isset($defaultCatQueryResult->return->session) && !empty($defaultCatQueryResult->return->session)) {
+        $client->session = $$defaultCatQueryResult->return->session;
+    }
+    
+    if(isset($defaultCatQueryResult->return->ids) && !empty($defaultCatQueryResult->return->ids)) {
+        return $defaultCatQueryResult->return->ids;
+    } else {
+        return 1;
+    }
+}
+
+function _job_order_category_dto_default($id) {
+    $entity = 'Category';
+    return bullhorn_find($entity, $id);
+}
+
+function _job_order_categories_find(&$job_order_dtos) {
+    
+    $default_category_id = _job_order_category_id_default();
+    
+    foreach($job_order_dtos as $dto) {
+        $category_id = bullhorn_get_association_id($dto->jobOrderId, 'JobOrder', 'categories');
+        
+        if(!$category_id) {
+            $category_id = $default_category_id;
+        }
+        
+        $entity = 'Category';
+        $category = bullhorn_find($entity, $category_id);
+        
+        if($category) {
+            $dto->category = $category->return->dto;
+        } else {
+            $category_default = _job_order_category_dto_default($default_category_id);
+            $dto->category = $category_default->return->dto;
+        }
+    }
+}
+
+// Define custom cron functions
+function bullhorn_job_order_cronapi($op, $function = NULL) {
+  switch($op) {
+    case 'list':
+      return array(
+        'bullhorn_job_order_data_save'         => 'Save Job Order Data',
+        'bullhorn_job_order_category_save'     => 'Save Job Order Category Data',
+        'bullhorn_job_order_country_save'      => 'Save Job Order Country Data',
+        'bullhorn_job_order_vocabularies_save' => 'Save Job Order Vocabularies',
+        'bullhorn_job_order_nodes_save'        => 'Save Job Order Nodes'
+      );
+
+    case 'rule':
+      switch($function) {
+        case 'bullhorn_job_order_data_save': return '5 * * * *';
+        case 'bullhorn_job_order_category_save': return '10 * * * *';
+        case 'bullhorn_job_order_country_save': return '15 * * * *';
+        case 'bullhorn_job_order_vocabularies_save': return '20 * * * *';
+        case 'bullhorn_job_order_nodes_save': return '25 * * * *';
+      }
+      break;
+
+    case 'execute':
+      switch($function) {
+        case 'bullhorn_job_order_data_save':
+            bullhorn_job_order_data_save();
+          break;
+        case 'bullhorn_job_order_category_save':
+            bullhorn_job_order_category_save();
+            break;
+        case 'bullhorn_job_order_country_save':
+            bullhorn_job_order_country_save();
+            break;
+        case 'bullhorn_job_order_vocabularies_save':
+            bullhorn_job_order_vocabularies_save();
+            break;
+        case 'bullhorn_job_order_nodes_save':
+            bullhorn_job_order_nodes_save();
+            break;
+      }
+      break;
+
+//    case 'settings':
+//      switch ($function) {
+//        // 'mymodule_cronjob_3' disabled by default
+//        case 'mymodule_cronjob_3': return array('enabled' => FALSE);
+//      }
+
+    case 'configure':
+      switch ($function) {
+        case 'bullhorn_job_order_data_save': return 'admin/config/bullhorn/job-order/data-save';
+        case 'bullhorn_job_order_category_save': return 'admin/config/bullhorn/job-order/category-save';
+        case 'bullhorn_job_order_country_save': return 'admin/config/bullhorn/job-order/country-save';
+        case 'bullhorn_job_order_vocabularies_save': return 'admin/config/bullhorn/job-order/vacabularies-save';
+        case 'bullhorn_job_order_nodes_save': return 'admin/config/bullhorn/job-order/nodes-save';
+      }
+  }
+}

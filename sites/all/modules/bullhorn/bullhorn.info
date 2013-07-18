@@ -1,0 +1,8 @@
+name = Bullhorn
+description = A custom module that creates variables for a client's username, password and API Key.
+core = 7.x
+package = Bullhorn
+
+files[] = bullhorn.module
+
+version = 7.x-0.1-beta

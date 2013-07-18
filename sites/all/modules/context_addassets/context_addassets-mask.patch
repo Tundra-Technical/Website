@@ -1,0 +1,11 @@
+--- context_addassets.module	2012-12-15 13:45:27.864710769 +0100
++++ context_addassets.module	2012-12-15 13:46:12.381712332 +0100
+@@ -297,7 +297,7 @@
+       foreach ($modules as $path) {
+         if (!$path) continue;
+         $dir = realpath('.') . base_path() . $path;
+-        $mask = ".+\." . $filetype;
++        $mask = '/.+\.' . $filetype .'/';
+         $files_raw[$path] = file_scan_directory($dir, $mask);
+       }
+       break;

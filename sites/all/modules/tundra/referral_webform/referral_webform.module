@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @file
+ * Module for hooking into the referral webform
+ */
+
+/**
+ * @defgroup referral_webform
+ * @ingroup tundra
+ * @{
+ * Hooks for referral webform
+ *
+ */
+
+/**
+ * Impliments hook_webform_submission_presave
+ * @param type $node
+ * @param type $submission 
+ */
+function referral_webform_webform_submission_presave($node, &$submission) {
+  //web service calls
+  
+}
+
+/**
+* Implementation of hook_webform_validation_validators().
+*/
+function referral_webform_webform_validation_validators() {
+  return array(
+    'validate_friends_email' => array(
+      'name' => "Validate Friends Email",
+      'component_types' => array(
+        'email', 'textfield'
+      ),
+    )
+  );
+}
+
+/**
+* Implementation of hook_webform_validation_validate().
+*/
+function referral_webform_webform_validation_validate($validator_name, $items, $components, $rule) {
+  if ($items) {
+    switch ($validator_name) {
+      case 'validate_friends_email':
+        
+        //@TODO: Fix dependancy injection here..
+        $job_order = $items['item_7'];
+        $email = $items['item_5'];
+        //$email = array_shift(array_values($items));
+        
+        //check if the firends email is in the database for this job_order already
+        $results = _referral_webform_check_if_exists_for_node($email, 5, $job_order, 7);
+        
+        if ($results->rowCount()) {
+            $errors['item_5'] = t('The user, %item, has already been referred for this role.', array('%item' => $items['item_5']));
+        }
+        return $errors;
+        break;
+    }
+  }
+}
+
+function _referral_webform_check_if_exists_for_node($email, $email_cid, $job_order, $jo_cid) {
+  // Query the required submission data.
+  // Create a subquery, which is just a normal query object.
+  $subquery = db_select('webform_submitted_data', 'ss');
+  $subquery->addField('ss', 'sid');
+  $subquery->condition('data', $job_order);
+  $subquery->condition('cid', $jo_cid);
+
+
+  // Create another query that joins against the virtual table resulting
+  // from the subquery.
+  $select = db_select('webform_submitted_data', 's');
+  $select->join($subquery, 'ss', 's.sid=ss.sid');
+  $select->addField('s', 'sid');
+  $select->condition('data', $email);
+  $select->condition('cid', $email_cid);
+  
+  //resulting query
+  //SELECT t.sid
+  //FROM webform_submitted_data t
+  //INNER JOIN (
+  //SELECT tt.sid
+  //FROM webform_submitted_data tt
+  //WHERE tt.data =8765
+  //AND tt.cid = 8
+  //)tt ON t.sid = tt.sid
+  //WHERE t.data = 'test@test.com'
+  //AND t.cid =4
+  
+  $results = $select->execute();
+  return $results;
+}
+ 
+ /**
+ * @} End of "defgroup referral_webform".
+ */

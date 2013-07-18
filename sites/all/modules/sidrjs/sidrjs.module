@@ -1,0 +1,129 @@
+<?php
+
+/**
+* @file
+* This file adds the configuration page and takes the variables set in the configuration page and sets them appropriately.
+* This file also checks that the plugin is in the apporpriate location.
+*/
+
+$sidrjs = 'sidrjs';
+
+/**
+ * Wrapper to get the library so it works with install profiles.
+ */
+function sidrjs_get_library() {
+  // account for libraries not being available on install
+  if (function_exists('libraries_get_libraries')) {
+    $libraries = libraries_get_libraries();
+    if (isset($libraries['sidrjs'])) {
+      return $libraries['sidrjs'] .'/jquery.sidr.min.js';
+    }
+  }
+  else {
+    $directory = 'libraries';
+    $profile = drupal_get_profile();
+    $config = conf_path();
+    $lib = 'sidrjs/jquery.sidr.min.js';
+    // look in install profile
+    if (file_exists("profiles/$profile/$directory/$lib")) {
+      return "profiles/$profile/$directory/$lib";
+    }
+    // look in sites all
+    // Always search sites/all/*.
+    $searchdir[] = 'sites/all/' . $directory ;
+    if (file_exists("sites/all/$directory/$lib")) {
+      return "sites/all/$directory/$lib";
+    }
+    // look in a local domain as last resort
+    // Also search sites/<domain>/*.
+    if (file_exists("$config/$directory/$lib")) {
+      return "$config/$directory/$lib";
+    }
+  }
+  return FALSE;
+}
+
+
+/*
+ * Impliments hook_page_build
+*/
+
+function sidrjs_page_build() {
+	
+  //retreve the selected menus from the settings config page
+  $selected_menus = variable_get('sidrjs_menus', array(0));
+
+  //set an empty variable that our menu content
+  //will be put into
+  $sidrjs_selected_menu_content = '';
+  //count the number of menus selected in
+  //the admin section
+  $menu_count = count(array_filter($selected_menus));
+  
+  foreach ($selected_menus as $selected_menu) {
+    if (!$selected_menu == 0) {
+      $menu_name = menu_load($selected_menu);
+      $menu_title = $menu_name['title'];
+      $tree = menu_tree_page_data($selected_menu);
+      $tree_output = menu_tree_output($tree, 1);
+      //if there is only one menu selected
+      //don't display the titles of the menus
+      if ($menu_count > 1) {
+	    $menu = array(
+          '#prefix' => $menu_title,
+          '#markup' => drupal_render($tree_output),
+        );
+      }
+      else {
+	    $menu = array(
+          '#markup' => drupal_render($tree_output),
+        );
+      }
+      
+      $sidrjs_selected_menu_content .= drupal_render($menu);
+    }		
+  }
+  
+  //Send the Variables to the sidrjs.js file
+  drupal_add_js(array('sidrjs' => array('sidrjs_selected_menu_output' => $sidrjs_selected_menu_content)), 'setting');
+
+  //Check the theme variable on the settings page
+  //to decide which theme the user wants
+  $sidrjs_theme = variable_get('sidrjs_theme');
+  if ($sidrjs_theme == 'dark') {
+    drupal_add_css('sites/all/libraries/sidrjs/stylesheets/jquery.sidr.dark.css');
+  }
+  if ($sidrjs_theme == 'light') {
+    drupal_add_css('sites/all/libraries/sidrjs/stylesheets/jquery.sidr.light.css');
+  }  
+  
+  //Adding the SidrJS plugin
+  $lib = sidrjs_get_library();
+  if ($lib) {
+    // add library to all pages
+    drupal_add_js($lib);
+  }
+  
+  //Add the sidr.js file
+  drupal_add_js(drupal_get_path('module', 'sidrjs') .'/sidrjs.js');
+}
+
+
+/*
+ * Impliments hook_menu
+ *
+ * Admin Page 
+*/
+
+function sidrjs_menu() {
+  $items['admin/config/user-interface/sidrjs'] = array(
+    'title' => 'Sidrjs Configuration',
+    'description' => 'Configure the Sidr.js plugin for mobile navigation.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sidrjs_config_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'sidrjs_admin.inc',
+  );
+	
+  return $items;
+}

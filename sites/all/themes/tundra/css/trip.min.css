@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+.section-take-trip-tundra #content ol{width:95%;clear:both;padding:5px;}
+.section-take-trip-tundra #content .youTubeVideo{float:right;top:-40px;position:relative;margin-left:30px;border:2px solid #292763;margin-bottom:-50px;z-index:10;}
+.section-take-trip-tundra #content .tripDescription{font-size:18px;}
+.section-take-trip-tundra #footer{z-index:100;}
+.section-take-trip-tundra #footer .content-menu a{text-align:center;/* padding-top:45px; */}
+.section-take-trip-tundra #footer .content-menu .icon{position:static;margin:0 auto;}

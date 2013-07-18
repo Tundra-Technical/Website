@@ -1,0 +1,4 @@
+@CHARSET "UTF-8";
+#content{padding:0px;min-height:500px;}
+#content .manage-my-assignment .manageFrame{height:800px;z-index:10;}
+.manage-my-assignment .field-item p{margin:0;}

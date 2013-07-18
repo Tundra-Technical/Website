@@ -1,0 +1,7 @@
+name = Tundra Technical
+description = Tundra Technical related modules e.g. Job Board T.R.I.P. referral button
+core = 7.x
+
+files[] = tundra.module
+
+package = Tundra Technical

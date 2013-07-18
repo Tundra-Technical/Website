@@ -1,0 +1,27 @@
+.view-testimonials .views-row {
+  display:block;
+  border:1px solid #292763;
+  padding:20px;
+  width:80%;
+  margin:0 auto;
+  background-color:#DDDDDD;
+  font-style:italic;
+  margin-top:35px;
+  position:relative;
+}
+.view-testimonials .views-field-field-signature {
+  display:block;
+  text-align:right;
+  margin-top:10px;
+  font-style:normal;
+  font-weight:bold;
+  font-size:12px;
+  width:80%;
+  margin-left:20%;
+}
+.view-testimonials .views-row-first{
+  margin-top:60px;
+}
+.view-testimonials .view-header{
+  min-height:100px;
+}

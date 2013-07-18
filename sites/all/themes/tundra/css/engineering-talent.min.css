@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+#content .engineering-talent .small-header{font-size:13px;padding:10px;background-color:#C8C8C8;margin-top:5px;}
+#content .engineering-talent table{margin-top:10px;width:100%;margin-bottom:50px;}
+#content .engineering-talent table td{width:50%;}
+#content .engineering-talent table ul{margin-top:10px;margin-left:auto;margin-right:auto;list-style:disc;width:85%;}
+/*#content .engineering-talent{padding-bottom:250px;}*/

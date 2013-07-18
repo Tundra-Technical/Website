@@ -1,0 +1,409 @@
+/* 
+    Document   : responsive
+    Created on : Jul 2, 2013, 11:46:07 AM
+    Author     : jnapoleone
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+@media (max-width: 320px) {
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-size: 75%;
+        line-height: 2em;
+    }
+    #page {
+        width: 100%;
+        padding: 0 5px;
+    }
+    
+    #header {
+        padding-top: 0; /*0.60em;*/
+        position: relative;
+    }
+    
+    #header #logo {
+        display: inline;
+        float: none;
+        margin-right: 0;
+        /*margin-bottom: 0.313em;*/
+        /*height: 90px;*/
+    }
+    
+    #logo img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        /*width: 60%;*/
+        height: auto;
+    }
+    
+    #header .region-header {
+        clear: both;
+        max-width: 100%; /*19.375em;*/
+        overflow: hidden;
+        width: 100%;
+    }
+    
+    #header .block-locale {
+        border-top: none;
+        float: none;
+        /*margin-right: 5px;*/
+        /*position: absolute;*/
+        /*top: 0px;*/
+        /*right: 0px;*/
+        /*left: 0px;*/
+        /*width: 100%;*/
+        margin: 1.5em auto;
+        padding: 0;
+        text-align: center;
+    }
+    
+    #header .block-locale li {
+        /*float: left;*/
+        /*display: block;*/
+        /*width: 33.333%;*/
+        /*border-radius: 5px;*/
+    }
+    
+    #header .block-locale li.divider {
+        display: none;
+    }
+    
+    #header .block-locale a {
+        background-color: #292763;
+        border-radius: 5px;
+        color: #fff;
+        display: inline-block;
+        font-size: 0.875em;
+        width: 49%;
+        padding: 0.875em;
+    }
+    
+    #header .block-locale li.active a {
+        background-color: #BA131A;
+        color: #fff;
+    }
+    
+    #header .social-networking-badges p a {
+            margin-right: 5px;
+    }
+    
+    #header .social-networking-badges p a:last-of-type {
+            margin-right: 0;
+    }
+    
+    #header .social-networking-badges p a:hover {
+            position: relative;
+            top: inherit;
+    }
+    
+    #header .social-networking-badges,
+    .domain-drupal-tundratechnical-ca #header .social-networking-badges{
+        float: none;
+        clear: both;
+        margin: 0 auto;
+        width: 143px;
+    }
+    
+
+    .main-menu {
+        clear: both;
+            padding: 0;
+            height: auto;
+            position: relative;
+            bottom: 0;
+            right:auto;
+            display: block;
+            margin: 0;
+            overflow: hidden;
+            z-index: auto;
+    }
+    .main-menu ul {
+        padding: 0;
+        margin: 0;
+    }
+            .main-menu li
+            {
+                display:block;
+                float:none;
+                background:#292763;
+                border-radius: 5px;
+                margin-top: 5px;
+                /*margin-right: 5px;*/
+                margin-bottom: 5px;
+                margin-left:0;
+                padding: 0;
+                border-bottom:inherit;				
+            }				
+            .main-menu li:hover
+            {				
+                background:#840003;
+                cursor:pointer;				
+                position:relative;
+                top:auto;
+            }
+
+/*                        .main-menu li:hover a {
+                padding: 13px 15px 15px;
+            }*/
+            .main-menu li a
+            {
+                /* font-size:14px; */
+                font-size:11px;
+                color:#fff;
+                font-weight:bold;
+                text-decoration:none;				
+                width:100%;
+                padding:15px;
+                display: inline-block;
+            }			
+            .main-menu li.active,
+            .main-menu li.active-trail
+            {
+                background:#FFF;	
+                border: 1px solid #292763;
+                /*border-bottom:none;*/
+                top:auto;
+                position:relative;
+            }			
+            .main-menu li.active:hover,
+            .main-menu li.active-trail:hover
+            {
+                background-color:#f1f1f1;
+                cursor:pointer;
+                top:auto;
+            }			
+                    .main-menu li.active a,
+                    .main-menu li.active-trail a
+                    {				
+                            color:#292763;
+                    }
+            .main-menu li:hover a,
+            .main-menu li.active-trail a {
+                /*padding: 14px 15px;*/
+                padding-bottom: 15px;
+            }
+            
+    .breadcrumb {
+        font-size: 0.750em; /*12px;*/
+        margin-bottom: 1.250em; /*20px;*/
+    }
+    
+    #content {
+        padding: 0;
+    }
+    
+    #content .field-item ol,#content .field-item ul {				
+            /*margin:0 auto;*/			
+            width:95%;
+            /*padding:20px;*/
+            /*border:1px solid #6F6F6F;*/
+            /*background-color:#F1F1F1;*/
+            /*margin-bottom:20px;*/
+    }
+    
+    #content h1,
+    .node-webform h2 {
+            /*color: #BA131A;*/
+            font-size: 1.8em;
+            /*font-weight: bold;*/
+            /*text-transform: uppercase;*/
+             /*margin-bottom:20px;*/ 
+            /*margin: 20px 0 20px;  Add margin between content and breadcrumb e.g. Job Order nodes */
+            /*clear:both;*/
+    }
+    
+    #content p {
+            font-size: 1.125em;
+            /*line-height: 1.5em;*/
+            /*margin-bottom:20px;*/
+    }
+
+            
+    .view-front-page-slideshow .skin-default {
+        max-width: 100%;
+        height: 21.875em; /*350px;*/
+        /*position: relative;*/
+        /*margin: 0 auto;*/
+        /*padding: 0 20px;*/
+        /*box-sizing: border-box;*/
+    }
+    
+    .views-slideshow-cycle-main-frame-row {
+        /*width: 100% !important; works now with IE8*/
+        height: 21.875em; /*350px;*/
+        /*overflow: hidden;*/
+    }
+    .view-front-page-slideshow .view-header,
+    .view-front-page-slideshow-test .view-header {
+        /*position: absolute;*/
+        width: 100%;
+        height: 21.875em; /*350px;*/
+        /*left: 0;*/
+        /*top: 0;*/
+    }
+    .view-front-page-slideshow .view-header .slideshow-controls,
+    .view-front-page-slideshow-test .view-header .slideshow-controls {
+        /*background-color: #fff;*/
+        /*opacity: 0.25;*/
+        /*position: absolute;*/
+        /*width: 20px;*/
+        height: 21.875em; /*350px;*/
+        /*z-index: 99;*/
+        /*cursor: pointer;*/
+    }
+    
+    #footer {		
+        text-align:center;
+        background-color:#fff;
+        width:100%;
+        padding-bottom:10px;
+        padding-left: 0;
+        padding-right: 0;
+        overflow:hidden;
+        margin:0 auto;
+		
+    }
+    
+    /*Footer Content Menu*/
+    
+    #footer .content-menu .menu-block-wrapper .menu {
+/*	border-bottom: 1px solid #c9c9c9;*/
+	padding: 0.313em 0;
+	text-align: left;
+	/*margin: 5px 0;*/
+        margin: 0;
+	/*height: 142px;*/
+	list-style: none;
+        overflow: hidden;
+    }
+
+    #footer .content-menu .menu-block-wrapper li {
+            position: relative;
+            opacity: 1;
+            top: 0px;
+            display: inline-block;
+            float: left;
+            margin: 0.125em 0;
+            width: 100%;
+            height: 7.813em; /*125px*/
+            overflow: hidden;
+            background-color: #f1f1f1;
+            border: 1px solid #c0c0c0;
+    }
+
+    #footer .content-menu .menu-block-wrapper li:hover {
+            background-color:#E5E5E5;
+    }
+
+    #footer .content-menu .menu-block-wrapper .menu h1 {
+            color: #ba131a;
+            font-size: 0.875em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 1.250em;
+            clear: both;
+            /*width: 70%;*/
+            line-height: 1;
+            margin-left: 1.250em;
+            margin-top: 1.250em;
+    }
+
+    #footer .content-menu .menu-block-wrapper .menu .indicator {
+            background-image: url('/sites/all/themes/tundra/images/arrow_on.jpg');
+            height: 13px;
+            width: 13px;
+            display: block;
+            margin-top: 5px;
+    }
+
+    #footer .content-menu .menu-block-wrapper .menu p {
+            /*width: 70%;*/
+            margin-left: 1.250em;
+            font-weight: bold;
+            font-size: 0.688em;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 99;
+    }
+
+    /* Content menu Main menu */
+
+    #footer .content-menu .menu-block-wrapper li a#get-hired {
+            background: url('/sites/default/files/images/careers.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#get-experts {
+            background: url('/sites/default/files/images/people.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#get-connected {
+            background: url('/sites/default/files/images/partner.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#get-paid {
+            background: url('/sites/default/files/images/cash-home.png') no-repeat right center;
+    }
+
+    /* Content menu About Us menu */
+
+    #footer .content-menu .menu-block-wrapper li a#client-testimonials-menu-item {
+            background: url('/sites/default/files/images/bus.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#consultant-testimonials-menu-item {
+            background: url('/sites/default/files/images/employee.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#news-menu-item {
+            background: url('/sites/default/files/images/news.png') no-repeat right center;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#green-initiative-menu-item {
+            background: url('/sites/default/files/images/leaf.png') no-repeat right center;
+    }
+
+    /* Content menu Employers menu */
+
+    #footer .content-menu .menu-block-wrapper li a#employers-menu-item {
+            background: url('/sites/default/files/images/search.png') no-repeat 50% 75%;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#information-technology-menu-item {
+            background: url('/sites/default/files/images/laptop.png') no-repeat 50% 80%;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#engineering-menu-item {
+            background: url('/sites/default/files/images/tools.png') no-repeat 50% 90%;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#contact-us-menu-item {
+            background: url('/sites/default/files/images/message.png') no-repeat 50% 90%;
+    }
+
+    /* Content menu Tundra TRIP menu */
+
+    #footer .content-menu .menu-block-wrapper li a#start-searching-menu-item {
+            background: url('/sites/default/files/images/search.png') no-repeat 50% 75%;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#watch-menu-item {
+            background: url('/sites/default/files/images/youtube.png') no-repeat 50% 85%;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#terms-conditions-menu-item {
+            background: url('/sites/default/files/images/flag.png') no-repeat 50% 80%;
+    }
+
+}

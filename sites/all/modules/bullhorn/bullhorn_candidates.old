@@ -1,0 +1,847 @@
+<?php
+
+/**
+ * Implementation of hook_menu()
+ */
+
+function bullhorn_candidates_menu() {
+    $items['candidates'] = array(
+                'title'           => 'Candidates',
+                'page callback'   => 'bullhorn_candidates_page',
+                'access callback' => TRUE
+            );
+    
+    $items['candidates/login'] = array(
+                'title'            => 'Log In',
+                'description'      => 'Login as a Bullhorn Candidate',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('bullhorn_candidates_login_form'),
+                'access arguments' => array('access content'),
+                'type'             => MENU_DEFAULT_LOCAL_TASK
+            );
+    
+    $items['candidates/register'] = array(
+                'title'            => 'Register',
+                'description'      => 'Register as a Bullhorn Candidate',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('bullhorn_candidates_register_form'),
+                'access arguments' => array('access content'),
+                'type'             => MENU_LOCAL_TASK
+            );
+    
+    $items['candidates/logout'] = array(
+                'title'            => 'Log out',
+                'page callback'    => 'bullhorn_candidates_logout',
+                'access arguments' => array('access content'),
+                'type'             => MENU_CALLBACK
+            );
+    
+    return $items;
+}
+
+/**
+ * Access callback for candidates
+ * 
+ * Display candidate login
+ * TODO if a Session with the Candidates User ID is set display Candidate's data
+ */
+
+function bullhorn_candidates_page() {
+    return drupal_get_form('bullhorn_candidates_login_form');
+}
+
+/**
+ * Implementation of _form()
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
+
+function bullhorn_candidates_register_form($form,&$form_state) {
+    
+    if(isset($_SESSION['bullhorn']['candidate']['uid']) && !empty($_SESSION['bullhorn']['candidate']['uid'])) {
+        drupal_set_message('You are already logged in!','warning');
+        drupal_goto('job-board');
+    }
+    
+    $form = array();
+    $form['login'] = array(
+                '#type'        => 'fieldset',
+                '#title'       => 'Log in',
+                '#collapsible' => TRUE,
+                '#collapsed'   => FALSE,
+            );
+    
+    $form['login']['email'] = array(
+                '#type'     => 'textfield',
+                '#title'    => t('E-mail'),
+                '#description' => t('A valid e-mail address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
+                '#required' => TRUE
+            );
+    
+    $form['login']['password'] = array(
+            '#type'        => 'password_confirm',
+            '#description' => t('Provide a password for the new account in both fields.'),
+            '#required'    => TRUE
+    );
+    
+    $form['resume_field'] = array(
+                '#type'        => 'fieldset',
+                '#title'       => t('Resume'),
+                '#description' => t('By uploading your resume, we will be able to extract the necessary information to fill out your employment profile.'),
+                '#collapsible' => TRUE,
+                '#collapsed'   => FALSE,        
+            );
+    
+    $form['resume_field']['resume'] = array(
+            '#type'        => 'file',
+            '#name'        => 'resume',
+            '#title'       => t('Upload resume'),
+            '#description' => t("maximinum size: 400kb, permitted file formats: pdf,doc,docx,rtf,xml,vcard"),
+            '#required'    => TRUE,
+            '#element_validate' => array('bullhorn_candidates_resume_validate','bullhorn_candidates_parse_resume_validate')
+    );
+    
+    $form['filesize'] = array(
+                '#type'  => 'hidden',
+                '#name'  => 'MAX_FILE_SIZE',
+                '#value' => '400'
+            );
+    $form['referral'] = array(
+                '#type'        => 'fieldset',
+                '#title'       => t('Referral'),
+                '#description' => t('Who else would know where to find the best IT &amp; Engineering talent but other IT &amp; Engineering professionals? With the Tundra Referral Incentive Program (T.R.I.P.) we are awarding those successful referral hires with cash and even a trip to the Caribbean. Our vision is to be the number one representative of choice for top Technology &amp; Engineering talent and this program has helped us live this vision.'),
+                '#collapsible' => TRUE,
+                '#collapsed'   => FALSE        
+            );
+    
+    $form['referral']['referrer_first_name'] = array(
+                '#type'        => 'textfield',
+                '#title'       => t('First Name'),
+                '#description' => t('Enter the first name of the person who referred you.'),
+            );
+    
+    $form['referral']['referrer_last_name'] = array(
+                '#type'        => 'textfield',
+                '#title'       => t('Last Name'),
+                '#description' => t('Enter the last name of the person who referred you.'),
+                '#states'      => array(
+                            'enabled' => array(
+                                        ':input[name="referrer_first_name"]' => array(
+                                                    'filled' => TRUE,
+                                                )
+                                    ),
+                            'required' => array(
+                                        ':input[name="referrer_first_name"]' => array(
+                                                    'filled' => TRUE,
+                                                ),
+                                    ),
+                        ),
+            );
+    
+    $form['submit'] = array(
+                '#type' => 'submit',
+                '#value' => 'Create new account'
+            );
+    
+    $form['#validate'][] = 'bullhorn_candidates_username_validate';
+    $form['#submit'][]   = 'bullhorn_candidates_register_submit';
+    
+    return $form;
+}
+
+/**
+ * Implementation of _validate()
+ *
+ * Use SOAP to call Bullhorn's parseResume operation and parse the uploaded file
+ */
+
+function bullhorn_candidates_resume_validate($element,&$form_state,$form) {
+    //function bullhorn_candidate_register_validate($form,&$form_state) {
+
+    // Unset error messages relating to the resume field so that
+    // the field can be set as #required and handle the validation here
+    // instead of by the default Drupal validator
+    // NOTE: I've attempted to unshift this to the beginning of the #validation
+    // Array so that it will run and set errors for the 'resume' field first
+    // with no success
+    $errors = form_get_errors();
+    if ($errors) {
+        // Clear errors.
+        form_clear_error();
+        // Clear error messages.
+        $error_messages = drupal_get_messages('error');
+        // Initialize an array where removed error messages are stored.
+        $removed_messages = array();
+
+        // Remove all errors originated by the 'foo][bar' element.
+        foreach ($errors as $name => $error_message) {
+            if ($name == 'resume') {
+                $removed_messages[] = $error_message;
+                unset($errors[$name]);
+            }
+        }
+
+        // Reinstate remaining errors.
+        foreach ($errors as $name => $error) {
+            form_set_error($name, $error);
+            // form_set_error() calls drupal_set_message(), so we have to filter out
+            // these from the error messages as well.
+            $removed_messages[] = $error;
+        }
+
+        // Reinstate remaining error messages (which, at this point, are messages that
+        // were originated outside of the validation process).
+        foreach (array_diff($error_messages['error'], $removed_messages) as $message) {
+            drupal_set_message($message, 'error');
+        }
+    }
+
+    if($_FILES['resume']['error'] != 0){
+        switch($_FILES['resume']['error']) {
+            case UPLOAD_ERR_INI_SIZE:
+                form_set_error('resume','The uploaded resume file exceeds the upload max filesize.');
+                break;
+            case UPLOAD_ERR_FORM_SIZE:
+                form_set_error('resume','The uploaded resume file exceeds the upload max filesize.');
+                break;
+            case UPLOAD_ERR_PARTIAL:
+                form_set_error('resume','The uploaded resume file was partially uploaded.');
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                form_set_error('resume','No resume file was uploaded');
+                break;
+            case UPLOAD_ERR_NO_TMP_DIR: // As of writing this module the PHP documentation does not have a Value 5
+                form_set_error('resume','A technical issue has prevented the resume file from being uploaded. A report is being filed.');
+                watchdog('bullhorn candidate','Missing temporary folder for resume upload on registration form.',array(),WATCHDOG_EMERGENCY);
+                break;
+            case UPLOAD_ERR_CANT_WRITE:
+                form_set_error('resume','A technical issue has prevented the resume file from being uploaded. A report is being filed.');
+                watchdog('bullhorn candidate','Failed to write resume upload file to disk.',array(),WATCHDOG_EMERGENCY);
+                break;
+            case UPLOAD_ERR_EXTENSION:
+                form_set_error('resume','A technical issue has prevented the resume file from being uploaded. A report is being filed.');
+                watchdog('bullhorn candidate','A PHP extension stopped the resume file upload.',array(),WATCHDOG_EMERGENCY);
+                break;
+            default:
+                break;
+        }
+    } else {
+
+        // File upload size limit
+        $size = 400;
+
+        // Permitted extensions
+        $extensions = array(
+                'pdf',   // Portable Document Format
+                'doc',   // Microsoft Word Document
+                'docx',  // Microsoft Word Document
+                'rtf',   // Rich Text Format
+                'xml',   // Extensible Markup Language
+                'vcf',   // vCard
+                'vcard', // vCard
+        );
+
+        // Permitted MIME Types
+        $types      = array(
+                'application/pdf',                                                         // Portable Document Format
+                'application/msword',                                                      // Microsoft Word Document
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Microsoft Word Document
+                'application/xml',                                                         // Extensible Markup Language
+                'text/xml',                                                                // Extensible Markup Language
+                'application/rtf',                                                         // Rich Text Format
+                'text/vcard',                                                              // vCard
+        );
+
+        // Check that the size of the file does not exceed the limit
+        if(($_FILES['resume']['size']/1024) > $size) {
+            form_set_error('resume','The resume upload file can not be greater than %size KB.',array('%size' => $size));
+        }
+
+        // Check that the file's extension is not one of the permitted extensions
+        $extension = explode('.',$_FILES['resume']['name']);
+        if(!in_array($extension[1], $extensions)) {
+            form_set_error('resume','The resume upload file extension (%extension) is not one of the permitted extension types.',array('%extension' => $extension[1]));
+        }
+
+        // Check that the file's MIME type is not one of the permitted types
+        if(!in_array($_FILES['resume']['type'],$types)) {
+            form_set_error('resume','The resume upload file MIME type (%type) is not one the permitted types.',array('%type' => $_FILES['resume']['type']));
+        }
+    }
+}
+
+/**
+ * Implementation of _validate()
+ * @param unknown_type $element
+ * @param unknown_type $form_state
+ * @param unknown_type $form
+ *
+ * Validate that the new candidate parse resume has succeeded
+ */
+
+function bullhorn_candidates_parse_resume_validate($element,&$form_state,$form) {
+
+    // Get all the current errors
+    $errors = form_get_errors();
+
+    // If an error for the resume element has not be thrown the attempt to parse the
+    // resume
+    if(!isset($errors['resume'])) {
+        $client = bullhorn_start_client();
+
+        $filename   = $_FILES['resume']['tmp_name'];
+        $file = file_get_contents($filename);
+
+        //TODO Base64 encode binary twice as per the following forum thread
+        // http://supportforums.bullhorn.com/viewtopic.php?f=32&t=13952&hilit=parseresume&sid=5f6db128dd563f1ab030ff0405946f48#p55606
+        $base64ChunkedResume = chunk_split(base64_encode($file),76,"\r\n");
+
+        $request_array = array(
+                'session' => $client->session,
+                'base64ChunkedResume' => $base64ChunkedResume
+        );
+
+        // Due to connectivity issues with the third party API that Bullhorn
+        // uses to parse resumes, they recommend doing a limited loop to retry
+        // the process. See the following forum thread for this bullshit
+        // solution: http://supportforums.bullhorn.com/viewtopic.php?f=32&t=11921&st=0&sk=t&sd=a&sid=db4aa72e646a45f7f5f52996e1960c86&start=15#p55617
+        // TODO create a Drupal variable to set $retries value
+        $retries = 5;
+        for($i=0;$i<$retries;$i++) {
+            $count = $i+1;
+            try {
+                $result = $client->parseResume($request_array);
+                //($result);
+            } catch (SoapFault $fault) {
+                form_set_error('email','A technical issue has prevented the completion of your registration. A report is being filed. Please try again later');
+            watchdog('bullhorn candidates','Find email via Candidate entity failed. Soap last request: %get_last_request. Soap fault: %soap_fault',array('%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+            }
+
+            if(isset($result) && $result->return->success == false) {
+                if($count < $retries) {
+                    watchdog('bullhorn candidates','Canadidate parse resume attempt %count failed. Bullhorn Diagnostic: %diagnostics',array('%count' => $count,'%diagnostics' => $result->return->diagnostics),WATCHDOG_DEBUG);
+                } else {
+                    form_set_error('resume','A technical issue has prevented the resume from being parsed. A report is being filed. Please try again later.');
+                    watchdog('bullhorn candidates','Canadidate parse resume attempt %count failed. Bullhorn Diagnostic: %diagnostics',array('%count' => $count,'%diagnostics' => $result->return->diagnostics),WATCHDOG_EMERGENCY);
+                }
+            }  else {
+                // Let's not depend on an already flaky third party
+                if(isset($result->return->hrXml) && !empty($result->return->hrXml)) {
+                    $form_state['values']['hrXml'] = $result->return->hrXml;
+                } else {
+                    form_set_error('resume','A technical issue has prevented the resume from being parsed. A report is being filed. Please try again later.');
+                    watchdog('bullhorn candidates','Canadidate parse resume returned success:TRUE but hrXml value not set or empty. Bullhorn Diagnostic: %diagnostics',array('%count' => $count,'%diagnostics' => $result->return->diagnostics),WATCHDOG_EMERGENCY);
+                }
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * Impelentation of _validate()
+ * @param $form
+ * @param $form_state
+ * 
+ * Validate that the entered username does not already exist
+ * otherwise display the Password recovery page
+ */
+
+function bullhorn_candidates_username_validate($form,&$form_state) {
+    //debug($form_state);
+    $errors = form_get_errors();
+     
+    if(!isset($errors['email'])) {
+        
+        $email = $form_state['values']['email'];
+        
+        // Validate the the username is a valid email address
+        if(_candidate_email_validate('email', $email)) {
+
+            // Start the Bullhorn client
+            $client = bullhorn_start_client();
+             
+            // Create an array with the query parameters
+            $query_array = array(
+                    'distinct' => false,
+                    'entityName' => 'Candidate',
+                    'maxResults' => 1,
+                    'where' => 'isDeleted=0 AND ownerCorporationID='.$client->corporationId.' AND email=\'' . $email . '\'',
+                    'parameters' => array()
+            );
+    
+            // Create the DTO type that the API will understand by casting the array to the dtoQuery
+            // type that the query operation expects.
+            $SOAP_query = new SoapVar($query_array, SOAP_ENC_OBJECT,"dtoQuery", "http://query.apiservice.bullhorn.com/");
+    
+            $request_array = array (
+                    'session' => $client->session,
+                    'query' => $SOAP_query);
+    
+            // Cast the request as a query type
+            $SOAP_request = new SoapVar($request_array, SOAP_ENC_OBJECT, "query", "http://query.apiservice.bullhorn.com/");
+    
+            // Use the query method to return the candidate ids
+            try {
+                $queryResult = $client->query($SOAP_request);
+                //debug($queryResult);
+            } catch (SoapFault $fault) {
+                form_set_error('email','A technical issue has prevented the completion of your registration. A report is being filed. Please try again later');
+                watchdog('bullhorn candidates','Find email via Candidate entity failed. Soap last request: %get_last_request. Soap fault: %soap_fault',array('%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+            }
+            
+            if(isset($queryResult->return->ids) && !empty($queryResult->return->ids)) {
+                form_set_error('email',t('Sorry but a Candidate with the username %email already exists. ' . l('Did you forget your password?','candidate/password'),array('%email' => $email)));
+            }
+        }
+    }
+
+}
+
+/**
+ * Implementtaion of _submit()
+ * @param $form
+ * @param $form_state
+ */
+
+function bullhorn_candidates_register_submit($form,&$form_state) {
+    
+    // Create a new instance of the Bullhorn client
+    $client = bullhorn_start_client();
+    
+    // Get a UserID for the referrer_first_name and referrer_last_name
+    // if provided.
+    // Note: The name does not have to be a Bullhorn Candidate and thus
+    // no UserID will be found.
+    $referrer_first_name = $form_state['values']['referrer_first_name'];
+    $referrer_last_name  = $form_state['values']['referrer_last_name'];
+    if(!empty($referrer_first_name) && !empty($referrer_last_name)) {
+        $referrer = _candidate_referrer_id($referrer_first_name,$referrer_last_name,$client);
+        $referred_by = $referrer_first_name . ' ' . $referrer_last_name;
+        $referred_by_person_id = (isset($referrer->return->ids)) ? $referrer->return->ids : null;
+        
+        $client->session = $referrer->return->session;
+    }
+    
+    // Create a SimpleXMLElement object representing hrXml
+    $hrxml = new SimpleXMLElement($form_state['values']['hrXml']);
+    
+    // Bullhorn Candidate entity non-nullable value
+    if(isset($hrxml->StructuredXMLResume->ContactInfo->PersonName->FormattedName)) {
+        $name = (string) $hrxml->StructuredXMLResume->ContactInfo->PersonName->FormattedName;
+    } else {
+        drupal_set_message(t('Your request can not be completed at this time. Please try again later'),error);
+        watchdog('bullhorn candidates','Failed to find Candidate full name ($hrxml->StructuredXMLResume->ContactInfo->PersonName->FormattedName) from parseResume.',array(),WATCHDOG_ERROR);
+        drupal_goto('candidates/register');
+    }
+    
+    // Bullhorn Candidate entity non-nullable value
+    if(isset($hrxml->StructuredXMLResume->ContactInfo->PersonName->GivenName)) {
+        $first_name = (string) $hrxml->StructuredXMLResume->ContactInfo->PersonName->GivenName;
+    } else {
+        drupal_set_message(t('Your request can not be completed at this time. Please try again later'),error);
+        watchdog('bullhorn candidates','Failed to find Candidate first name ($hrxml->StructuredXMLResume->ContactInfo->PersonName->GivenName) from parseResume.',array(),WATCHDOG_ERROR);
+        drupal_goto('candidates/register');
+    }
+    
+    // Bullhorn Candidate entity non-nullable value
+    if(isset($hrxml->StructuredXMLResume->ContactInfo->PersonName->FamilyName)) {
+        $last_name  = (string) $hrxml->StructuredXMLResume->ContactInfo->PersonName->FamilyName;
+    } else {
+        drupal_set_message(t('Your request can not be completed at this time. Please try again later'),error);
+        watchdog('bullhorn candidates','Failed to find Candidate last name ($hrxml->StructuredXMLResume->ContactInfo->PersonName->FamilyName) from parseResume.',array(),WATCHDOG_ERROR);
+        drupal_goto('candidates/register');
+    }
+    
+    /*
+     * Previous login username is based on Candidate Entity's email field therefore we will continue to use
+     * email as provided through the Candidates Register E-mail field as the Candidate Entity 'email' and 'username'
+     * fields
+     */
+    //$email      = (isset($hrxml->StructuredXMLResume->ContactInfo->ContactMethod->InternetEmailAddress)) ? (string) $hrxml->StructuredXMLResume->ContactInfo->ContactMethod->InternetEmailAddress : null;
+    $email    = $form_state['values']['email'];
+    $password = $form_state['values']['password'];
+    
+    $country = array();
+    $country['var']  = 'code'; // At this time I do not see anything else than 'code' being returned by the resume parser
+    $country['val']  = (string) $hrxml->StructuredXMLResume->ContactInfo->ContactMethod->PostalAddress->CountryCode;
+    $country['type'] = 'string';
+    $country_query = bullhorn_find_country($country,$client);
+    
+    $client->session = $country_query->return->session;
+    
+    $postal_address = $hrxml->StructuredXMLResume->ContactInfo->ContactMethod->PostalAddress;
+    
+    $address1  = (isset($postal_address->DeliveryAddress->AddressLine)) ? (string) $postal_address->DeliveryAddress->AddressLine : null;
+    $city      = (isset($postal_address->Municipality)) ? (string) $postal_address->Municipality : null;
+    $state     = (isset($postal_address->Region)) ? (string) $postal_address->Region : null;
+    $zip       = (isset($postal_address->PostalCode)) ? (string) $postal_address->PostalCode : null;
+    $countryID = (!$country_query==false) ? $country_query->return->dto->countryID : 1; // Default to USA
+    
+    $address = new stdClass();
+    $address->address1  = $address1;
+    $address->city      = $city;
+    $address->state     = $state;
+    $address->zip       = $zip;
+    $address->countryID = $countryID;
+    
+    $newCandidate                     = new stdClass();
+    $newCandidate->name               = $name;
+    $newCandidate->firstName          = $first_name;
+    $newCandidate->lastName           = $last_name;
+    $newCandidate->email              = $email;
+    $newCandidate->username           = $email;
+    $newCandidate->password           = $password;
+    $newCandidate->address            = $address;
+    $newCandidate->categoryID         = 1;
+    $newCandidate->comments           = null;
+    $newCandidate->employeeType       = 'W2';
+    $newCandidate->isDeleted          = false;
+    $newCandidate->isEditable         = true;
+    $newCandidate->ownerID            = $client->userId;
+    $newCandidate->preferredContact   = 'email';
+    $newCandidate->status             = 'New Lead';
+    $newCandidate->userTypeID         = 35;
+    $newCandidate->referredBy         = $referred_by;
+    $newCandidate->referredByPersonID = $referred_by_person_id;
+    
+    // Create DTO
+    $candidate = new SoapVar($newCandidate, SOAP_ENC_OBJECT,"candidateDto", "http://candidate.entity.bullhorn.com/");
+    
+    // Put the DTO into an request object
+    $save_array = array(
+                'session' => $client->session,
+                'dto'     => $candidate
+            );
+    
+    // Cast the request as a save type
+    $save_request = new SoapVar($save_array,SOAP_ENC_OBJECT,'save','http://apiservice.bullhorn.com');
+    
+    // Try request
+    try {
+        $result = $client->save($save_request);
+    } catch (SoapFault $fault) {
+        drupal_set_message(t('Your request can not be completed at this time. Please try again later.'),'error');
+        watchdog('bullhorn candidates','Failed to save Candidate record. Soap last request: %get_last_request. Soap fault: %soap_fault',array('%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+        drupal_goto('candidates');
+    }
+    
+    if(isset($result->return->dto) && !empty($result->return->dto)) {
+        // Unset any Candidate Session and prevent multiple login
+        if(isset($_SESSION['bullhorn']['candidate'])) {
+            unset($_SESSION['bullhorn']['candidate']);
+        }
+       
+        $cuid = $result->return->dto->userID;
+        
+        // Save NEW Candidate to {bullhorn_candidates}
+        $candidate = new stdClass();
+        $candidate->cuid       = $cuid;
+        $candidate->first_name = $first_name;
+        $candidate->last_name  = $last_name;
+        $candidate->email      = $email;
+        
+        $cid = _candidate_save($candidate);
+        
+        // Set a Session variable with the Candidate's data
+        $_SESSION['bullhorn']['candidate'] = array (
+                'cuid'       => $cuid,
+                'cid'        => $cid,
+                'first_name' => $first_name,
+                'last_name'  => $last_name,
+                //'applied'    => $applied,
+        );
+        
+        // Redirect to Job Board
+        drupal_goto('job-board');
+    }
+}
+
+/**
+ * Implementation of _form()
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
+
+function bullhorn_candidates_login_form($form,&$form_state) {
+//     debug($_SESSION);
+    $form = array();
+
+    $form['email'] = array(
+            '#type'        => 'textfield',
+            '#title'       => t('E-mail'),
+            '#description' => t('Enter your e-mail address.'),
+            '#required'    => TRUE
+    );
+
+    $form['password'] = array(
+            '#type'        => 'password',
+            '#title'       => 'Password',
+            '#description' => t('Enter the password that accompanies your e-mail.'),
+            '#required'    => TRUE
+    );
+
+    $form['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Log in'
+    );
+    
+    //$form['#validate'][] = 'bullhorn_candidates_login_validate';
+    $form['#submit'][] = 'bullhorn_candidates_login_submit';
+
+    return $form;
+}
+
+function bullhorn_candidates_login_form_validate($elements,&$form_state) {
+    $email = $form_state['values']['email'];
+    _candidate_email_validate('email', $email);
+}
+
+/**
+ * Implementation of _submit()
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
+
+function bullhorn_candidates_login_submit($form,&$form_state) {
+    //debug($_SESSION);
+    $errors = form_get_errors();
+
+    $client = bullhorn_start_client();
+     
+    // Create an array with the query parameters
+    $query_array = array(
+            'distinct' => false,
+            'entityName' => 'Candidate',
+            'maxResults' => 1,
+            'where' => 'isDeleted=0 AND ownerCorporationID='.$client->corporationId.' AND email=\'' . $form_state['values']['email'] . '\' AND password=\'' . $form_state['values']['password'] . '\'',
+            'parameters' => array()
+    );
+
+    // Create the DTO type that the API will understand by casting the array to the dtoQuery
+    // type that the query operation expects.
+    $SOAP_query = new SoapVar($query_array, SOAP_ENC_OBJECT,"dtoQuery", "http://query.apiservice.bullhorn.com/");
+
+    $request_array = array (
+            'session' => $client->session,
+            'query' => $SOAP_query);
+
+    // Cast the request as a query type
+    $SOAP_request = new SoapVar($request_array, SOAP_ENC_OBJECT, "query", "http://query.apiservice.bullhorn.com/");
+
+    // Use the query method to return the candidate ids
+    try {
+        $queryResult = $client->query($SOAP_request);
+        //debug($queryResult);
+    } catch (SoapFault $fault) {
+        form_set_error('email','A technical issue has prevented your from logging in. A report is being filed. Please try again later');
+        watchdog('bullhorn candidates','Find email/password via Candidate entity failed. Soap last request: %get_last_request. Soap fault: %soap_fault',array('%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+    }
+
+    if(isset($queryResult->return->ids) && !empty($queryResult->return->ids)) {
+        
+        // Copy the Candidate user id
+        $cuid = $queryResult->return->ids;
+        
+        // Prepare some Candidate variables
+        $first_name = '';
+        $last_name  = '';
+        $email      = '';
+        
+        // Let's get the Candidates First an Last name to put them in the
+        // Bullhorn Candidates table. This is an attempt to collect 
+        // this data of already existing Candidates.
+        
+        // Copy current session value
+        $client->session = $queryResult->return->session;
+        
+        // Cast Id into an integer type
+        $findId = new SoapVar($cuid,XSD_INTEGER,'int','http://www.w3.org/2001/XMLSchema');
+        
+        // Create find() method request
+        $find_request = array(
+                    'session'    => $client->session,
+                    'entityName' => 'Candidate',
+                    'id'         => $findId
+                );
+        
+        // Use the find() method to return the candidate dto
+        try {
+            $findResult = $client->find($find_request);
+            //debug($findResult);
+        } catch (SoapFault $fault) {
+            debug($client->__getLastRequest());
+            debug($fault->faultstring .': ' . __LINE__);
+        }
+        
+        if(!empty($findResult)) {
+            $first_name = $findResult->return->dto->firstName;
+            $last_name  = $findResult->return->dto->lastName;
+            $email      = $findResult->return->dto->email;
+        }
+        
+        // Find out if the Candidate already exist in our {bullhorn_candidates} table
+        // If not proceed to add them
+        $result = db_query('SELECT b.cid, b.first_name, b.last_name FROM {bullhorn_candidates} b WHERE b.cuid=:cuid',array(':cuid' => $cuid))->fetchAssoc();
+        //debug($result);
+        
+        // If the candidate could not be found in {bullhorn_candidates} 
+        // add the user to the {bullhorn_candidates} table
+        if(!$result) {
+            $candidate = new stdClass();
+            $candidate->cuid = $cuid;
+            $candidate->first_name = $first_name;
+            $candidate->last_name  = $last_name;
+            $candidate->email      = $email;
+            
+            $cid = _candidate_save($candidate);
+            if(!$cid) {
+                _candidate_session_unset();
+                drupal_set_message(t('Your request can not be completed at this time. Please try again later.'),'error');
+                watchdog('bullhorn candidates','Failed to save candidate to the {bullhorn_candidates} table upon login.',array(),WATCHDOG_EMERGENCY);
+                drupal_goto('candidates');
+            }
+            
+        } else {
+            //debug($result);
+            $cid        = $result['cid'];
+            $first_name = $result['first_name'];
+            $last_name  = $result['last_name'];
+        }
+        
+        // Unset any existing candidates uid to avoid multiple login
+        if(isset($_SESSION['bullhorn']['candidate'])) {
+            unset($_SESSION['bullhorn']['candidate']);
+        }
+       
+        // Get the Jobs that this user has applied for
+        $query = db_select('bullhorn_job_order_applications','joc');
+        $query->leftJoin('bullhorn_job_orders','jo','joc.jid = jo.jid');
+        $query->fields('jo',array('job_order_id'))
+        ->condition('joc.cid',$cid);
+        $result = $query->execute();
+        
+        //debug($result);
+        
+        $applied = array();
+        foreach($result as $row) {
+            //debug($row->job_order_id);
+            $applied[] = $row->job_order_id;
+        }
+        
+        // Set a Session variable for the candidate user id
+        $_SESSION['bullhorn']['candidate'] = array (
+                'cuid'       => $cuid,
+                'cid'        => $cid,
+                'first_name' => $first_name,
+                'last_name'  => $last_name,
+                'applied'    => $applied,
+        );
+        
+        // Redirect to the Job Board
+        // TODO create a variable to select from available paths to redirect to
+         drupal_goto('job-board');
+    } else {
+        drupal_set_message('Sorry we are unable to find that email/password combination. ' . l(t('Did you forget your password?'),'candidate/password'),'error');
+    }
+}
+
+function bullhorn_candidates_logout() {
+    // unset the bullhorn_candidates session
+    if(isset($_SESSION['bullhorn']['candidate'])) {
+        unset($_SESSION['bullhorn']['candidate']);
+    }
+    // go to home page
+    drupal_goto();
+}
+
+function _candidate_save($candidate) {
+    (object) $candidate;
+    try {
+        $cid = db_insert('bullhorn_candidates')
+        ->fields(array(
+                'cuid'       => $candidate->cuid,
+                'first_name' => $candidate->first_name,
+                'last_name'  => $candidate->last_name,
+                'email'      => $candidate->email
+        ))
+        ->execute();
+        //debug($cid);
+        return $cid;
+    } catch(Exception $e) {
+        watchdog('bullhorn candidates','Failed to Insert user :first_name :last_name (:cuid) at login. Exception: :exception',array(
+                    ':first_name' => $candidate->first_name,
+                    ':last_name'  => $candidate->last_name,
+                    ':cuid'       => $candidate->cuid,
+                    ':exception'  => $e
+            )
+        );
+        return false;
+    }
+}
+
+function _candidate_session_unset() {
+    if(isset($_SESSION['bullhorn']['candidate'])) {
+        unset($_SESSION['bullhorn']['candidate']);
+    }
+}
+
+/**
+ * Search for Candidate referrer UserID
+ * @param $first_name
+ *     Current Candidate's first name
+ * @param $last_name
+ *     Current Candidate's last name
+ * @param $client
+ *     A Bullhorn SOAP client object
+ * 
+ * Get the UserID of a referring Candidate by querying the Candidate
+ * entity for firstName and lastName.
+ * Results are in Date Added Ascending order
+ */
+function _candidate_referrer_id($first_name,$last_name,$client=null) {
+    
+    if($client == null) {
+        $client = bullhorn_start_client();
+    }
+     
+    // Create an array with the query parameters
+    $query_array = array(
+            'distinct'   => false,
+            'entityName' => 'Candidate',
+            'maxResults' => 1,
+            'where'      => 'isDeleted=0 AND firstName=\'' . $first_name . '\' AND lastName=\'' . $last_name . '\'',
+            'orderBys'   => 'dateAdded asc',
+            'parameters' => array()
+    );
+
+    // Create the DTO type that the API will understand by casting the array to the dtoQuery
+    // type that the query operation expects.
+    $SOAP_query = new SoapVar($query_array, SOAP_ENC_OBJECT,"dtoQuery", "http://query.apiservice.bullhorn.com/");
+
+    $request_array = array (
+                'session' => $client->session,
+                'query'   => $SOAP_query
+            );
+
+    // Cast the request as a query type
+    $SOAP_request = new SoapVar($request_array, SOAP_ENC_OBJECT, "query", "http://query.apiservice.bullhorn.com/");
+
+    // Use the query method to return the candidate ids
+    try {
+        $queryResult = $client->query($SOAP_request);
+        //debug($queryResult);
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn candidates','Find referrer %first_name %last_name via Candidate entity failed. Soap last request: %get_last_request. Soap fault: %soap_fault',array('%first_name' => $first_name, '%last_name' => $last_name, '%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+    }
+    
+    return $queryResult;
+}
+
+function _candidate_email_validate($name,$email) {
+    if(!valid_email_address($email)) {
+        form_set_error($name,t('Sorry but the email address %email is not a valid email address.',array('%email' => $email)));
+        return FALSE;
+    }
+    return TRUE;
+}

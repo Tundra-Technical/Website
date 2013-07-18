@@ -1,0 +1,11 @@
+name = Bullhorn Candidates
+description = A custom module that handles creating (via the Bullhorn Parse Resume Operation) and authenticating Candidates through the Bullhorn SOAP API. This module also creates a database for recording Candidate Bullhorn UserID, first name, last name and email address.
+core = 7.x
+package = Bullhorn
+
+files[] = bullhorn_candidates.module
+
+dependencies[] = bullhorn
+dependencies[] = bullhorn_job_order
+
+version = 7.x-0.1-beta

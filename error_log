@@ -1,0 +1,350 @@
+[07-May-2013 10:22:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24587249 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:23:42] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24731539 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:25:02] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24587249 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:26:22] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24587249 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:26:37] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24822853 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:27:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24587249 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:28:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24587249 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:29:47] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24702491 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:31:05] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24702490 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:32:14] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24784411 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:32:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24702491 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:33:51] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24702491 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:35:11] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24793805 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 10:35:17] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24702491 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 13:10:11] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24919661 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 13:12:21] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24919694 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 14:05:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25044647 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 14:06:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25044647 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 14:07:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25044644 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 14:08:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25044647 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 15:05:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25143795 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 15:06:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25143795 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 15:07:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25143795 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 15:08:47] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25143795 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 15:09:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 25143795 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 16:05:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855995 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 16:06:48] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855995 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 16:07:42] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855995 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 16:08:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855995 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 16:09:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855995 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 17:05:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24827389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 17:06:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24827389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 17:07:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24827389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 17:08:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24827389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 17:09:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24827389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 18:05:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 18:06:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 18:07:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 18:08:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 18:09:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855354 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 19:05:57] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855356 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 19:06:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 19:07:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 19:08:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855356 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 19:09:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855357 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 20:05:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855390 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 20:06:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 20:07:42] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855390 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 20:08:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 20:09:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855389 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 21:05:48] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855407 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 21:06:51] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 21:07:50] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 21:08:47] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 21:09:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 22:05:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 22:06:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855409 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 22:07:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 22:08:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24855410 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 23:05:52] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24636341 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 23:06:54] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24636342 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 23:07:49] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24636342 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[07-May-2013 23:08:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24636342 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:05:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23242362 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:06:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23242362 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:07:36] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23242361 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:08:38] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23242362 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:09:36] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23242362 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 10:21:04] PHP Parse error:  syntax error, unexpected '}' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 363
+[08-May-2013 12:05:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23533828 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:06:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23533828 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:07:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23533828 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:08:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23533828 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:09:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23533828 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:16:51] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23825032 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:18:37] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23825026 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 12:20:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23815637 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:05:37] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23636938 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:06:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23636938 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:07:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23636937 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:08:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23636937 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:09:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23636938 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:16:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23920248 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:18:52] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23920245 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 13:20:35] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23920248 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:05:37] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23743100 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:06:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23743100 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:07:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23743100 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:08:51] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23743100 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:09:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23743099 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:16:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23947812 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:18:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23957200 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 14:20:42] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23947812 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:05:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23828968 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:06:47] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23828968 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:07:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23828967 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:08:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23828968 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:09:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 23828968 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:16:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24124667 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:18:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24124668 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 15:20:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24124662 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:05:38] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019138 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:06:38] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 21968956 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:07:40] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019138 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:08:53] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019138 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:09:49] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019137 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:16:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24307064 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:18:43] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24316458 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 16:20:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24307064 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:05:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019140 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:06:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019140 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:07:39] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019139 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:08:49] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019138 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:09:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019140 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:16:33] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24226042 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:18:35] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24226042 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 17:20:38] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24226042 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[08-May-2013 18:05:46] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 24019140 bytes) in /home1/tundrate/public_html/drupal/includes/database/database.inc on line 2168
+[09-May-2013 20:10:00] PHP Parse error:  syntax error, unexpected '}' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1145
+[09-May-2013 21:31:04] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1178
+[10-May-2013 10:29:47] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 49715968 bytes) in /home1/tundrate/public_html/drupal/includes/common.inc on line 7462
+[10-May-2013 10:32:16] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 49715968 bytes) in /home1/tundrate/public_html/drupal/includes/common.inc on line 7462
+[12-May-2013 16:50:00] PHP Parse error:  syntax error, unexpected '[', expecting ')' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1144
+[12-May-2013 22:37:47] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 326
+[12-May-2013 22:44:28] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 326
+[12-May-2013 22:51:15] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 326
+[13-May-2013 16:48:01] PHP Parse error:  syntax error, unexpected T_CONST in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 8
+[13-May-2013 18:59:21] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1036
+[14-May-2013 10:39:59] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 145
+[14-May-2013 10:44:31] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bulhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bulhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 132
+[14-May-2013 10:48:34] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 146
+[14-May-2013 19:48:40] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 326
+[16-May-2013 13:09:00] PHP Parse error:  syntax error, unexpected ')' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 512
+[16-May-2013 15:48:34] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[16-May-2013 15:48:46] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[16-May-2013 15:54:11] PHP Parse error:  syntax error, unexpected '[', expecting ')' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 506
+[16-May-2013 15:54:14] PHP Parse error:  syntax error, unexpected '[', expecting ')' in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 506
+[16-May-2013 15:54:32] PHP Fatal error:  Cannot use object of type view as array in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 506
+[16-May-2013 16:18:19] PHP Fatal error:  Cannot use object of type stdClass as array in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_board/bullhorn_job_board.module on line 519
+[18-May-2013 14:26:36] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:26:36] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 227
+[18-May-2013 14:26:37] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:26:37] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 227
+[18-May-2013 14:27:47] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:27:47] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 227
+[18-May-2013 14:27:47] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:27:47] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 227
+[18-May-2013 14:27:49] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:27:49] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 227
+[18-May-2013 14:30:17] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:32:53] PHP Parse error:  syntax error, unexpected $end in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_order/bullhorn_job_order.module on line 757
+[18-May-2013 14:33:00] PHP Parse error:  syntax error, unexpected $end in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_job_order/bullhorn_job_order.module on line 757
+[18-May-2013 14:33:38] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:33:38] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 228
+[18-May-2013 14:33:40] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:33:40] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 228
+[18-May-2013 14:34:57] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:34:57] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 228
+[18-May-2013 14:36:10] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:36:10] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 230
+[18-May-2013 14:39:01] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:39:01] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 230
+[18-May-2013 14:39:05] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:39:05] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 230
+[18-May-2013 14:39:55] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:39:55] PHP Fatal error:  Call to undefined method stdClass::query() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 230
+[18-May-2013 14:43:13] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:43:13] PHP Fatal error:  Call to a member function startSession() on a non-object in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 140
+[18-May-2013 14:43:14] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:43:14] PHP Fatal error:  Call to a member function startSession() on a non-object in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 140
+[18-May-2013 14:44:09] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:44:09] PHP Fatal error:  Call to a member function startSession() on a non-object in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 140
+[18-May-2013 14:44:11] PHP Fatal error:  SOAP-ERROR: Parsing WSDL: Couldn't load from 'https://api.bllhornstaffing.com/webservices-2.5/?wsdl' : failed to load external entity "https://api.bllhornstaffing.com/webservices-2.5/?wsdl"
+ in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 122
+[18-May-2013 14:44:11] PHP Fatal error:  Call to a member function startSession() on a non-object in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn.module on line 140
+[18-May-2013 20:59:01] PHP Fatal error:  Cannot redeclare bullhorn_candidates_mail() (previously declared in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module:1358) in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1547
+[18-May-2013 21:50:48] PHP Fatal error:  Call to undefined function  _candidate_mail_text() in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1654
+[19-May-2013 10:57:11] PHP Fatal error:  Cannot use object of type stdClass as array in /home1/tundrate/public_html/drupal/sites/all/modules/bullhorn/bullhorn_candidates/bullhorn_candidates.module on line 1628
+[08-Jun-2013 22:39:45] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[08-Jun-2013 22:40:09] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[08-Jun-2013 22:42:57] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[08-Jun-2013 22:45:15] PHP Fatal error:  Nesting level too deep - recursive dependency? in /home1/tundrate/public_html/drupal/includes/common.inc on line 7459
+[14-Jun-2013 11:23:56] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 43697593 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[14-Jun-2013 11:32:34] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 43697593 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[14-Jun-2013 11:37:02] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 66856961 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[14-Jun-2013 11:37:12] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 66856961 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[14-Jun-2013 11:40:35] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 66856961 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[14-Jun-2013 11:53:52] PHP Fatal error:  Call to undefined function  dmp() in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 346
+[14-Jun-2013 11:53:58] PHP Fatal error:  Call to undefined function  dmp() in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 346
+[14-Jun-2013 11:54:19] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 39039157 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1603
+[14-Jun-2013 11:56:52] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 44113472 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[14-Jun-2013 12:05:18] PHP Fatal error:  Cannot use object of type stdClass as array in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 344
+[14-Jun-2013 12:05:23] PHP Fatal error:  Cannot use object of type stdClass as array in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 344
+[14-Jun-2013 12:05:50] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 12880999 bytes) in /home1/tundrate/public_html/drupal/sites/all/modules/devel/krumo/class.krumo.php on line 1267
+[14-Jun-2013 12:06:01] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 12880999 bytes) in /home1/tundrate/public_html/drupal/sites/all/modules/devel/krumo/class.krumo.php on line 1267
+[14-Jun-2013 12:06:32] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 12880999 bytes) in /home1/tundrate/public_html/drupal/sites/all/modules/devel/krumo/class.krumo.php on line 1267
+[14-Jun-2013 12:07:35] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 21483521 bytes) in /home1/tundrate/public_html/drupal/sites/all/modules/devel/krumo/class.krumo.php on line 1283
+[14-Jun-2013 12:07:45] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 21483521 bytes) in /home1/tundrate/public_html/drupal/sites/all/modules/devel/krumo/class.krumo.php on line 1283
+[14-Jun-2013 23:10:59] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 75397121 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[15-Jun-2013 08:07:41] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 50344836 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[19-Jun-2013 10:21:44] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 54732801 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[19-Jun-2013 11:54:16] PHP Fatal error:  Call to undefined function  dmp() in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 378
+[19-Jun-2013 12:41:12] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 68843521 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[19-Jun-2013 12:41:28] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 68843521 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[19-Jun-2013 12:41:41] PHP Parse error:  syntax error, unexpected '}' in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 376
+[19-Jun-2013 12:43:19] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 68843521 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[19-Jun-2013 13:03:31] PHP Fatal error:  Cannot access empty property in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--title.tpl.php on line 25
+[19-Jun-2013 13:03:42] PHP Fatal error:  Cannot access empty property in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--title.tpl.php on line 25
+[19-Jun-2013 13:04:09] PHP Parse error:  syntax error, unexpected '}' in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--title.tpl.php on line 25
+[19-Jun-2013 13:04:12] PHP Parse error:  syntax error, unexpected '}' in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--title.tpl.php on line 25
+[19-Jun-2013 16:56:09] PHP Parse error:  syntax error, unexpected '[' in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 370
+[19-Jun-2013 20:52:37] PHP Fatal error:  Cannot access empty property in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--field-image.tpl.php on line 26
+[19-Jun-2013 20:52:45] PHP Fatal error:  Cannot access empty property in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/views-view-field--front-page-slideshow--block--field-image.tpl.php on line 26
+[21-Jun-2013 09:41:52] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[21-Jun-2013 09:42:00] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[21-Jun-2013 09:42:53] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[21-Jun-2013 09:43:58] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[21-Jun-2013 09:45:21] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[21-Jun-2013 09:45:24] PHP Parse error:  syntax error, unexpected T_UNSET in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 386
+[08-Jul-2013 11:20:02] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 47316784 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 11:20:48] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 47316796 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 11:21:27] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46403591 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 11:23:51] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 200540161 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/template.php on line 393
+[08-Jul-2013 16:31:09] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46381324 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 16:31:29] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46403604 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 16:32:38] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46381312 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[08-Jul-2013 16:34:53] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46403603 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[09-Jul-2013 08:26:21] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 46403603 bytes) in /home1/tundrate/public_html/drupal/includes/theme.inc on line 1508
+[09-Jul-2013 09:32:02 America/Toronto] PHP Fatal error:  Call to undefined function devel_undefined_function() in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.admin.inc on line 173
+[09-Jul-2013 09:32:03 America/Toronto] PHP Fatal error:  Call to undefined function devel_undefined_function() in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.admin.inc on line 173
+[09-Jul-2013 09:32:12 America/Toronto] PHP Fatal error:  Call to undefined function devel_undefined_function() in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.admin.inc on line 173
+[09-Jul-2013 09:32:14 America/Toronto] PHP Fatal error:  Call to undefined function devel_undefined_function() in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.admin.inc on line 173
+[09-Jul-2013 09:32:14 America/Toronto] PHP Fatal error:  Call to undefined function devel_undefined_function() in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.admin.inc on line 173
+[09-Jul-2013 10:51:29 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:30 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:30 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:30 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:30 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:30 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:32 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:37 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:37 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:38 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:39 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:39 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:39 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:41 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:44 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:45 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:45 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:45 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:45 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:46 America/Toronto] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 83333121 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[09-Jul-2013 10:51:54 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:54 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:55 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:57 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:58 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:51:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:02 America/Toronto] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 83333121 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[09-Jul-2013 10:52:18 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:18 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:18 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:18 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:19 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:19 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:19 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:19 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:19 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:20 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:21 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:21 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:21 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:21 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:21 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:22 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:22 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:22 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:22 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:23 America/Toronto] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 83333121 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126
+[09-Jul-2013 10:52:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:52:59 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:00 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:01 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:02 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:02 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:02 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:02 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:03 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:03 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:03 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:03 America/Toronto] PHP Notice:  Undefined index: args in /home1/tundrate/public_html/drupal/sites/all/modules/devel/devel.module on line 1850
+[09-Jul-2013 10:53:04 America/Toronto] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 83333121 bytes) in /home1/tundrate/public_html/drupal/sites/all/themes/tundra/templates/page.tpl.php on line 126

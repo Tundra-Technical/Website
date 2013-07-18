@@ -1,0 +1,51 @@
+<?php
+
+function bullhorn_candidates_schema() {
+    $schema['bullhorn_candidates'] = array(
+                'description' => 'A table to collect and store basic information about Bullhorn candidates',
+                'fields'      => array(
+                            'cid' => array(
+                                        'description' => 'The primary identifier for a Candidate.',
+                                        'type'        => 'serial',
+                                        'unsigned'    => true,
+                                        'not null'    => true,
+                                    ),
+                            'cuid' => array(
+                                        'description' => 'The Bullhorn primary identifier for a Candidate.',
+                                        'type'        => 'int',
+                                        'unsigned'    => true,
+                                        'not null'    => true,
+                                        'default'     => 0,
+                                    ),
+                            'first_name' => array(
+                                        'description' => 'The Bullhorn Candidate\'s first name.',
+                                        'type'        => 'varchar',
+                                        'length'      => 255,
+                                        'not null'    => true,
+                                        'default'     => '',
+                                    ),
+                            'last_name' => array(
+                                        'description' => 'The Bullhorn Candidate\'s last name.',
+                                        'type'        => 'varchar',
+                                        'length'      => 255,
+                                        'not null'    => true,
+                                        'default'     => '',
+                                    ),
+                            'email' => array(
+                                        'description' => 'The Bullhorn Candidate\'s email address.',
+                                        'type'        => 'varchar',
+                                        'length'      => 255,
+                                        'not null'    => true,
+                                        'default'     => '',
+                                    ),
+                        ),
+                'primary key' => array('cid'),
+                'indexes'     => array(
+                            'cuid' => array(
+                                        'cuid'
+                                    ),
+                        ),
+            );
+    
+    return $schema;
+}

@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+#content .contact-us{padding-bottom:155px;}
+#content .contact-us h2{margin-bottom:0px;font-size:14px;background-color:#595959;color:#fff;}
+#content .contact-us .addresList{background-color:transparent;border:none;width:auto;padding-bottom:5px;margin-top:0px;padding:0px;}
+#content .contact-us .addresList .addressItem{border:1px solid #999999;background-color:#E6E6E6;position:relative;height:290px;display:block;width:100%;margin-left:0px;*left:-20px;}
+#content .contact-us .addresList h2{padding:0px;font-size:13px;background-color:transparent;color:#000;}
+#content .contact-us .addresList h1{margin-left:25px;margin-top:10px;margin-bottom:0px;text-decoration:underline;display:block;}
+#content .contact-us .addresList .addressItem .address{margin-left:25px;margin-top:25px;}
+#content .contact-us .addresList .addressItem .city{margin-left:25px;margin-top:25px;font-size:15px;}
+#content .contact-us .addresList .addressItem .map{position:absolute;right:15px;top:15px;border:1px solid #333333;}

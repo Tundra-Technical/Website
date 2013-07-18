@@ -1,0 +1,15 @@
+#mobile-header {
+    background: none repeat scroll 0 0 #222222;
+    height: 48px;
+    line-height: 48px;
+    text-align: left;
+}
+
+#mobile-header #responsive-menu-button {
+    background: none repeat scroll 0 0 #444444;
+    color: #FFFFFF;
+    font-family: Arial,sans-serif;
+    font-size: 0.6875em;
+    margin-left: 5px;
+    padding: 10px 10px 8px;
+}

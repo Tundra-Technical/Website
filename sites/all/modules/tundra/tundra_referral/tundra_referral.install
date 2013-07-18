@@ -1,0 +1,81 @@
+<?php
+/**
+ * Implementation of hook_schema()
+ */
+function tundra_referral_schema() {
+    $schema['tundra_referral_from_referrals'] = array(
+                'description' => 'A table for collecting FROM Referral names and email addresses.',
+                'fields' => array(
+                            'rfid' => array(
+                                        'type'     => 'serial',
+                                        'unsigned' => TRUE,
+                                        'not null' => TRUE,
+                                    ),
+                            'name'  => array(
+                                        'type'     => 'varchar',
+                                        'length'   => 255,
+                                        'not null' => TRUE,
+                                    ),
+                            'email' => array(
+                                        'type'     => 'varchar',
+                                        'length'   => 255,
+                                        'not null' => TRUE,
+                                    ),
+                        ),
+                'primary key' => array('rfid'),
+            );
+    
+    $schema['tundra_referral_to_referrals'] = array(
+                'description' => 'A table for collecting TO Referral names and email addresses.',
+                'fields' => array(
+                            'rtid' => array(
+                                        'type'     => 'serial',
+                                        'unsigned' => TRUE,
+                                        'not null' => TRUE,
+                                    ),
+                            'name'  => array(
+                                        'type'     => 'varchar',
+                                        'length'   => 255,
+                                        'not null' => TRUE,
+                                    ),
+                            'email' => array(
+                                        'type'     => 'varchar',
+                                        'length'   => 255,
+                                        'not null' => TRUE,
+                                    ),
+                        ),
+                'primary key'       => array('rtid'),
+            );
+    
+    $schema['tundra_referral_referrals'] = array(
+                'description' => 'A table for collecting and bridging Referral From, To and Job Order referrals.',
+                'fields'      => array(
+                            'rid' => array(
+                                        'type'     => 'serial',
+                                        'unsigned' => TRUE,
+                                        'not null' => TRUE,
+                                    ),
+                            'rfid' => array(
+                                        'type'     => 'int',
+                                        'unsigned' => TRUE,
+                                        'non null' => TRUE,
+                                    ),
+                            'rtid' => array(
+                                        'type'     => 'int',
+                                        'unsigned' => TRUE,
+                                        'non null' => TRUE,
+                                    ),
+                            'jid'  => array(
+                                        'type'     => 'int',
+                                        'unsigned' => TRUE,
+                                        'not null' => TRUE,
+                                    ),
+                        ),
+                'primary key'      => array('rid'),
+                'indexes'          => array(
+                            'rfid' => array('rfid'),
+                            'rtid' => array('rtid'),
+                        ),
+            );
+    return $schema;
+}

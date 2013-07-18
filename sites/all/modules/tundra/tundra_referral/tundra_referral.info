@@ -1,0 +1,10 @@
+name = Tundra Technical Referral
+description = A link to a form added to every Job Board JobOrder that allows a user to refer that JobOrder to 1 or more people via email.
+core = 7.x
+files[] = tundra_referral.module
+files[] = tundra_referral.install
+
+dependencies[] = tundra
+dependencies[] = bullhorn_job_order
+
+package = Tundra Technical

@@ -1,0 +1,444 @@
+<?php
+global $client;
+
+/**
+ * Define some constants
+ */
+$bullhorn_default_error_message = variable_get('bullhorn_default_error_message');
+define('BULLHORN_DEFAULT_ERROR',$bullhorn_default_error_message);
+
+// Create a global $client class
+$client = new stdClass();
+
+/**
+ * Implementation of hook_permission()
+ */
+
+function bullhorn_permission() {
+    return array (
+                'administer bullhorn' => array(
+                            'title' => t('Administer Bullhorn'),
+                            'description' => t('Perform administration tasks for the Bullhorn module')
+                        )
+            );
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+
+function bullhorn_menu() {
+    $items = array();
+    $items['admin/config/bullhorn'] = array(
+                'title' => 'Bullhorn',
+                'page callback'    => 'drupal_get_form',
+                'page arguments'   => array('bullhorn_form'),
+                'access arguments' => array('administer bullhorn')
+            );
+    $items['admin/config/bullhorn/rest-api-config'] = array(
+                'title' => 'Bullhorn REST API Config',
+                'description' => "Configure your Bullhorn REST API access."
+            );
+//     $items['admin/config/bullhorn/access-token'] = array(
+//                 'title' => 'View Bullhorn Access Token',
+//                 'description' => 'Your Bullhorn Access Token.',
+//                 'page callback' => 'bullhorn_access_token_view',
+//                 'access arguments' => array('administer bullhorn'),
+//                 'type'          => MENU_LOCAL_TASK
+//             );
+    
+    return $items;
+}
+
+/**
+ * Implementation of _form()
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ * @return Ambigous <The, string>
+ */
+    
+function bullhorn_form($form,&$form_state) {
+    $form['bullhorn_credentials'] = array(
+                '#type' => 'fieldset',
+                '#title' => 'Bullhorn Credentials',
+                '#collapsible' => TRUE
+            );
+    $form['bullhorn_credentials']['bullhorn_username'] = array(
+                '#type'          => 'textfield',
+                '#title'         => 'Username',
+                '#size'          => 100,
+                '#default_value' => variable_get('bullhorn_username'),
+                '#required'      => TRUE
+            );
+    $form['bullhorn_credentials']['bullhorn_password'] = array(
+                '#type'          => 'textfield',
+                '#title'         => 'Password',
+                '#size'          => 100,
+                '#default_value' => variable_get('bullhorn_password'),
+                '#required'       => TRUE
+            );
+    $form['bullhorn_credentials']['bullhorn_api_key'] = array(
+                '#type'          => 'textfield',
+                '#title'         => 'API Key',
+                '#size'          => 100,
+                '#default_value' => variable_get('bullhorn_api_key'),
+                '#required'      => TRUE
+            );
+   
+    return system_settings_form($form);
+}
+
+/**
+ * Implementation of _submit()
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
+
+function bullhorn_form_submit($form,&$form_state) {
+    watchdog('bullhorn','Bullhorn SOAP API credentials updated.',array(),WATCHDOG_NOTICE);
+    drupal_set_message('Bullhorn SOAP API credenials updated.');
+}
+
+/**
+ * bullhorn get session
+ *
+ * @return session
+ * 
+ * A helper function to instantiate a session with Bullhorn Staffing.
+ */
+
+function bullhorn_start_client(){
+    global $client;
+    
+    // Create a new instance of the SoapClient class.
+    $params = array(
+            'trace' => 1,
+            'soap_version' => SOAP_1_1);
+     
+    // TODO create Drupal variables to switch between live and staging and for saving
+    // a WSDL version to use
+     
+    $BHclient = new SoapClient("https://api.bullhornstaffing.com/webservices-2.5/?wsdl",$params);
+    //$BHclient = new SoapClient("https://api-staging.bullhorn.com/webservices-2.5/?wsdl",$params);
+     
+    // To run this code, you will need a valid username, password, and API key.
+    $username = variable_get('bullhorn_username');
+    $password = variable_get('bullhorn_password');
+    $apiKey   = variable_get('bullhorn_api_key');
+     
+    // Start a new session
+    $session_request = new stdClass();
+    $session_request->username = $username;
+    $session_request->password = $password;
+    $session_request->apiKey   = $apiKey;
+    $API_session               = $BHclient->startSession($session_request);
+    $API_currentSession        = $API_session->return->session;
+    
+    $client                    = new stdClass();
+    $client                    = $BHclient;
+    $client->session           = $API_currentSession;
+    $client->corporationId     = $API_session->return->corporationId;
+    $client->userId            = $API_session->return->userId;
+    
+    return $client;
+}
+
+/**
+ * bullhorn find coutnry
+ * @param mixed $country
+ *     var: the variable name according to the Bullhorn Country DTO can either be code|countryID|name
+ *     val: the value for the variable code|name=string and countryID=int
+ *     type: the variable type see val definition
+ * @param unknown_type $client
+ */
+
+function bullhorn_find_country($country,$client=null) {
+    
+    // Type cast $country as an Array
+    $country = (array) $country;
+    
+    // Start a client to Bullhorn's API if doesn't exist
+    if($client==null) {
+        $client = bullhorn_start_client();
+    }
+    
+    $where = $country['var'] . '=';
+    switch($country['type']) {
+        case 'int':
+            $where .= $country['val'];
+            break;
+        case 'string':
+            $where .= '\'' . $country['val'] . '\'';
+            break;
+        default:
+            $where .= '\'' . $country['val'] . '\'';
+    }
+    
+    $entity = 'Country';
+    $condition = $where;
+    $queryResult = bullhorn_query($entity, $condition);
+    
+    $client->session = $queryResult->return->session;
+    
+    $entity = 'Country';
+    $id     = $queryResult->return->ids;
+    $findResult = bullhorn_find($entity, $id);
+    
+    if(isset($findResult->return->dto) && !empty($findResult->return->dto)) {
+        return $findResult;
+    } else {
+        return false;
+    }
+}
+
+function bullhorn_query($entity,$condition,$parameters=array(),$distinct=false,$max_results=null) {
+    global $client;
+    
+    $query_array = array(
+            'entityName' => $entity,
+            'where'      => $condition,
+            'parameters' => $parameters,
+            'distinct'   => $distinct,
+    );
+    
+    if(!is_null($max_results)) {
+        $query_array['maxResults'] = $max_results;
+    }
+    
+    // Create the DTO type that the API will understand by casting the array to the dtoQuery
+    // type that the query operation expects.
+    $SOAP_query = new SoapVar($query_array, SOAP_ENC_OBJECT,"dtoQuery", "http://query.apiservice.bullhorn.com/");
+    
+    // Put the DTO into a request object
+    $request_array = array (
+            'session' => $client->session,
+            'query' => $SOAP_query
+            );
+    
+    // Cast the request as a query type
+    $SOAP_request = new SoapVar($request_array, SOAP_ENC_OBJECT, "query", "http://query.apiservice.bullhorn.com/");
+    
+    // Use the query method to return the candidate ids
+    try {
+        $result = $client->query($SOAP_request);
+    } catch (SoapFault $fault) {
+//         var_dump($client->__getLastRequest());
+//         die($fault->faultstring .': ' . __LINE__);
+           watchdog('bullhorn',"Bullhorn Query Failed<br />\nSoapClient::getLastRequest: %get_last_request<br />\nSoapFault: %soap_fault",array('%get_last_request' => $client->__getLastRequest(), '%soap_fault' => $fault->faultstring),WATCHDOG_CRITICAL);
+    }
+    
+    return (isset($result) && !empty($result)) ? $result : FALSE;
+}
+
+function bullhorn_find_multiple($chunk,$entity) {
+    global $client;
+    
+    $findId_array = array();
+    
+    foreach($chunk as $id) {
+        $findId_array[] = new SoapVar($id, XSD_INTEGER,"int","http://www.w3.org/2001/XMLSchema");
+    }
+
+    $find_request = array(
+        'session'    => $client->session,
+        'entityName' => $entity,
+        'ids'        => $findId_array,
+    );
+
+    try {
+        $result = $client->findMultiple($find_request);
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn',"Bullhorn Find Multiple @entity Failed<br />\nSoapClient::getLastRequest: %get_last_request<br />\nSoapFault: %soap_fault",array('@entity' => $entity,'%get_last_request' => $client->__getLastRequest(), '%soap_fault' => $fault->faultstring),WATCHDOG_CRITICAL);
+    }
+    
+    return (isset($result) && !empty($result)) ? $result : FALSE;
+}
+
+function bullhorn_find($entity,$id) {
+    global $client;
+    
+    $find_request = array(
+            'session'    => $client->session,
+            'entityName' => $entity,
+            'id'         => new SoapVar($id,XSD_INTEGER,'int','http://www.w3.org/2001/XMLSchema')
+    );
+
+    try{
+        $result = $client->find($find_request);
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn',"Bullhorn Find @entity Failed<br />\nSoapClient::getLastRequest: %get_last_request<br />\nSoapFault: %soap_fault",array('@entity'=> $entity,'%get_last_request' => $client->__getLastRequest(), '%soap_fault' => $fault->faultstring),WATCHDOG_CRITICAL);
+    }
+    
+    return (isset($result) && !empty($result)) ? $result : FALSE;
+}
+
+/**
+ * Bullhorn Save
+ * @global stdClass $client
+ * @param object $data
+ * @param string $type_name
+ * @param string $namespace
+ * @return object
+ */
+function bullhorn_save($data,$type_name,$namespace) {
+    global $client;
+    
+    // Put the DTO into an request object
+    $save_array = array(
+                'session' => $client->session,
+                'dto'     => new SoapVar($data, SOAP_ENC_OBJECT,$type_name, $namespace),
+            );
+    
+    // Cast the request as a save type
+    $save_request = new SoapVar($save_array,SOAP_ENC_OBJECT,'save','http://apiservice.bullhorn.com');
+    
+    // Try request
+    try {
+        $result = $client->save($save_request);
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn','Failed to save @type_name record. Soap last request: %get_last_request. Soap fault: %soap_fault',array('@type_name' => $type_name,'%get_last_request' => $client->__getLastRequest(),'%soap_fault' => $fault->faultstring),WATCHDOG_EMERGENCY);
+    }
+    
+    return (isset($result) && !empty($result)) ? $result : FALSE;
+}
+
+/**
+ * Bullhorn Get Association ID
+ * @global stdClass $client
+ * @param integer $id
+ * @param string $entity
+ * @param string $assoc_name
+ * @return object
+ */
+function bullhorn_get_association_id($id,$entity,$assoc_name) {
+    global $client;
+    $get_assoc_request = array(
+            'session'         => $client->session,
+            'entityName'      => $entity,
+            'id'              => new SoapVar($id,XSD_INTEGER,'int','http://www.w3.org/2001/XMLSchema'),
+            'associationName' => $assoc_name,
+    );
+
+    try{
+        $getAssocResult = $client->getAssociationIDs($get_assoc_request);
+
+        if(isset($getAssocResult->return->ids) && is_array($getAssocResult->return->ids)) {
+            $assoc_id = array_shift($getAssocResult->return->ids);
+        }
+
+        if(isset($getAssocResult->return->ids) && !is_array($getAssocResult->return->ids)) {
+            $assoc_id = $getAssocResult->return->ids;
+        }
+    } catch (SoapFault $fault) {
+        watchdog('bullhorn',"Failed to getAssociationIDs for @entity (@id) by @assoc_name.<br />\nSoapClient::getLastRequest: %get_last_request<br />\nSoapFault: %soap_fault",array('@entity' => $entity,'@id' => $id,'@assoc_name' => $assoc_name,'%get_last_request' => $client->__getLastRequest(), '%soap_fault' => $fault->faultstring),WATCHDOG_CRITICAL);
+    }
+    
+    return (isset($assoc_id) && !empty($assoc_id)) ? $assoc_id : FALSE;
+}
+
+/**
+ * Implementation of hook_mail
+ * @param string $key
+ * @param string $message
+ * @param mixed $params
+ */
+function bullhorn_mail($key,&$message,$params) {
+    // Each message is associated with a language, which may or may not be the
+    // current user's selected language, depending on the type of e-mail being
+    // sent. This $options array is used later in the t() calls for subject
+    // and body to ensure the proper translation takes effect.
+    $options = array(
+            'langcode' => $message['language']->language,
+    );
+    
+    switch ($key) {
+        // Send a simple message from the contact form.
+        case 'error_message':
+            $message['subject'] = t('@site-name: Error', array('@site-name' => variable_get('site_name', 'Tundra Technical')), $options);
+            // Note that the message body is an array, not a string.
+            //$message['body'][] = t('@name sent you the following message:', array('@name' => $user->name), $options);
+            // Because this is just user-entered text, we do not need to translate it.
+//            $message['body'][] = t('Hello @first_name @last_name,',array('@first_name' => $params['first_name'],'@last_name' => $params['last_name']));
+
+            // Since user-entered text may have unintentional HTML entities in it like
+            // '<' or '>', we need to make sure these entities are properly escaped,
+            // as the body will later be transformed from HTML to text, meaning
+            // that a normal use of '<' will result in truncation of the message.
+            $message['body'][] = check_plain($params['message']);
+            break;
+    }
+}
+
+/**
+ * Sends an e-mail.
+ *
+ * @param $form_values
+ *   An array of values from the contact form fields that were submitted.
+ *   There are just two relevant items: $form_values['email'] and
+ *   $form_values['message'].
+ */
+function bullhorn_error_mail_send($values) {
+    global $language;
+    // All system mails need to specify the module and template key (mirrored from
+    // hook_mail()) that the message they want to send comes from.
+    $module = 'bullhorn';
+    $key = 'error_message';
+
+    // Specify 'to' and 'from' addresses.
+    $to = $values['email'];
+    $site_name  = variable_get('site_name','Tundra Technical');
+    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
+    $domain_pos = (strpos($site_mail,'@')+1);
+    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
+    $from = $site_name . ' <noreply@'.$domain.'>'; //variable_get('site_mail', 'noreply@tundratechnical.ca');
+
+    // "params" loads in additional context for email content completion in
+    // hook_mail(). In this case, we want to pass in the values the user entered
+    // into the form, which include the message body in $form_values['message'].
+    $params = $values;
+    
+    
+    // The language of the e-mail. This will one of three values:
+    // * user_preferred_language(): Used for sending mail to a particular website
+    //   user, so that the mail appears in their preferred language.
+    // * global $language: Used when sending a mail back to the user currently
+    //   viewing the site. This will send it in the language they're currently
+    //   using.
+    // * language_default(): Used when sending mail to a pre-existing, 'neutral'
+    //   address, such as the system e-mail address, or when you're unsure of the
+    //   language preferences of the intended recipient.
+    //
+    // Since in our case, we are sending a message to a random e-mail address that
+    // is not necessarily tied to a user account, we will use the site's default
+    // language.
+//    $language = $language;
+
+    // Whether or not to automatically send the mail when drupal_mail() is
+    // called. This defaults to TRUE, and is normally what you want unless you
+    // need to do additional processing before drupal_mail_send() is called.
+    $send = TRUE;
+    // Send the mail, and check for success. Note that this does not guarantee
+    // message delivery; only that there were no PHP-related issues encountered
+    // while sending.
+    $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+//    if ($result['result'] == TRUE) {
+//        drupal_set_message(t('Your message has been sent.'));
+//    }
+//    else {
+//        drupal_set_message(t('There was a problem sending your message and it was not sent.'), 'error');
+//    }
+    
+    if($result['result'] == FALSE) {
+        watchdog('drupal_mail',"Email failed:\n@message",array('@message' => $params['body']));
+    }
+
+}
+
+function bullhorn_mail_alter(&$message) {
+    $site_name  = variable_get('site_name','Tundra Technical');
+    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
+    $domain_pos = (strpos($site_mail,'@')+1);
+    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
+    $message['headers']['Return-Path'] = $site_name . ' <noreply@'.$domain.'>';
+//    $message['headers']['Sender']      = $site_name . ' <noreply@'.$domain.'>';
+}
