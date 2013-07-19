@@ -1,4 +1,8 @@
- body
+* {
+    box-sizing: border-box;
+}
+
+body
 {
 	font-family: Helvetica,Verdana,Arial,sans-serif;	
 	color: #292763;
@@ -365,7 +369,7 @@
 		#footer ul.phone-numbers
 		{
 			display:inline-block;
-			padding-top:10px;
+			padding:0.625em 0 0;
 			margin: 0;
 		}
 		#footer .toll-free-numbers {
@@ -379,15 +383,17 @@
 			font-size:14px;
 			color:#B30000;
 			font-weight:bold;
-			padding:0px 70px 0 70px;			
+			/*padding:0px 70px 0 70px;*/			
 		}
 		#footer .phone-numbers .right-bumper
 		{
 			border-right:1px solid #C5C5C5;
+                        padding-right: 1.375em;
 		}		
 		#footer .phone-numbers .left-bumper
 		{
 			border-left:1px solid #7E7E7E;
+                        padding-left: 1.375em;
 		}		
 		#footer .footer-menu ul.menu
 		{		
@@ -401,7 +407,7 @@
 			{
 				float:left;
 				display:block;
-				margin:0px 10px 5px 10px;
+				padding:0px 10px 5px 10px;
 			}
 				#footer .footer-menu li a
 				{
@@ -623,8 +629,11 @@ zoom: 1;
 
 .view-news .views-row {
 	display:block;
+	border:1px solid #292763;
 	padding:20px;
+	width:80%;
 	margin:0 auto;
+	background-color:#DDDDDD;
 	/* font-style:italic; */
 	margin-top:35px;
 	position:relative;
@@ -801,36 +810,58 @@ html.js fieldset.collapsed .fieldset-legend {
 
 /* Content menus */
 
-#footer .content-menu .menu-block-wrapper .menu {
-/*	border-bottom: 1px solid #c9c9c9;*/
+/*#footer .content-menu .menu-block-wrapper .menu {
+	border-bottom: 1px solid #c9c9c9;
 	padding: 5px 0;
 	text-align: left;
-	/*margin: 5px 0;*/
+	margin: 5px 0;
         margin: 0;
-	/*height: 142px;*/
+	height: 142px;
 	list-style: none;
         overflow: hidden;
+}*/
+
+#footer .content-menu .menu-block-wrapper ul {
+    overflow: hidden;
+    padding: 0.125em 0 0 0.125em;
+    max-width:60.000em;
+    margin: 0.125em auto;
+    
+    list-style: none;
 }
 
-#footer .content-menu .menu-block-wrapper li {
+/*#footer .content-menu .menu-block-wrapper li {
 	position: relative;
 	opacity: 1;
 	top: 0px;
 	display: inline-block;
 	float: left;
-	margin: 2px;
+	margin: 0.125em;
 	width: 234px;
 	height: 132px;
 	overflow: hidden;
-	background-color: #f1f1f1;
-	border: 1px solid #c0c0c0;
+	
+}*/
+
+#footer .content-menu .menu-block-wrapper li {
+    /*background-color: #f1f1f1;*/
+    /*border: 1px solid #c0c0c0;*/
+    padding: 0 0.125em 0.125em 0;
+    list-style-image: none;
+    list-style-type: none;
 }
 
-#footer .content-menu .menu-block-wrapper li:hover {
+#footer .content-menu .menu-block-wrapper li > div {
+    background-color: #f1f1f1;
+    border: 1px solid #c0c0c0;
+    height: 100%;
+}
+
+/*#footer .content-menu .menu-block-wrapper li:hover {
 	background-color:#E5E5E5;
-}
+}*/
 
-#footer .content-menu .menu-block-wrapper .menu h1 {
+/*#footer .content-menu .menu-block-wrapper .menu h1 {
 	color: #ba131a;
 	font-size: 14px;
 	font-weight: bold;
@@ -841,6 +872,19 @@ html.js fieldset.collapsed .fieldset-legend {
 	line-height: 1;
 	margin-left: 20px;
 	margin-top: 20px;
+}*/
+
+#footer .content-menu .menu-block-wrapper .menu h1 {
+	color: #ba131a;
+	font-size: 0.875em;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-bottom: 1.250em;
+	clear: both;
+	/*width: 70%;*/
+	line-height: 1;
+	margin-left: 1.250em;
+	margin-top: 1.250em;
 }
 
 #footer .content-menu .menu-block-wrapper .menu .indicator {
@@ -851,7 +895,7 @@ html.js fieldset.collapsed .fieldset-legend {
 	margin-top: 5px;
 }
 
-#footer .content-menu .menu-block-wrapper .menu p {
+/*#footer .content-menu .menu-block-wrapper .menu p {
 	width: 70%;
 	margin-left: 20px;
 	font-weight: bold;
@@ -866,7 +910,7 @@ html.js fieldset.collapsed .fieldset-legend {
 	left: 0px;
 	top: 0px;
 	z-index: 99;
-}
+}*/
 
 /* Content menu Main menu */
 
@@ -975,7 +1019,7 @@ html.js fieldset.collapsed .fieldset-legend {
 }
 
 #block-views-front-page-slideshow-block h1.field-slideshow-caption {
-    margin-top: 14.500em; /*200px;*/
+    margin-top: 12.500em; /*200px;*/
     margin-bottom: 0;
 }
 
@@ -1328,9 +1372,9 @@ blockquote p {
 }
 
 @media all and (max-height: 600px) {
-    #footer {
+/*    #footer {
         position: static;
-    }
+    }*/
     #page #content {
         margin-bottom: 0;
     }

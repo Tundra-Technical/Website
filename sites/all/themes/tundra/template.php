@@ -259,12 +259,14 @@ function tundra_menu_link__menu_block__menu_home_menu(array $variables) {
   if($element['#below']) {
       $sub_menu = drupal_render($element['#below']);
   }
-  $output = '<h1>' . $element['#title'] . '<span class="indicator"></span></h1>';
+  $output  = '<div>';
+  $output .= '<h1>' . $element['#title'] . '<span class="indicator"></span></h1>';
   $output .= '<p>' . $element['#localized_options']['attributes']['title'] . '</p>';
   if($image) {
       $output .= '<img class="icon" src="'. $image .'" />';
   }
   $output .= l('',$element['#href'],$element['#localized_options']);
+  $output .= '</div>';
 //  dpm($element);
   return '<li' . drupal_attributes($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 } // Home Menu
