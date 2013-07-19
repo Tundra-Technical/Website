@@ -623,11 +623,8 @@ zoom: 1;
 
 .view-news .views-row {
 	display:block;
-	border:1px solid #292763;
 	padding:20px;
-	width:80%;
 	margin:0 auto;
-	background-color:#DDDDDD;
 	/* font-style:italic; */
 	margin-top:35px;
 	position:relative;
