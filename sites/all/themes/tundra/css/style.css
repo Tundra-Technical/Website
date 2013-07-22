@@ -1371,6 +1371,24 @@ blockquote p {
 	display: none;
 }
 
+body.section-about-us #content p
+    {
+    	font-size: 14px;
+    	line-height: 22px;
+    	margin-bottom: 20px;
+    	text-align: justify;
+    }
+
+    body.section-about-us #content h1
+    {
+    	clear: both;
+    	color: #BA131A;
+    	font-size: 18px !important;
+    	font-weight: bold;
+    	margin-bottom: 20px;
+    	text-transform: uppercase;
+    }
+
 @media all and (max-height: 600px) {
 /*    #footer {
         position: static;
@@ -1378,4 +1396,13 @@ blockquote p {
     #page #content {
         margin-bottom: 0;
     }
+
+    
+
 }
+
+
+
+
+
+
