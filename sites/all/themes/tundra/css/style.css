@@ -23,6 +23,11 @@ body
 	text-align:left;
 	/*margin-bottom: 100px;*/
 }
+
+#why_tundra_box
+{
+	clear: both;
+}
 	#header
 	{
 		position:relative;
@@ -1376,6 +1381,24 @@ blockquote p {
 	display: none;
 }
 
+body.section-about-us #content p
+    {
+    	font-size: 14px;
+    	line-height: 22px;
+    	margin-bottom: 20px;
+    	text-align: justify;
+    }
+
+    body.section-about-us #content h1
+    {
+    	clear: both;
+    	color: #BA131A;
+    	font-size: 20px !important;
+    	font-weight: bold;
+    	margin-bottom: 20px;
+    	text-transform: uppercase;
+    }
+
 @media all and (max-height: 600px) {
 /*    #footer {
         position: static;
@@ -1383,4 +1406,13 @@ blockquote p {
     #page #content {
         margin-bottom: 0;
     }
+
+    
+
 }
+
+
+
+
+
+
