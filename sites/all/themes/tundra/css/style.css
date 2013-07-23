@@ -1,4 +1,6 @@
 * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -826,8 +828,8 @@ html.js fieldset.collapsed .fieldset-legend {
     padding: 0.125em 0 0 0.125em;
     max-width:60.000em;
     margin: 0.125em auto;
-    
     list-style: none;
+    text-align: left;
 }
 
 /*#footer .content-menu .menu-block-wrapper li {
@@ -849,17 +851,19 @@ html.js fieldset.collapsed .fieldset-legend {
     padding: 0 0.125em 0.125em 0;
     list-style-image: none;
     list-style-type: none;
+    height: 8.250em;
 }
 
 #footer .content-menu .menu-block-wrapper li > div {
     background-color: #f1f1f1;
     border: 1px solid #c0c0c0;
     height: 100%;
+    overflow: hidden;
 }
 
-/*#footer .content-menu .menu-block-wrapper li:hover {
+#footer .content-menu .menu-block-wrapper li:hover > div{
 	background-color:#E5E5E5;
-}*/
+}
 
 /*#footer .content-menu .menu-block-wrapper .menu h1 {
 	color: #ba131a;
@@ -881,7 +885,7 @@ html.js fieldset.collapsed .fieldset-legend {
 	text-transform: uppercase;
 	margin-bottom: 1.250em;
 	clear: both;
-	/*width: 70%;*/
+	width: 70%;
 	line-height: 1;
 	margin-left: 1.250em;
 	margin-top: 1.250em;
@@ -895,26 +899,27 @@ html.js fieldset.collapsed .fieldset-legend {
 	margin-top: 5px;
 }
 
-/*#footer .content-menu .menu-block-wrapper .menu p {
+#footer .content-menu .menu-block-wrapper .menu p {
 	width: 70%;
 	margin-left: 20px;
 	font-weight: bold;
 	font-size: 11px;
-}
+}/*
 
-#footer .content-menu .menu-block-wrapper li a {
+*/#footer .content-menu .menu-block-wrapper li a {
 	display: block;
 	width: 100%;
 	height: 100%;
 	position: absolute;
 	left: 0px;
+        overflow: hidden;
 	top: 0px;
 	z-index: 99;
-}*/
+}
 
 /* Content menu Main menu */
 
-#footer .content-menu .menu-block-wrapper li a#get-hired {
+#footer .content-menu .menu-block-wrapper li div a#get-hired {
 	background: url('/sites/default/files/images/careers.png') no-repeat right center;
 }
 
@@ -944,7 +949,7 @@ html.js fieldset.collapsed .fieldset-legend {
 	background: url('/sites/default/files/images/news.png') no-repeat right center;
 }
 
-#footer .content-menu .menu-block-wrapper li a#green-initiative-menu-item {
+#footer .content-menu .menu-block-wrapper li div a#green-initiative-menu-item {
 	background: url('/sites/default/files/images/leaf.png') no-repeat right center;
 }
 
