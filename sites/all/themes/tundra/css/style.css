@@ -830,17 +830,6 @@ html.js fieldset.collapsed .fieldset-legend {
 
 /* Content menus */
 
-/*#footer .content-menu .menu-block-wrapper .menu {
-	border-bottom: 1px solid #c9c9c9;
-	padding: 5px 0;
-	text-align: left;
-	margin: 5px 0;
-        margin: 0;
-	height: 142px;
-	list-style: none;
-        overflow: hidden;
-}*/
-
 #footer .content-menu .menu-block-wrapper ul {
     overflow: hidden;
     padding: 0.125em 0 0 0.125em;
@@ -849,19 +838,6 @@ html.js fieldset.collapsed .fieldset-legend {
     list-style: none;
     text-align: left;
 }
-
-/*#footer .content-menu .menu-block-wrapper li {
-	position: relative;
-	opacity: 1;
-	top: 0px;
-	display: inline-block;
-	float: left;
-	margin: 0.125em;
-	width: 234px;
-	height: 132px;
-	overflow: hidden;
-	
-}*/
 
 #footer .content-menu .menu-block-wrapper li {
     /*background-color: #f1f1f1;*/
@@ -882,19 +858,6 @@ html.js fieldset.collapsed .fieldset-legend {
 #footer .content-menu .menu-block-wrapper li:hover > div{
 	background-color:#E5E5E5;
 }
-
-/*#footer .content-menu .menu-block-wrapper .menu h1 {
-	color: #ba131a;
-	font-size: 14px;
-	font-weight: bold;
-	text-transform: uppercase;
-	margin-bottom: 20px;
-	clear: both;
-	width: 70%;
-	line-height: 1;
-	margin-left: 20px;
-	margin-top: 20px;
-}*/
 
 #footer .content-menu .menu-block-wrapper .menu h1 {
 	color: #ba131a;
@@ -1016,7 +979,7 @@ html.js fieldset.collapsed .fieldset-legend {
     position: relative;
     margin: 0 auto;
     /*padding: 0 20px;*/
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
 }
 
 .views-slideshow-cycle-main-frame-row {
@@ -1028,7 +991,8 @@ html.js fieldset.collapsed .fieldset-legend {
 .views-slideshow-cycle-main-frame-row-item {
     /*position: relative;*/
     /*padding: 35px;*/
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
+    /*z-index: 1;*/
 }
 
 #block-views-front-page-slideshow-block .views-field-title{
@@ -1046,11 +1010,14 @@ html.js fieldset.collapsed .fieldset-legend {
     margin-bottom: 0;
 }
 
-#block-views-front-page-slideshow-block .views-field-field-slideshow-image {
-    position:absolute;
-    top: 0;
-    left: 0;
-    z-index: -99;
+#block-views-front-page-slideshow-block .slideshow-link {
+    /*display: block;*/
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    top: 0px;
+    left: 0px;
+    z-index: 99;
 }
 
 .views-field {
@@ -1058,11 +1025,12 @@ html.js fieldset.collapsed .fieldset-legend {
 }
 
 .slideshow-link a {
+    background-color: rgba(204,204,204,0.01);
     display: block;
     position: absolute;
-    left: 0;
-    top: 0;
-    box-sizing: border-box;
+    left: 0px;
+    top: 0px;
+    /*box-sizing: border-box;*/
     width: 100%;
     height: 300px;
 }
