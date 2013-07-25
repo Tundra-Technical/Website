@@ -140,7 +140,7 @@
     #footer ul.phone-numbers
     {
             display:inline-block;
-            padding:10px 0 0;
+            padding: 0;
             margin: 0;
     }
     #footer .phone-numbers li
@@ -337,13 +337,32 @@
     
 }
 
-
-
-
 @media screen and (min-width: 800px) {
     #mobile-header {
         display: none;
     }
+}
+
+
+@media screen and (max-width: 800px) {
+    
+   /*
+   * The layout when there is only one sidebar, the right one.
+   */
+
+  .sidebar-second #content { /* Span 2 columns, starting in 1st column from left. */
+    float: none;
+    width: 100%; /*66.667%;*/
+    /*margin-left: 0%;*/
+    margin-right: 0; /*-66.667%;*/
+  }
+  .sidebar-second .region-sidebar-second { /* Span 1 column, starting in 3rd column from left. */
+    float: none;
+    width: 100%; /*33.333%;*/
+    margin-left: 0; /*66.667%;*/
+    margin-right: 0; /*-100%;*/
+  }
+
 }
 
 
@@ -457,7 +476,7 @@
 
 
 
-@media all and (min-width: 27em) {
+@media all and (min-width: 432px) {
     #footer .content-menu .menu-block-wrapper li {
             width: 50%;
             float: left;
@@ -485,16 +504,3 @@
 	height: 6.250em;
     }
 }
-
-/*@media all and ( max-width: 600px ) {
-        
-    #content h1,
-    .node-webform h2
-    {
-        font-size: 1.125em;
-    }
-    
-    #content p {
-            font-size: 1.125em;
-    }
-}*/

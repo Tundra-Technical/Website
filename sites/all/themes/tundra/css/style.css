@@ -549,11 +549,6 @@ zoom: 1;
 	text-decoration: none;
 }
 
-.sidebar-second .view-job-board .view-content a.view-btn {
-    text-align: center;
-    width: auto;
-}
-
 .view-job-board .view-content a.view-btn:visited {
 	color:#111;
 }
@@ -606,16 +601,16 @@ zoom: 1;
     overflow: visible;
 }
 
-.sidebar-second .view-job-board .views-row div {
+/*.sidebar-second .view-job-board .views-row div {
     margin-bottom: 8px;
-}
+}*/
 
-.sidebar-second .view-job-board .label {
+/*.sidebar-second .view-job-board .label {
     background-color: #f9f9f9;
     display: block;
     font-size: 12px;
     padding: 4px;
-}
+}*/
 
 .sidebar-second .view-job-board .field {
     font-size: 13px;
@@ -632,14 +627,19 @@ zoom: 1;
     text-decoration: none;
 }
 
-.sidebar-second .views-slideshow-controls-bottom {
+/*.sidebar-second .views-slideshow-controls-bottom {
     margin-top: 10px;
-}
+}*/
 
-.sidebar-second .views-slideshow-slide-counter {
+/*.sidebar-second .views-slideshow-slide-counter {
     font-size: 11px;
     text-align: right;
-}
+}*/
+
+/*.sidebar-second .view-job-board .view-content a.view-btn {
+    text-align: center;
+    width: auto;
+}*/
 
 .views-exposed-form .views-exposed-widget .form-submit,
 .views-exposed-form .views-exposed-widget .form-reset {
@@ -673,7 +673,8 @@ zoom: 1;
 }
 
 #content .view-news h2.node-title a {
-	text-decoration: none;
+    color: #292763;
+    text-decoration: none;
 }
 
 #content .view-news h2 {
@@ -1379,6 +1380,18 @@ body.section-about-us #content p
     	margin-bottom: 20px;
     	text-transform: uppercase;
     }
+    
+    .ui-tooltip {
+        width: 750px !important;
+    }
+    
+    .ui-tooltip {
+        max-width: 750px !important;
+    }
+
+.qtip-link, .qtip-additional-element {
+  border-bottom: none;
+}
 
 @media all and (max-height: 600px) {
 /*    #footer {
