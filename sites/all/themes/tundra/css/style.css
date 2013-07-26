@@ -536,7 +536,7 @@ zoom: 1;
 	color: #111;
 }
 
-.view-job-board .view-content .view-btn {
+.view-job-board .view-content a.view-btn {
 	font-size: 11px;
 	display: block;
 	width: 100%;
@@ -549,11 +549,11 @@ zoom: 1;
 	text-decoration: none;
 }
 
-.view-job-board .view-content .view-btn:visited {
+.view-job-board .view-content a.view-btn:visited {
 	color:#111;
 }
 
-.view-job-board .view-content .view-btn:hover {
+.view-job-board .view-content a.view-btn:hover {
 	background-color:#2A2763;
 	color:#fff;
 }
@@ -1382,8 +1382,11 @@ body.section-about-us #content p
     }
     
     .ui-tooltip {
-        width: 100% !important;
-        max-width: 735px;
+        width: 750px !important;
+    }
+    
+    .ui-tooltip {
+        max-width: 750px !important;
     }
 
 .qtip-link, .qtip-additional-element {
