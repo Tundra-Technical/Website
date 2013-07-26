@@ -1385,6 +1385,10 @@ body.section-about-us #content p
     .ui-tooltip {
         width: 735px !important;
     }
+.ui-tooltip, .qtip{
+	max-width: 735px;
+	min-width: 735px;
+}
 
 .qtip-link, .qtip-additional-element {
   border-bottom: none;
