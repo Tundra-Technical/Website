@@ -1,3 +1,8 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+...
+</head> 
+<body>
 <?php
 define('CLIENT_ID', '408396f4-461d-4194-b39a-4e046089ccc9');
 define('CLIENT_SECRET', 'G0TfQxq5Y00khGnzrsXOmpe1HAgnVG1n');
@@ -67,7 +72,7 @@ return $content;
 
 function doBullhornJobQuery($BhRestToken, $BhURL)
 {
-	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,description&where=id>=1&orderBy=-dateAdded&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd&where=id>=9445&orderBy=+id&BhRestToken=".$BhRestToken;
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);
@@ -96,9 +101,50 @@ $jeff = json_decode($session);
 
 $joborder = doBullhornJobQuery($jeff->BhRestToken, $jeff->restUrl);
 
+$jeff2 = json_decode($joborder);
+
+$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$joborder);
+$num = count($jeff2->data);
+//print '<pre>';
+print_r('The number of responses is '.$num);
+//print '</pre>';
+require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
+
+for ($i=0; $i < $num; $i++) { 
+	/*
+	$config = HTMLPurifier_Config::createDefault();
+	$config->set('HTML.AllowedElements', 'br,ul,ol,li');  
+	$config->set('Attr.AllowedClasses', '');  
+	$config->set('HTML.AllowedAttributes', '');  
+	$config->set('AutoFormat.RemoveEmpty', true);  
+	$temp = $jeff2->data[$i]->description;
+	$remarks = preg_replace('/<\?xml[^>]+\/>/im', '', $temp); 
+	$purifier = new HTMLPurifier($config);
+	$clean_html = $purifier->purify($remarks);
+	print '<pre style="font-family: Verdana; font-size: 12px;">';
+	print_r($clean_html);
+	print '</pre>';
+	*/
 print '<pre>';
-print_r($joborder);
+print_r($jeff2);
 print '</pre>';
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ?>
+
+
+</body>
+</html>
