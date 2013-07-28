@@ -72,7 +72,7 @@ return $content;
 
 function doBullhornJobQuery($BhRestToken, $BhURL)
 {
-	$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd&where=id>=9445&orderBy=+id&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories&where=id>=9445&orderBy=+id&BhRestToken=".$BhRestToken;
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);

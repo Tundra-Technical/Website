@@ -24,7 +24,10 @@ body
 	/*margin-bottom: 100px;*/
 }
 
-
+ol.tripList li
+{
+	font-size: inherit !important;
+}
 
 #why_tundra_box
 {
