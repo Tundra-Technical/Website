@@ -29,7 +29,7 @@ ol.tripList li
 	font-size: inherit !important;
 }
 
-.news_story_image
+.news_story_image_right
 {   
 	border: 1px solid #000000;
     float: right;
@@ -38,7 +38,21 @@ ol.tripList li
 
 }
 
-.news_story_image img
+.news_story_image_left
+{   
+	border: 1px solid #000000;
+    float: left;
+    margin-right: 10px;
+    padding: 10px;
+
+}
+
+.news_story_image_right img
+{
+	border-radius: 5px 5px 5px 5px;
+}
+
+.news_story_image_left img
 {
 	border-radius: 5px 5px 5px 5px;
 }
