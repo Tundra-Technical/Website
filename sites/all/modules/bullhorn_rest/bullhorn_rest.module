@@ -72,7 +72,7 @@ function doBullhornJobQuery($BhRestToken, $BhURL)
 
 	$item = $raw_result->fetchObject(); 
 
-	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);
@@ -162,6 +162,33 @@ function bullhorn_rest_queue_cron_info()
   return $queues;
 }
 
+function cat_id_to_name($id)
+{
+  switch ($id) {
+    case '692418':
+      $name = "applications";
+      break;
+    case '692451':
+      $name = "engineering";
+      break;
+    case '692527':
+      $name = "erp/sap";
+      break;
+    case '696836':
+      $name = "infrastructure";
+      break;
+    case '738245':
+      $name = "pmo";
+      break;
+    case '692511':
+      $name = "other area(s)";
+      break;
+    
+  }
+
+  return $name;
+}
+
 function bullhorn_cron()
 {
 	try {
@@ -170,8 +197,9 @@ $auth = doBullhornAuth($authCode);//echo $auth;die;
 $tokens = json_decode($auth);//print '<pre>';print_r($tokens);die;
 $session = doBullhornLogin($tokens->access_token);
 
-} catch (Exception $e) {
-error_log($e->getMessage());
+} catch (Exception $e) 
+{
+  error_log($e->getMessage());
 }
 
 	$jeff = json_decode($session);
@@ -209,6 +237,38 @@ for ($i=0; $i < $num; $i++) {
   	$node->title = ucfirst(strtolower($jeff2->data[$i]->title));
 
   	$node->language = "en";
+
+    $full_category = $jeff2->data[$i]->categories;
+
+    
+    if ($full_category->total == 1) {
+      // This means this job is associated with a category so we can proceed.
+      
+      $category_data = $full_category->data;
+
+      // Now that I got the data, pull out the category ID
+      
+      $cat_id = $category_data[0]->id;
+    }
+
+    $cat_name = cat_id_to_name($cat_id);
+
+    
+
+    if ($term = taxonomy_get_term_by_name($cat_name)) {
+          $terms_array = array_keys($term);
+          $node->field_category[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
+        } else {
+          $term = new STDClass();
+          $term->name = $tag;
+          $term->vid = 1;
+          if (!empty($term->name)) {
+            $test = taxonomy_term_save($term);
+            $term = taxonomy_get_term_by_name($tag);
+            $tid = $term->tid;
+            $node->field_category[LANGUAGE_NONE][0]['tid'] = $tid;
+          }
+        }
 
     $node->body[LANGUAGE_NONE][0]['value']   = $clean_html;
     $node->body[LANGUAGE_NONE][0]['summary'] = text_summary($clean_html);
