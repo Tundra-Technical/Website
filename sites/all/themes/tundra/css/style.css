@@ -29,6 +29,16 @@ ol.tripList li
 	font-size: inherit !important;
 }
 
+.news_story_image
+{   
+border: 1px solid #000000;
+    border-radius: 5px 5px 5px 5px;
+    float: right;
+    margin: 10px;
+    padding: 10px;
+
+}
+
 #why_tundra_box
 {
 	clear: both;
