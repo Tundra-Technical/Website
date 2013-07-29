@@ -260,11 +260,11 @@ for ($i=0; $i < $num; $i++) {
           $node->field_category[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
         } else {
           $term = new STDClass();
-          $term->name = $tag;
+          $term->name = $cat_name;
           $term->vid = 1;
           if (!empty($term->name)) {
             $test = taxonomy_term_save($term);
-            $term = taxonomy_get_term_by_name($tag);
+            $term = taxonomy_get_term_by_name($cat_name);
             $tid = $term->tid;
             $node->field_category[LANGUAGE_NONE][0]['tid'] = $tid;
           }
@@ -302,7 +302,7 @@ for ($i=0; $i < $num; $i++) {
           $node->field_employment_type[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
         } else {
           $term = new STDClass();
-          $term->name = $tag;
+          $term->name = ucwords(strtolower($jeff2->data[$i]->employmentType));
           $term->vid = 1;
           if (!empty($term->name)) {
             $test = taxonomy_term_save($term);
@@ -382,5 +382,15 @@ for ($i=0; $i < $num; $i++) {
   	node_save($node);
 
 }
+}
+
+
+function bullhorn_rest_form_alter($form, $form_state, $form_id)
+{
+  if ($form_id == "views_exposed_form") {
+    //print '<pre>';
+    //print_r($form);
+    //exit();
+  }
 }
 
