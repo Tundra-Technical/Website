@@ -72,7 +72,7 @@ function doBullhornJobQuery($BhRestToken, $BhURL)
 
 	$item = $raw_result->fetchObject(); 
 
-	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,description,title,dateClosed&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);
@@ -197,7 +197,7 @@ for ($i=0; $i < $num; $i++) {
 	$config->set('Attr.AllowedClasses', '');  
 	$config->set('HTML.AllowedAttributes', '');  
 	$config->set('AutoFormat.RemoveEmpty', true);  
-	$temp = $jeff2->data[$i]->description;
+	$temp = $jeff2->data[$i]->publicDescription;
 	$remarks = preg_replace('/<\?xml[^>]+\/>/im', '', $temp); 
 	$purifier = new HTMLPurifier($config);
 	$clean_html = $purifier->purify($remarks);
