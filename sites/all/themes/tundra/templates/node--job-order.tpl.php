@@ -131,10 +131,6 @@
               <td class="value"><?php print render($content['field_published']); ?></td>
           </tr>
           <tr class="detailItem">
-              <td class="property"><?php print t('Expires'); ?></td>
-              <td class="value"><?php print render($content['field_expires']); ?></td>
-          </tr>
-          <tr class="detailItem">
               <td class="property"><?php print t('Overview'); ?></td>
               <td class="value"><?php print render($content['body']); ?></td>
           </tr>
