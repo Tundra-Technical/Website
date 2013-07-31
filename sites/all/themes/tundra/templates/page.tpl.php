@@ -112,6 +112,14 @@
 
   </header>
 
+  <?php if ($page['pj_banner']): ?>
+  <div id="pj_banner">
+  <?php
+    $con = array_shift($page['pj_banner']);
+    print_r ($con['#markup']);
+    ?>
+  </div>
+  <?php endif; ?>
   <div id="main">
 
     <div id="content" class="column" role="main">

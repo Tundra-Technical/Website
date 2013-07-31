@@ -104,6 +104,7 @@ regions[navigation]     = Navigation bar
 regions[highlighted]    = Highlighted
 regions[help]           = Help
 regions[content]        = Content
+regions[pj_banner]        = PJ Banner
 regions[sidebar_first]  = First sidebar
 regions[sidebar_second] = Second sidebar
 regions[content_menu]   = Content menu

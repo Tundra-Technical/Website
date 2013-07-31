@@ -29,6 +29,11 @@ ol.tripList li
 	font-size: inherit !important;
 }
 
+#pj_banner
+{
+	height: 150px;
+}
+
 .news_story_image_right
 {   
 	border: 1px solid #000000;
