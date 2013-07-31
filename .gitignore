@@ -2,6 +2,7 @@
 .DS_Store
 sites/*/settings*.php
 sites/default/files/*
+.htaccess
 
 # Ignore paths that contain user-generated content.
 /nbproject/*
