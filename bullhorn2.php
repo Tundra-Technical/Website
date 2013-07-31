@@ -72,7 +72,30 @@ return $content;
 
 function doBullhornJobQuery($BhRestToken, $BhURL)
 {
-	$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,publicDescription&where=id>=9880&orderBy=+id&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status&where=id>=1&orderBy=+id&count=1000&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=id,status&where=id>=1&orderBy=-id&count=5000&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=id,status&where=id>=1&orderBy=-id&count=5000&BhRestToken=".$BhRestToken;
+
+	$tuCurl = curl_init();
+		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
+		curl_setopt($tuCurl, CURLOPT_PORT , 443);
+		curl_setopt($tuCurl, CURLOPT_VERBOSE, 0);
+		curl_setopt($tuCurl, CURLOPT_HEADER, 0);
+		curl_setopt($tuCurl, CURLOPT_SSLVERSION, 3); 
+		curl_setopt($tuCurl, CURLOPT_SSL_VERIFYPEER, 1); 
+		curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
+	$tuData = curl_exec($tuCurl);
+	curl_close($tuCurl);
+
+	return $tuData;
+}
+
+function doBullhornEventJobQuery($BhRestToken, $BhURL)
+{
+	//$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status&where=id>=1&orderBy=+id&count=1000&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=id,status&where=id>=1&orderBy=-id&count=5000&BhRestToken=".$BhRestToken;
+	$data = "event/subscription/jobs?maxEvents=100&BhRestToken=".$BhRestToken;
+	
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);
@@ -99,7 +122,9 @@ error_log($e->getMessage());
 
 $jeff = json_decode($session);
 
-$joborder = doBullhornJobQuery($jeff->BhRestToken, $jeff->restUrl);
+//$joborder = doBullhornJobQuery($jeff->BhRestToken, $jeff->restUrl);
+//
+$joborder = doBullhornEventJobQuery($jeff->BhRestToken, $jeff->restUrl);
 
 $jeff2 = json_decode($joborder);
 
@@ -110,7 +135,7 @@ print_r('The number of responses is '.$num);
 //print '</pre>';
 require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
 
-for ($i=0; $i < $num; $i++) { 
+for ($i=0; $i < 1; $i++) { 
 	/*
 	$config = HTMLPurifier_Config::createDefault();
 	$config->set('HTML.AllowedElements', 'br,ul,ol,li');  
