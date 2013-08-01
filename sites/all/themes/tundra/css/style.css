@@ -1071,7 +1071,7 @@ html.js fieldset.collapsed .fieldset-legend {
     margin:0;
 }
 
-#block-views-front-page-slideshow-block .skin-default {
+.skin-default {
     max-width: 60.000em; /*960px;*/
     height: 18.750em; /*300px;*/
     position: relative;
@@ -1080,7 +1080,7 @@ html.js fieldset.collapsed .fieldset-legend {
     /*box-sizing: border-box;*/
 }
 
-#block-views-front-page-slideshow-block .views-slideshow-cycle-main-frame-row {
+.views-slideshow-cycle-main-frame-row {
     width: 100% !important; /*works now with IE8*/
     height: 18.750em; /*300px;*/
     overflow: hidden;
