@@ -188,7 +188,7 @@ ol.tripList li
             margin-left: 780px;
             margin-right: -700px;
             width: 150px;
-            padding-top: 60px;
+            /*padding-top: 60px; */
         }
 	#main {
             padding: 0;
