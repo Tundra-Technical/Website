@@ -44,9 +44,20 @@ body.page-node-7940 .sidebar .region-sidebar-second
 	margin-left: -130px;
 }
 
+#block-views-pj-news-feed-block
+{
+	width: 627px;
+}
+
+iframe#twitter-widget-0
+{
+	margin-top: -50px;
+}
+
 .view-pj-news-feed .view-content .views-row
 {
 	padding-bottom: 20px;
+	line-height: 24px;
 }
 
 #pj-left-container
