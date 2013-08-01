@@ -148,6 +148,7 @@ function tundra_preprocess_html(&$variables, $hook) {
  */
 
 function tundra_preprocess_page(&$variables, $hook) {
+  dsm($variables);
   if ($variables['is_front']) 
   {
     drupal_add_js('sites/all/themes/tundra/js/homer.js');

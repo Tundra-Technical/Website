@@ -34,6 +34,18 @@ ol.tripList li
 	height: 150px;
 }
 
+#pj-left-container
+{
+	    float: left;
+    width: 75%;
+}
+
+#pj-right-container
+{
+	float: left;
+    width: 24%;
+}
+
 .news_story_image_right
 {   
 	border: 1px solid #000000;
