@@ -6,11 +6,8 @@
         Purpose of the stylesheet follows.
 */
 
-@media screen and (max-width: 479px) {
-    * {
-        box-sizing: border-box;
-    }
-    
+/*@media screen and (max-width: 479px) {*/
+@media screen and ( max-width: 320px ) {
     #page {
         padding: 0 5px;
     }
@@ -200,7 +197,31 @@
 
 }
 
+@media screen and ( max-width: 568px ) {
+    
+    #footer .content-menu .menu-block-wrapper li {
+	height: 6.250em;
+  }
+                  
+                    
+    /* Content menu Employers menu */
 
+    #footer .content-menu .menu-block-wrapper li a#employers-menu-item {
+            background-size: 50px;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#information-technology-menu-item {
+            background-size: 45px;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#engineering-menu-item {
+            background-size: 60px;
+    }
+
+    #footer .content-menu .menu-block-wrapper li a#contact-us-menu-item {
+            background-size: 50px;
+    }
+}
 
 
 @media screen and (max-width: 960px) {
@@ -362,6 +383,10 @@
     margin-left: 0; /*66.667%;*/
     margin-right: 0; /*-100%;*/
   }
+  
+  #footer .content-menu .menu-block-wrapper li {
+	height: 7.250em;
+  }
 
 }
 
@@ -494,13 +519,5 @@
     #content .field-item ol,
     #content .field-item ul {				
             width:100%;
-    }
-}
-
-
-
-@media all and ( max-width: 800px ) {
-    #footer .content-menu .menu-block-wrapper li {
-	height: 6.250em;
     }
 }

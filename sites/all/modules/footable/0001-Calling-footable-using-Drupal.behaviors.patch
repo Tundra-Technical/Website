@@ -1,0 +1,31 @@
+From 92bb8111d808848db197c5c9ede28e5c54f5ce15 Mon Sep 17 00:00:00 2001
+From: Daniel Wentsch <hello@wentsch.me>
+Date: Fri, 5 Apr 2013 13:43:27 +0200
+Subject: [PATCH] Calling footable() using Drupal.behaviors
+
+---
+ js/caller.js |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/js/caller.js b/js/caller.js
+index 8f0ce84..a1525c3 100644
+--- a/js/caller.js
++++ b/js/caller.js
+@@ -2,8 +2,8 @@
+  * @file 
+  * Calls the FooTable plugin.
+  */
+-jQuery(document).ready(function($) {
+-  $(function() {
+-    $('.footable').footable();
+-  });
+-});
++Drupal.behaviors.fooTable = {
++  attach: function (context, settings) {
++    jQuery('.footable').footable();
++  }
++};
+\ No newline at end of file
+-- 
+1.7.4.msysgit.0
+

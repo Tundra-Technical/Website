@@ -186,14 +186,14 @@ ol.tripList li
 		/*min-height:900px;*/
 	}
         .sidebar-second #content {
-            width: 700px;
-            margin-right: -780px;
+            /*width: 700px;*/
+            /*margin-right: -780px;*/
         }
         .sidebar-second .region-sidebar-second {
-            margin-left: 780px;
-            margin-right: -700px;
-            width: 150px;
-            /*padding-top: 60px; */
+            /*margin-left: 780px;*/
+            /*margin-right: -700px;*/
+            /*width: 150px;*/
+            padding-top: 60px;
         }
 	#main {
             padding: 0;
@@ -599,6 +599,7 @@ zoom: 1;
 	font-size: 11px;
 	display: block;
 	width: 100%;
+        max-width: 150px;
 	line-height: 13px;
 	margin-top: 5px;
 	padding: 5px;
@@ -626,7 +627,7 @@ zoom: 1;
 .view-job-board .view-filters form {
 	/* background-color: #d8d8d8; */
 	background: #d8d8d8 url('/sites/default/files/images/job_search.png') right top no-repeat padding-box;
-	height: 100px;
+	/*height: 100px;*/
 	position: relative;
 	padding: 20px;
 	border: 1px solid #7c7c7c;
@@ -634,7 +635,7 @@ zoom: 1;
 }
 
 .view-job-board .view-filters .views-exposed-widget {
-	display: inline;
+	/*display: inline;*/
 	float: left;
 	position: relative;
 	bottom: -10px;
@@ -655,14 +656,24 @@ zoom: 1;
 	font-size: 12px;
 }
 
+.sidebar-second .view-job-board {
+    height: 400px;
+    width: 100%;
+}
+
 .sidebar-second .view-job-board .views-slideshow-cycle-main-frame-row,
 .sidebar-second .view-job-board .views-slideshow-cycle-main-frame {
     overflow: visible;
 }
 
-/*.sidebar-second .view-job-board .views-row div {
+.sidebar-second .view-job-board .views-row {
+    padding-top: 8px;
     margin-bottom: 8px;
-}*/
+}
+
+.sidebar-second .view-job-board .views-row > div {
+    padding-bottom: 8px;
+}
 
 /*.sidebar-second .view-job-board .label {
     background-color: #f9f9f9;
@@ -679,6 +690,17 @@ zoom: 1;
 .sidebar-second .view-job-board .title.field {
     font-size: 100%;
     padding: 0;
+}
+
+.sidebar-second .view-job-board .views-field-field-city,
+.sidebar-second .view-job-board .views-field-field-country,
+.sidebar-second .view-job-board .views-field-field-category,
+.sidebar-second .view-job-board .views-field-field-employment-type,
+.sidebar-second .view-job-board .views-field-field-published{
+    float: left;
+    /*margin-right: -20%;*/
+    /*width: 20%;*/
+    
 }
 
 .sidebar-second .view-job-board a {
@@ -1033,7 +1055,7 @@ html.js fieldset.collapsed .fieldset-legend {
     margin:0;
 }
 
-.skin-default {
+#block-views-front-page-slideshow-block .skin-default {
     max-width: 60.000em; /*960px;*/
     height: 18.750em; /*300px;*/
     position: relative;
@@ -1042,7 +1064,7 @@ html.js fieldset.collapsed .fieldset-legend {
     /*box-sizing: border-box;*/
 }
 
-.views-slideshow-cycle-main-frame-row {
+#block-views-front-page-slideshow-block .views-slideshow-cycle-main-frame-row {
     width: 100% !important; /*works now with IE8*/
     height: 18.750em; /*300px;*/
     overflow: hidden;

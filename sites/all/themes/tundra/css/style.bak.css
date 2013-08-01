@@ -490,16 +490,16 @@ zoom: 1;
 	text-decoration: none;
 }
 
-.sidebar-second .view-job-board .view-content a.view-btn {
+.sidebar-second .view-job-board .view-content .view-btn {
     text-align: center;
     width: auto;
 }
 
-.view-job-board .view-content a.view-btn:visited {
+.view-job-board .view-content .view-btn:visited {
 	color:#111;
 }
 
-.view-job-board .view-content a.view-btn:hover {
+.view-job-board .view-content .view-btn:hover {
 	background-color:#2A2763;
 	color:#fff;
 }

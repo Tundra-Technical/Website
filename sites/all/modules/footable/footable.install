@@ -1,0 +1,34 @@
+<?php
+/**
+ * @file
+ * Installation file for FooTable module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function footable_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  $requirements['footable']['title'] = 'FooTable';
+  $requirements['footable']['value'] = NULL;
+  if (file_exists(drupal_get_path('module', 'footable') . '/FooTable/js/footable.js')) {
+    $requirements['footable']['severity'] = REQUIREMENT_OK;
+  }
+  elseif (module_exists('libraries') && file_exists(libraries_get_path('FooTable') . '/js/footable.js')) {
+    $requirements['footable']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    // Required footable library wasn't found; abort installation.
+    $requirements['footable']['value'] = $t('Not found');
+    // Provide a download link to the FooTable jQuery plugin.
+    $requirements['footable']['description'] = $t('The <a href="!footable">FooTable</a> jQuery plugin is missing. See <a href="!readme">README.md</a> for instructions on how to download and extract it.', array(
+      '!footable' => 'http://themergency.com/footable/',
+      '!readme' => url(drupal_get_path('module', 'footable') . '/README.txt'))
+    );
+    $requirements['footable']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $requirements;
+}

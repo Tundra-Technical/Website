@@ -1,6 +1,53 @@
 @CHARSET "UTF-8";
-#content .information-technology-talent .small-header{font-size:13px;padding:10px;background-color:#C8C8C8;margin-top:5px;}
-#content .information-technology-talent table{margin-top:10px;width:100%;margin-bottom:50px;}
-#content .information-technology-talent table td{width:50%;}
-#content .information-technology-talent table ul{margin-top:10px;margin-left:auto;margin-right:auto;list-style:disc;width:85%;}
-/*#content .information-technology-talent{padding-bottom:250px;}*/
+.information-technology-talent .small-header{
+    font-size:13px;
+    padding:10px;
+    background-color:#C8C8C8;
+    margin-top:5px;
+}
+
+.information-technology-talent .first {
+    float: left;
+    width: 50%;
+}
+            
+.information-technology-talent .second {
+    float: left;
+    width: 50%;
+}
+            
+.information-technology-talent .first h3,
+.information-technology-talent .second h3 {
+    background-color: #C8C8C8;
+    font-size: 13px;
+    padding: 10px;
+    display: inline-block;
+    width: 100%;
+}
+
+.information-technology-talent ul {
+    margin-top:10px;
+    margin-left:auto;
+    margin-right:auto;
+    list-style:disc;
+    width:85%;
+}
+
+@media screen and ( max-width: 600px ) {                
+    .information-technology-talent .first {
+        float: none;
+        width: 100%;
+    }
+
+    .information-technology-talent .second {
+        float: none;
+        width: 100%;
+    }
+}
+
+@media screen and ( max-width: 768px ) {
+    .information-technology-talent ul {
+        width: 90%;
+        padding: 10px;
+    }
+}

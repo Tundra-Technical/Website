@@ -7,3 +7,4 @@ sites/default/files/*
 # Ignore paths that contain user-generated content.
 /nbproject/*
 /nbproject/private/
+/test/
