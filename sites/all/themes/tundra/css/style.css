@@ -34,6 +34,11 @@ ol.tripList li
 	height: 150px;
 }
 
+.page-node-7940 #page #main aside.sidebar section.region-sidebar-second
+{
+	padding-top: 0px !important;
+}
+
 .twitter-timeline
 {
 	margin-left: -130px;
