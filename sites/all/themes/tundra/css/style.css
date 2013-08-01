@@ -39,6 +39,11 @@ ol.tripList li
 	margin-left: -130px;
 }
 
+.view-pj-news-feed .view-content .views-row
+{
+	padding-bottom: 20px;
+}
+
 #pj-left-container
 {
 	    float: left;
