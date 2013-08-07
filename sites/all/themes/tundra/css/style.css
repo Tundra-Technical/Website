@@ -54,6 +54,12 @@ iframe#twitter-widget-0
 	margin-top: -50px;
 }
 
+.view-news-articles .view-content .views-row
+{
+	padding-bottom: 20px;
+	line-height: 24px;
+}
+
 .view-pj-news-feed .view-content .views-row
 {
 	padding-bottom: 20px;
