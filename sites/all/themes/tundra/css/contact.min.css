@@ -8,7 +8,4 @@
 #content .contact-us .addresList .addressItem .address{margin-left:25px;margin-top:25px;}
 #content .contact-us .addresList .addressItem .city{margin-left:25px;margin-top:25px;font-size:15px;}
 #content .contact-us .addresList .addressItem .map{position:absolute;right:15px;top:15px;border:1px solid #333333;}
-#content .contact-us ul.addresList .addressItem p.address {    font-size: 1em;
-    line-height: 22px;
-    margin-bottom: 20px;
-    text-align: justify;}
+#content .contact-us ul.addresList .addressItem p.address {font-size: 15px;line-height: 19px;text-align: justify;}
