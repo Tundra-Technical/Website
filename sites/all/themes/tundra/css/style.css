@@ -349,7 +349,7 @@ iframe#twitter-widget-0
 		#content .field-item ol li, #content .field-item ul li
 		{					
 			margin:12px;			
-			font-size:13px;			
+			font-size:inherit;			
 			list-style-position:inside;
 		}
 	.front #footer {
