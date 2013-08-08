@@ -1,8 +1,6 @@
 @CHARSET "UTF-8";
 .information-technology-talent .small-header{
-    font-size:13px;
     padding:10px;
-    background-color:#C8C8C8;
     margin-top:5px;
 }
 
@@ -18,8 +16,6 @@
             
 .information-technology-talent .first h3,
 .information-technology-talent .second h3 {
-    background-color: #C8C8C8;
-    font-size: 13px;
     padding: 10px;
     display: inline-block;
     width: 100%;
