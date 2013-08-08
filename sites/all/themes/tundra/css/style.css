@@ -1468,7 +1468,7 @@ blockquote p {
 
 body.section-about-us #content p
     {
-    	font-size: 14px;
+    	font-size: 1em;
     	line-height: 22px;
     	margin-bottom: 20px;
     	text-align: justify;
