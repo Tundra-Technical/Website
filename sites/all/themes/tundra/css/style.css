@@ -352,6 +352,46 @@ iframe#twitter-widget-0
 			font-size:inherit;			
 			list-style-position:inside;
 		}
+
+		#content .field-item ol li:before
+		{
+			font: bold 50px/1 Sans-Serif;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+
+		.ffdf
+		{
+			counter-reset: this-counter;
+			margin: 0 auto 20px;
+			padding: 20px;
+			width: 80%;
+		}
+
+		.ffdf dd
+		{
+			line-height: 22px;
+    		margin: 0 0 0 40px;
+    		padding-bottom: 27px;
+		}
+
+		.ffdf dt
+		{
+			padding-left: 50px;
+			height: 75px;
+		}
+
+		.ffdf dt:before
+		{
+			content: counter(this-counter, decimal);
+    		counter-increment: this-counter;
+		    font: bold 50px/1 Sans-Serif;
+		    position: absolute;
+		        left: 130px;
+		}
+
+
 	.front #footer {
 		position: static;
 	}
