@@ -628,16 +628,16 @@
     }
     
     .views-slideshow-cycle-main-frame-row {
-        height: 21.875em; /*350px;*/
+        height: 100%; /*350px;*/
     }
     .view-front-page-slideshow .view-header,
     .view-front-page-slideshow-test .view-header {
         width: 100%;
-        height: 21.875em; /*350px;*/
+        height: 100%; /*350px;*/
      }
     .view-front-page-slideshow .view-header .slideshow-controls,
     .view-front-page-slideshow-test .view-header .slideshow-controls {
-        height: 21.875em; /*350px;*/
+        height: 100%; /*350px;*/
      }
     
     #footer {		
