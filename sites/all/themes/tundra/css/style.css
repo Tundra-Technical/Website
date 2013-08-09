@@ -1302,11 +1302,6 @@ html.js fieldset.collapsed .fieldset-legend {
 }
 
 
-.views-slideshow-cycle-main-frame-row, .views-slideshow-cycle-main-frame {
-      width: 100% !important;
-      height: auto !important;
-    }
-
 .view-front-page-slideshow .view-header .slideshow-controls,
 .view-front-page-slideshow-test .view-header .slideshow-controls {
     background-color: #fff;

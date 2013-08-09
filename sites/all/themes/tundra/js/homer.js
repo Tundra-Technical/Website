@@ -4,3 +4,26 @@ jQuery(function ($) {
   	return false;
   });
 });
+
+jQuery(function ($) {
+        
+    $(window).resize(function() {
+        $('.views-slideshow-cycle-main-frame').each(function(){
+            var heightImgNow = '';
+
+            $(this).find('.views-slideshow-cycle-main-frame-row').each(function(){
+                    var thisDisplay = $(this).prop("style").display;
+                    var thisImgHeight = $(this).find('img').height();
+                    if(thisDisplay == 'block') {
+                        heightImgNow = thisImgHeight;
+                    }   
+            });            
+
+            if(heightImgNow != '') {
+                // set div height    = now image height.
+                $(this).height(heightImgNow);
+            }           
+        });
+    });   
+
+});
