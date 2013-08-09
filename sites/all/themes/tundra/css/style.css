@@ -1296,7 +1296,7 @@ html.js fieldset.collapsed .fieldset-legend {
 .view-front-page-slideshow-test .view-header {
     position: absolute;
     width: 60.000em; /*960px;*/
-    height: 18.750em; /*300px;*/
+    height: 100%; /*300px;*/
     left: 0;
     top: 0;
 }
