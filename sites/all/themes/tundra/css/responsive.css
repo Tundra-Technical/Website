@@ -6,222 +6,119 @@
         Purpose of the stylesheet follows.
 */
 
-/*@media screen and (max-width: 479px) {*/
-@media screen and ( max-width: 320px ) {
-    #page {
-        padding: 0 5px;
+
+
+@media screen and ( max-width: 640px ) {
+    .field-item ul,
+    .field-item ol {
+        padding: 10px;
     }
     
-    #header {
-        padding-top: 0; /*0.60em;*/
-        position: relative;
+    .view-job-board .views-exposed-form {
+        padding-top: 10px;
+        height: 184px;
+        padding-right: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
     }
     
-    #header #logo {
-        display: inline;
-        float: none;
-        margin-right: 0;
+    .views-exposed-widgets {
+        height: 100%;
     }
     
-    #logo img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        height: auto;
-    }
-    
-    #header .region-header {
-        clear: both;
-        max-width: 100%; /*19.375em;*/
-        overflow: hidden;
-        width: 100%;
-    }
-    
-    #header .block-locale {
-        border-top: none;
-        float: none;
-        margin: 1.5em auto;
-        padding: 0;
-        text-align: center;
-    }
-    
-    #header .block-locale li.divider {
-        display: none;
-    }
-    
-    #header .block-locale a {
-        background-color: #292763;
-        border-radius: 5px;
-        color: #fff;
-        display: inline-block;
-        font-size: 0.875em;
-        width: 49%;
-        padding: 0.175em;
-    }
-    
-    #header .block-locale li.active a {
-        background-color: #BA131A;
-        color: #fff;
-    }
-    
-    #header .social-networking-badges p a {
-            margin-right: 5px;
-    }
-    
-    #header .social-networking-badges p a:last-of-type {
-            margin-right: 0;
-    }
-    
-    #header .social-networking-badges p a:hover {
-            position: relative;
-            top: inherit;
-    }
-    
-    #header .social-networking-badges,
-    .domain-drupal-tundratechnical-ca #header .social-networking-badges{
-        float: none;
-        clear: both;
-        margin: 0 auto;
-        width: 143px;
-    }
-    
-    #content {
-        padding: 0;
-    }
-    
-    #content .field-item ol,#content .field-item ul {				
-            width:100%;
-    }
-    
-    #content h1,
-    .node-webform h2 {
-            font-size: 1.8em;
-    }
-    
-/*    #content p {
-            font-size: 1.125em;
-    }*/
-            
-    .view-front-page-slideshow .skin-default {
-        max-width: 100%;
-        height: 21.875em; /*350px;*/
-    }
-    
-    .views-slideshow-cycle-main-frame-row {
-        height: 21.875em; /*350px;*/
-    }
-    .view-front-page-slideshow .view-header,
-    .view-front-page-slideshow-test .view-header {
-        width: 100%;
-        height: 21.875em; /*350px;*/
-     }
-    .view-front-page-slideshow .view-header .slideshow-controls,
-    .view-front-page-slideshow-test .view-header .slideshow-controls {
-        height: 21.875em; /*350px;*/
-     }
-    
-    #footer {		
-        text-align:center;
-        background-color:#fff;
-        width:100%;
-        padding-bottom:10px;
+    .view-job-board .views-exposed-widget {
+        height: 50%;
+        width: 33.333333%;
+        padding-top: 0;
+        padding-right: 5px;
+        padding-bottom: 5px;
         padding-left: 0;
-        padding-right: 0;
-        overflow:hidden;
-        margin:0 auto;
-		
+        position: inherit;
+        bottom: auto;
     }
     
-    /*Toll free numbers*/
-    
-    #footer ul.phone-numbers
-    {
-            display:inline-block;
-            padding: 0;
-            margin: 0;
-    }
-    #footer .phone-numbers li
-    {
-            float:none;
-            display:block;
-            font-size:14px;
-            color:#B30000;
-            font-weight:bold;			
-    }
-    #footer .phone-numbers .right-bumper
-    {
-            border-right:none;
-            padding-right:0;
-    }		
-    #footer .phone-numbers .left-bumper
-    {
-            border-left:none;
-            padding-left:0;
+    .view-job-board .views-exposed-widget:nth-last-child(2) {
+        width: 50%;
     }
     
-    #footer .footer-menu ul.menu
-    {		
-            margin:0;
-            padding:0;
+    .view-job-board .views-submit-button {
+        position: relative;
+        width: 50%;
     }
-            #footer .footer-menu li
-            {
-                    float:left;
-                    display:block;
-                    padding:0 0.625em;
-                    margin: 0.313em 0;
-                    width: 50%;
-            }
-            
-            #footer .footer-menu li a {
-                border-radius: 0.375em;
-                color: #fff;
-                display: block;
-                width: 100%;
-                background-color: #292763;
-                padding: 0.375em 0;
-            }
-                    #footer .footer-menu li a:hover
-                    {
-                            color:#fff;
-                    }
     
-    .view-news .views-row {
-	width:95%;
-	margin-top:2.188em;
+    .view-job-board .form-submit {
+        position: absolute;
+        top: 39%;
     }
-
-    .view-news .views-row-first {
-      margin-top:3.750em;
-    }
-
 }
 
 @media screen and ( max-width: 568px ) {
     
-    #footer .content-menu .menu-block-wrapper li {
-	height: 6.250em;
-  }
-                  
-                    
+    .content-menu .leaf {
+          height: 6.250em;
+    }
+                            
     /* Content menu Employers menu */
 
-    #footer .content-menu .menu-block-wrapper li a#employers-menu-item {
+    #employers-menu-item {
             background-size: 50px;
     }
 
-    #footer .content-menu .menu-block-wrapper li a#information-technology-menu-item {
+    #information-technology-menu-item {
             background-size: 45px;
     }
 
-    #footer .content-menu .menu-block-wrapper li a#engineering-menu-item {
+    #engineering-menu-item {
             background-size: 60px;
     }
 
-    #footer .content-menu .menu-block-wrapper li a#contact-us-menu-item {
+    #contact-us-menu-item {
             background-size: 50px;
     }
 }
+
+/*@media screen and ( min-width: 600px ) {
+    
+    .view-job-board .sticky-enabled.footable th,
+    .view-job-board .sticky-header th {
+	padding-left: 20px;
+	padding-right: 20px;
+    }
+    
+    .view-job-board .sticky-header th {
+        width: 100% !important;
+    }
+    
+    .footable-row-detail-cell {
+        padding: 10px 0;
+    }
+ 
+    .footable-row-detail-row {
+        float: left;
+        width: 20%;
+    }
+    .footable-row-detail-name {
+        font-size: 1.025em;
+        color: #707070;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    .footable-row-detail-value {
+        font-size: 1.3em;
+    }
+    .footable-row-detail-row:last-of-type .footable-row-detail-name {
+        display: none;
+    }
+    .footable-row-detail-row:last-of-type .footable-row-detail-value {
+        width: 100%;
+    }
+    .sharethis-wrapper {
+        display: inline-block;
+        float: right;
+    }
+    .footable-row-detail-row:first-of-type {
+        width: 40%;
+    }
+}*/
 
 
 @media screen and (max-width: 960px) {
@@ -250,13 +147,13 @@
         width:100%;	
     }
     
-    #content .field-item ol,
-    #content .field-item ul {				
+    .field-item ol,
+    .field-item ul {				
             width:90%;
     }
     
-    #content .field-item ol li,
-    #content .field-item ul li {
+    .field-item ol li,
+    .field-item ul li {
         font-size: 0.875em;
         list-style-position: outside;
     }
@@ -325,7 +222,7 @@
     }
     
     
-    #footer .content-menu .menu-block-wrapper li {
+    .content-menu .leaf {
 	height: 8.250em;
     }
     
@@ -382,10 +279,6 @@
     width: 100%; /*33.333%;*/
     margin-left: 0; /*66.667%;*/
     margin-right: 0; /*-100%;*/
-  }
-  
-  #footer .content-menu .menu-block-wrapper li {
-	height: 7.250em;
   }
 
 }
@@ -496,28 +389,403 @@
     #content {
         padding: 10px;
     }
+    
+    .view-job-board .sticky-enabled.footable th,
+    .view-job-board .sticky-header th {
+	padding-left: 10px;
+	padding-right: 10px;
+    }
+    
+    .view-job-board .sticky-header th {
+        width: 100% !important;
+    }
+    
+    .view-job-board .views-field {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: inherit;
+    }
+    
+    .footable-row-detail-cell {
+        padding: 10px 0;
+    }
+ 
+    .footable-row-detail-row {
+        float: left;
+        width: 25%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .footable-row-detail-name {
+        font-size: 1.025em;
+        color: #707070;
+        text-shadow: 1px 1px 1px #fff;
+    }
+    .footable-row-detail-value {
+        font-size: 1.3em;
+    }
+    .footable-row-detail-row:last-of-type .footable-row-detail-name {
+        display: none;
+    }
+    .footable-row-detail-row:last-of-type .footable-row-detail-value {
+        width: 100%;
+    }
+    .sharethis-wrapper {
+        display: inline-block;
+        float: right;
+    }
+    .footable-row-detail-row:first-of-type {
+        width: 40%;
+    }
+    
+    .footable-row-detail-row:last-of-type {
+        width: 10%;
+    }
+    
+    .sharethis-wrapper {
+        width: 22px;
+    }
 }
 
 
 
 
 @media all and (min-width: 432px) {
-    #footer .content-menu .menu-block-wrapper li {
+    .content-menu .leaf {
             width: 50%;
             float: left;
     }
 }
 
 @media all and (min-width: 960px) {
-    #footer .content-menu .menu-block-wrapper li {
+    .content-menu .leaf {
             width: 25%;
             height: 8.250em;
     }
 }
 
-@media all and (max-width: 761px) {
-    #content .field-item ol,
-    #content .field-item ul {				
+@media all and (max-width: 768px) {
+    .field-item ol,
+    .field-item ul {				
             width:100%;
+    }
+    
+    .form-submit, .view-btn {
+	font-size: 1em;
+	color: #050505;
+	padding: 10px 20px;
+	background: -moz-linear-gradient(
+		top,
+		#ffffff 0%,
+		#ebebeb 50%,
+		#dbdbdb 50%,
+		#b5b5b5);
+	background: -webkit-gradient(
+		linear, left top, left bottom, 
+		from(#ffffff),
+		color-stop(0.50, #ebebeb),
+		color-stop(0.50, #dbdbdb),
+		to(#b5b5b5));
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	border: 1px solid #949494;
+	-moz-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 2px rgba(255,255,255,1);
+	-webkit-box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 2px rgba(255,255,255,1);
+	box-shadow:
+		0px 1px 3px rgba(000,000,000,0.5),
+		inset 0px 0px 2px rgba(255,255,255,1);
+	text-shadow:
+		0px -1px 0px rgba(000,000,000,0.2),
+		0px 1px 0px rgba(255,255,255,1);
+        text-align: center;
+    }
+}
+
+@media screen and ( max-width: 480px ) {
+    .view-job-board .views-exposed-widget {
+        width: auto;
+    }
+}
+
+/*@media screen and (max-width: 479px) {*/
+@media screen and ( max-width: 320px ) {
+    
+    a {
+        font-size: 1.125em;
+    }
+    
+    #page {
+        padding: 0 5px;
+    }
+    
+    #header {
+        padding-top: 0; /*0.60em;*/
+        position: relative;
+    }
+    
+    #header #logo {
+        display: inline;
+        float: none;
+        margin-right: 0;
+    }
+    
+    #logo img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        height: auto;
+    }
+    
+    #header .region-header {
+        clear: both;
+        max-width: 100%; /*19.375em;*/
+        overflow: hidden;
+        width: 100%;
+    }
+    
+    #header .block-locale {
+        border-top: none;
+        float: none;
+        margin: 1.5em auto;
+        padding: 0;
+        text-align: center;
+    }
+    
+    #header .block-locale li.divider {
+        display: none;
+    }
+    
+    #header .block-locale a {
+        background-color: #292763;
+        border-radius: 5px;
+        color: #fff;
+        display: inline-block;
+        font-size: 0.875em;
+        width: 49%;
+        padding: 0.175em;
+    }
+    
+    #header .block-locale li.active a {
+        background-color: #BA131A;
+        color: #fff;
+    }
+    
+    #header .social-networking-badges p a {
+            margin-right: 5px;
+    }
+    
+    #header .social-networking-badges p a:last-of-type {
+            margin-right: 0;
+    }
+    
+    #header .social-networking-badges p a:hover {
+            position: relative;
+            top: inherit;
+    }
+    
+    #header .social-networking-badges,
+    .domain-drupal-tundratechnical-ca #header .social-networking-badges{
+        float: none;
+        clear: both;
+        margin: 0 auto;
+        width: 143px;
+    }
+    
+    #content {
+        padding: 0;
+    }
+    
+    .field-item ol,.field-item ul {				
+            width:100%;
+    }
+    
+    #content h1,
+    .node-webform h2 {
+            font-size: 1.8em;
+    }
+    
+/*    #content p {
+            font-size: 1.125em;
+    }*/
+            
+    .view-front-page-slideshow .skin-default {
+        max-width: 100%;
+        height: 21.875em; /*350px;*/
+    }
+    
+    .views-slideshow-cycle-main-frame-row {
+        height: 21.875em; /*350px;*/
+    }
+    .view-front-page-slideshow .view-header,
+    .view-front-page-slideshow-test .view-header {
+        width: 100%;
+        height: 21.875em; /*350px;*/
+     }
+    .view-front-page-slideshow .view-header .slideshow-controls,
+    .view-front-page-slideshow-test .view-header .slideshow-controls {
+        height: 21.875em; /*350px;*/
+     }
+    
+    #footer {		
+        text-align:center;
+        background-color:#fff;
+        width:100%;
+        padding-bottom:10px;
+        padding-left: 0;
+        padding-right: 0;
+        overflow:hidden;
+        margin:0 auto;
+		
+    }
+    
+    /*Toll free numbers*/
+    
+    #footer ul.phone-numbers
+    {
+            display:inline-block;
+            padding: 0;
+            margin: 0;
+    }
+    #footer .phone-numbers li
+    {
+            float:none;
+            display:block;
+            font-size:14px;
+            color:#B30000;
+            font-weight:bold;			
+    }
+    #footer .phone-numbers .right-bumper
+    {
+            border-right:none;
+            padding-right:0;
+    }		
+    #footer .phone-numbers .left-bumper
+    {
+            border-left:none;
+            padding-left:0;
+    }
+    
+    #footer .footer-menu ul.menu
+    {		
+            margin:0;
+            padding:0;
+    }
+            #footer .footer-menu li
+            {
+                    float:left;
+                    display:block;
+                    padding:0 0.625em;
+                    margin: 0.313em 0;
+                    width: 50%;
+            }
+            
+            #footer .footer-menu li a {
+                border-radius: 0.375em;
+                color: #fff;
+                display: block;
+                width: 100%;
+                background-color: #292763;
+                padding: 0.375em 0;
+            }
+                    #footer .footer-menu li a:hover
+                    {
+                            color:#fff;
+                    }
+    
+    .view-news .views-row {
+	width:95%;
+	margin-top:2.188em;
+    }
+
+    .view-news .views-row-first {
+      margin-top:3.750em;
+    }
+    
+    /*Job Board*/
+    
+    .view-job-board .views-exposed-form {
+        height: auto;
+    }
+    
+    .view-job-board .views-exposed-widget {
+        clear: left;
+        float: none;
+        padding: 0;
+        width: 100%;
+        height: auto;
+    }
+    
+    .view-job-board .views-exposed-widget:nth-last-child(2) {
+        width: 100%;
+    }
+    
+    .view-job-board .views-exposed-widget:last-child {
+        text-align: right;
+    }
+    
+    .view-job-board .views-exposed-widget label {
+        float: left;
+        width: 25%;
+    }
+    
+    .view-job-board .views-widget {
+        float:left;
+    }
+    
+    .footable-row-detail-row {
+        float: left;
+        width: 50%;
+    }
+    
+    .footable-row-detail-row:first-of-type {
+        width: 50%;
+    }
+    
+    .footable-row-detail-row:nth-last-of-type(2) {
+        width: 100%;        
+    }
+    
+    .footable-row-detail-row:last-child{
+        width: 100%;
+    }
+    
+
+    
+    .view-job-board .form-submit {
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        top: inherit;
+    }
+    
+    .view-btn {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        
+    }
+
+    .view-btn:visited {
+            color: inherit;
+    }
+
+    .view-btn:hover {
+            background-color:inherit;
+            color: inherit;
+    }
+    
+    .sharethis-wrapper {
+        width: 100%;
+    }
+    
+    .jobDetailsTable .property,
+    .jobDetailsTable .value {
+        padding: 5px;
     }
 }
