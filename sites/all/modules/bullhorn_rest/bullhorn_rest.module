@@ -312,43 +312,17 @@ for ($i=0; $i < $num; $i++) {
           }
         }
 
-        
-    $countries_cities = taxonomy_vocabulary_machine_name_loadmachine_name_load('countries_cities');
-    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
-        $country = "United States";
-    }
-    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
-        $country = "Canada";
-    }
-    else
-    {
-        $country = "Canada";
-    }
-
-    if ($term = taxonomy_get_term_by_name($country)) {
-      $terms_array = array_keys($term);
-      $node->field_country_cities[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-    } else {
-      $term = new STDClass();
-      $term->name = $country;
-      $term->vid = $countries_cities->vid;
-      if (!empty($term->name)) {
-        $test = taxonomy_term_save($term);
-        $term = taxonomy_get_term_by_name($tag);
-        $tid = $term->tid;
-        $node->field_country[LANGUAGE_NONE][0]['tid'] = $tid;
-      }
-    }
-    
+    //$node->field_city[$node->language][0]['value'] = ucfirst(strtolower($jeff2->data[$i]->address->city));
+    //
     if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
     {
           $terms_array = array_keys($term);
-          $node->field_country_cities[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
+          $node->field_city[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
     } else 
     {
           $term = new STDClass();
           $term->name = ucfirst(strtolower($jeff2->data[$i]->address->city));
-          $term->vid = 1;
+          $term->vid = 2;
 
 
           if (!empty($term->name)) 
@@ -368,63 +342,32 @@ for ($i=0; $i < $num; $i++) {
             $node->field_city[LANGUAGE_NONE][0]['tid'] = $tid;
           }
     }
-        
-    //$node->field_city[$node->language][0]['value'] = ucfirst(strtolower($jeff2->data[$i]->address->city));
-    //
-//    if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
-//    {
-//          $terms_array = array_keys($term);
-//          $node->field_city[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-//    } else 
-//    {
-//          $term = new STDClass();
-//          $term->name = ucfirst(strtolower($jeff2->data[$i]->address->city));
-//          $term->vid = 2;
-//
-//
-//          if (!empty($term->name)) 
-//          {
-//            $test = taxonomy_term_save($term);
-//   
-//            //print_r($test);
-//            $new_tid = $term->tid;
-//            //print 'The new tid is '.$new_tid;
-//			
-//            $term = taxonomy_get_term_by_name($term->name);
-//            //$jeff5 = array_shift($term);
-//            //print_r($jeff5);
-//            //exit();
-//			//die();
-//            $tid = $new_tid;
-//            $node->field_city[LANGUAGE_NONE][0]['tid'] = $tid;
-//          }
-//    }
-//
-//    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
-//    	$country = "United States";
-//    }
-//    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
-//    	$country = "Canada";
-//    }
-//    else
-//    {
-//    	$country = "Canada";
-//    }
-//
-//    if ($term = taxonomy_get_term_by_name($country)) {
-//          $terms_array = array_keys($term);
-//          $node->field_country[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-//        } else {
-//          $term = new STDClass();
-//          $term->name = $tag;
-//          $term->vid = 1;
-//          if (!empty($term->name)) {
-//            $test = taxonomy_term_save($term);
-//            $term = taxonomy_get_term_by_name($tag);
-//            $tid = $term->tid;
-//            $node->field_country[LANGUAGE_NONE][0]['tid'] = $tid;
-//          }
-//        }
+
+    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
+    	$country = "United States";
+    }
+    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
+    	$country = "Canada";
+    }
+    else
+    {
+    	$country = "Canada";
+    }
+
+    if ($term = taxonomy_get_term_by_name($country)) {
+          $terms_array = array_keys($term);
+          $node->field_country[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
+        } else {
+          $term = new STDClass();
+          $term->name = $tag;
+          $term->vid = 1;
+          if (!empty($term->name)) {
+            $test = taxonomy_term_save($term);
+            $term = taxonomy_get_term_by_name($tag);
+            $tid = $term->tid;
+            $node->field_country[LANGUAGE_NONE][0]['tid'] = $tid;
+          }
+        }
 
     $skill_list = ucfirst(strtolower($jeff2->data[$i]->skillList));
 
