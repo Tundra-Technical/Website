@@ -36,6 +36,14 @@ ol.tripList li
 	height: 150px;
 }
 
+.view-news-articles .views-field-body
+{
+	    padding-left: 50px;
+    padding-top: 20px;
+    text-align: justify;
+    width: 652px;
+}
+
 body.page-node-7940 .sidebar .region-sidebar-second
 {
 	padding-top: 0px !important;
