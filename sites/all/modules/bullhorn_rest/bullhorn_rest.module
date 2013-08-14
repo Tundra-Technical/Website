@@ -295,7 +295,11 @@ for ($i=0; $i < $num; $i++) {
     //$node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
 
 
-
+    /**
+     *
+     * TAXONOMY SEARCH FOR EMPLOYMENT TYPE
+     * 
+     */
     
     if ($term = taxonomy_get_term_by_name(strtolower($jeff2->data[$i]->employmentType))) {
           $terms_array = array_keys($term);
@@ -313,7 +317,93 @@ for ($i=0; $i < $num; $i++) {
         }
 
     //$node->field_city[$node->language][0]['value'] = ucfirst(strtolower($jeff2->data[$i]->address->city));
-    //
+
+    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
+      $country = "United States";
+    }
+    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
+      $country = "Canada";
+    }
+    else
+    {
+      $country = "Canada";
+    }
+    
+    /**
+     *
+     * TAXONOMY SEARCH FOR JOB BOARD LOCATION COUNTRY
+     * 
+     */
+    
+    if ($term = taxonomy_get_term_by_name(strtolower($country),"job_board_location")) {
+          $terms_array = array_keys($term);
+          $node->field_job_board_location[LANGUAGE_NONE][0] = array('tid' => $terms_array['0']);
+          $parent_term_id = $terms_array['0'];
+          print '<pre>The country taxonomy is:<br>';
+            print_r($term);
+        } else {
+          $term = new STDClass();
+          $term->name = strtolower($country);
+          $term->vocabulary_machine_name = "job_board_location";
+          if (!empty($term->name)) {
+            $test = taxonomy_term_save($term);
+            $term = taxonomy_get_term_by_name(strtolower($country),"job_board_location");
+
+            $tid = $term->tid;
+            $parent_term_id = $tid;
+            $node->field_job_board_location[LANGUAGE_NONE][0]['tid'] = array('tid' => $tid);
+          }
+        }  
+
+
+    /**
+     *
+     * TAXONOMY SEARCH FOR JOB BOARD LOCATION CITY
+     * 
+     */
+    
+    if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location")) {
+          $terms_array = array_keys($term);
+          print 'Terms array is:<br>';
+          print_r($terms_array);
+          $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $terms_array['0']);
+        } else {
+          $term = new STDClass();
+          $term->vid = 9;
+          $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
+          $term->parent = $parent_term_id;
+          $term->vocabulary_machine_name = "job_board_location";
+          if (!empty($term->name)) {
+            print '<pre>Term is: ';
+            print_r($term);
+            $test = taxonomy_term_save($term);
+            print 'test holds';
+            print_r($test);
+            
+            $term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location");
+            print 'The term after getting by name from job board location: ';
+            print_r($term);
+            $temp = array_pop($term);
+            print_r($temp);
+            $city_tid = $term->tid;
+            //exit();
+            $tid = $city_tid;
+            $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $tid);
+          }
+        }  
+
+        //$node->field_job_board_location[LANGUAGE_NONE][0] = 
+        //$node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => '584');
+
+    
+
+
+
+
+
+
+
+
     if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
     {
           $terms_array = array_keys($term);
@@ -343,16 +433,7 @@ for ($i=0; $i < $num; $i++) {
           }
     }
 
-    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
-    	$country = "United States";
-    }
-    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
-    	$country = "Canada";
-    }
-    else
-    {
-    	$country = "Canada";
-    }
+    
 
     if ($term = taxonomy_get_term_by_name($country)) {
           $terms_array = array_keys($term);
@@ -378,6 +459,10 @@ for ($i=0; $i < $num; $i++) {
  
     $path = 'joborder/programmatically_created_node_' . date('YmdHis');
     $node->path = array('alias' => $path);
+    $node->uid = 1;
+    print '<pre>';
+    print_r($node);
+    //exit();
 
   	node_save($node);
 
@@ -387,10 +472,26 @@ for ($i=0; $i < $num; $i++) {
 
 function bullhorn_rest_form_alter($form, $form_state, $form_id)
 {
-  if ($form_id == "views_exposed_form") {
-    //print '<pre>';
-    //print_r($form);
-    //exit();
+  if ($form_id == "views_exposed_form" && $form_state['view']->name == "job_board" && $form_state['view']->current_display == "page") 
+  {
+      /*
+      print '<pre>';
+      print_r($form); 
+      print '</pre>';
+      */ 
   }
+
 }
+
+function bullhorn_rest_node_presave($node)
+{
+  //print '<pre>';
+  //print_r($node);
+  //exit();
+}
+
+
+
+
+
 

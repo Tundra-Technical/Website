@@ -83,6 +83,8 @@
  * @see template_process()
  */
 //dpm($content,'Content');
+//print '<pre>';
+//print_r($node);
 ?>
 <article class="node-<?php print $node->nid; ?> <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 

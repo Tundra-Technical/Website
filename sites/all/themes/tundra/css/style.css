@@ -31,6 +31,11 @@ ol.tripList li
 	font-size: inherit !important;
 }
 
+th.views-field
+{
+	width: 20px !important;
+}
+
 #pj_banner
 {
 	height: 150px;
@@ -622,7 +627,7 @@ zoom: 1;
 }
 
 .view-job-board .views-field {
-	width: 100%;
+
 	text-align: center;
 	background-color: #d8d8d8;
 	font-size: 14px;
