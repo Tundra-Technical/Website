@@ -41,12 +41,95 @@ th.views-field
 	height: 150px;
 }
 
+#job_board_item_container
+{
+	width:100%;
+	clear: both;
+	padding-bottom: 20px;
+}
+
+
+#job_board_item_container #top_container
+{
+	width: 100%;
+	clear: both;
+}
+
+#job_board_item_container #middle_container
+{
+	width: 100%;
+	clear: both;
+}
+
+#job_board_item_container #top_container div
+{
+	float: left;
+}
+
+#job_board_item_container #top_container div#job_title
+{
+	width: 50%;
+    word-wrap: break-word;
+	text-align: left;
+}
+
+#job_board_item_container #top_container div#job_published
+{
+    text-align: right;
+    text-transform: capitalize;
+    width: 30%;
+}
+
+#job_board_item_container #top_container div#job_city
+{
+	    color: #8A8A8A;
+    float: left;
+    font-size: 12px;
+    padding-left: 45px;
+    text-align: right;
+    text-transform: capitalize;
+    width: 20%;
+    word-wrap: break-word;
+
+}
+
+div.view-job-board div.view-content div.views-row-odd
+{
+	background-color: #F0F0F0;
+}
+
+
+
+#job_board_item_container #middle_container div#job_employment_type
+{
+    float: left;
+    padding-left: 76px;
+    text-align: center;
+    width: 30%;
+}
+
+
+
+#job_board_item_container #middle_container div#job_category
+{
+    float: left;
+    padding-left: 40px;
+    text-align: left;
+    width: 61%;
+}
+
+
 .view-news-articles .views-field-body
 {
 	    padding-left: 50px;
     padding-top: 20px;
     text-align: justify;
     width: 652px;
+}
+
+form#views-exposed-form-job-board-page div.views-submit-button
+{
+	padding-top: 29px;
 }
 
 body.page-node-7940 .sidebar .region-sidebar-second
@@ -629,7 +712,6 @@ zoom: 1;
 .view-job-board .views-field {
 
 	text-align: center;
-	background-color: #d8d8d8;
 	font-size: 14px;
 	vertical-align: middle;
 }
