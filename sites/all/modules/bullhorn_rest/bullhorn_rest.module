@@ -470,25 +470,49 @@ for ($i=0; $i < $num; $i++) {
 }
 
 
+
 function bullhorn_rest_form_alter($form, $form_state, $form_id)
 {
   if ($form_id == "views_exposed_form" && $form_state['view']->name == "job_board" && $form_state['view']->current_display == "page") 
   {
-      /*
-      print '<pre>';
-      print_r($form); 
-      print '</pre>';
-      */ 
+      
+      $form = NULL;
+
+      //print '<pre>';
+      //print_r($form); 
+      //print '</pre>';
+
+      return $form;
+       
+  }
+  //return $form;
+
+}
+
+function bullhorn_rest_views_query_alter(&$view, &$query) {
+
+ 
+//simple example: change the order of the master display
+  //if you want to do it only  on a certain display add something
+  // like  "&&$view->current_display == 'panel_page_1'"
+  if($view->name == "job_board")
+  {
+    //print '<pre>';
+    //print_r($view->query->fields['field_data_field_city_node_entity_type'] );
+    //$view->query->fields['field_data_field_category_node_entity_type'] = NULL;
+    //
+   $arrayName = array(
+      field => 'field_data_field_job_board_location.field_job_board_location_tid', 
+      value => '574' ,
+      operator => '=' );
+   //array_push($view->query->where[1]['conditions'], $arrayName);
+    //print '<pre>';
+    //print_r($view->query->where[1]['conditions'] );
+    //print '</pre>';
   }
 
 }
 
-function bullhorn_rest_node_presave($node)
-{
-  //print '<pre>';
-  //print_r($node);
-  //exit();
-}
 
 
 
