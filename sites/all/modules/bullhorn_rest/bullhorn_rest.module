@@ -364,8 +364,8 @@ for ($i=0; $i < $num; $i++) {
     
     if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location")) {
           $terms_array = array_keys($term);
-          print 'Terms array is:<br>';
-          print_r($terms_array);
+          //print 'Terms array is:<br>';
+          //print_r($terms_array);
           $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $terms_array['0']);
         } else {
           $term = new STDClass();
