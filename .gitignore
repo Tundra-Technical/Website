@@ -8,4 +8,5 @@ sites/default/files/*
 /nbproject/*
 /nbproject/private/
 /test/
-/angular-phonecat/*
+angular-phonecat
+angular-phonecat/*

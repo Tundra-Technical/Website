@@ -79,7 +79,7 @@
  *
  * @ingroup themeable
  */
-print_r($node);
+//print_r($node);
 ?>
 
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> <?php print node_class($node); ?> clearfix"<?php print $attributes; ?>>

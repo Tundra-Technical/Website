@@ -369,22 +369,22 @@ for ($i=0; $i < $num; $i++) {
           $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $terms_array['0']);
         } else {
           $term = new STDClass();
-          $term->vid = 9;
+          $term->vid = 8;
           $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
           $term->parent = $parent_term_id;
           $term->vocabulary_machine_name = "job_board_location";
           if (!empty($term->name)) {
-            print '<pre>Term is: ';
-            print_r($term);
+            //print '<pre>Term is: ';
+            //print_r($term);
             $test = taxonomy_term_save($term);
-            print 'test holds';
-            print_r($test);
+            //print 'test holds';
+            //print_r($test);
             
             $term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location");
-            print 'The term after getting by name from job board location: ';
-            print_r($term);
+            //print 'The term after getting by name from job board location: ';
+            //print_r($term);
             $temp = array_pop($term);
-            print_r($temp);
+            //print_r($temp);
             $city_tid = $term->tid;
             //exit();
             $tid = $city_tid;
@@ -407,11 +407,11 @@ for ($i=0; $i < $num; $i++) {
     if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
     {
           $terms_array = array_keys($term);
-          $node->field_city[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
+          $node->field_city[LANGUAGE_NONE][0]['tid'] = ucwords($terms_array['0']);
     } else 
     {
           $term = new STDClass();
-          $term->name = ucfirst(strtolower($jeff2->data[$i]->address->city));
+          $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
           $term->vid = 2;
 
 
@@ -460,8 +460,8 @@ for ($i=0; $i < $num; $i++) {
     $path = 'joborder/programmatically_created_node_' . date('YmdHis');
     $node->path = array('alias' => $path);
     $node->uid = 1;
-    print '<pre>';
-    print_r($node);
+    //print '<pre>';
+    //print_r($node);
     //exit();
 
   	node_save($node);
