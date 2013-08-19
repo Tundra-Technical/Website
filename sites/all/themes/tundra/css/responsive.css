@@ -556,6 +556,11 @@
     clear: both;
 }
 
+.twitter-timeline
+{
+    margin-left: 0px;
+}
+
 .view-news-articles .views-field-body 
     {
         display: none;
