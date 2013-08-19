@@ -541,6 +541,10 @@
     word-wrap: break-word;
 
 }
+div.description
+{
+    clear: both;
+}
 #job_board_item_container #top_container div#job_published
 {
     text-align: left;
