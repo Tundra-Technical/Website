@@ -541,6 +541,12 @@
     word-wrap: break-word;
 
 }
+#job_board_item_container #top_container div#job_published
+{
+    text-align: left;
+    text-transform: capitalize;
+    width: 100%;
+}
 
 #job_board_item_container #middle_container div#job_employment_type
 {
