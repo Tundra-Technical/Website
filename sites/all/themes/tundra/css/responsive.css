@@ -528,7 +528,7 @@
         font-size: 1.125em;
     }
     
-    #job_board_item_container #top_container div#job_city
+#job_board_item_container #top_container div#job_city
 {
     clear: both;
     color: #8A8A8A;
@@ -541,6 +541,21 @@
     word-wrap: break-word;
 
 }
+
+div#map_item_container div#left
+{
+    width:100% !important;
+    float: left;
+
+}
+
+div#map_item_container div#right
+{
+    width: 100% !important;
+    float: left;
+}
+
+
 div.description
 {
     clear: both;
