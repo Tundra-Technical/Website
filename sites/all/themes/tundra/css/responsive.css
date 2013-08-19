@@ -542,6 +542,25 @@
 
 }
 
+#pj-left-container
+{
+    width: 100%;
+    float: left;
+    clear: both;
+}
+
+#pj-right-container
+{
+    width: 100%;
+    float: left;
+    clear: both;
+}
+
+.view-news-articles .views-field-body 
+    {
+        display: none;
+    }
+
 #pj-banner-link
 {
     width: 320px;
