@@ -36,9 +36,13 @@ th.views-field
 	width: 20px !important;
 }
 
-#pj_banner
+#pj-banner-link
 {
+	width: 960px;
 	height: 150px;
+	background-image: url('/sites/default/files/tundra-racing-header_0.jpg');
+	display: block;
+	text-indent: -9999px;
 }
 
 #job_board_item_container
@@ -176,6 +180,8 @@ iframe#twitter-widget-0
     width: 24%;
     padding-left: 50px;
 }
+
+
 
 .news_story_image_right
 {   
