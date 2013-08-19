@@ -167,13 +167,14 @@ iframe#twitter-widget-0
 #pj-left-container
 {
 	    float: left;
-    width: 75%;
+    width: 65%;
 }
 
 #pj-right-container
 {
 	float: left;
     width: 24%;
+    padding-left: 50px;
 }
 
 .news_story_image_right
