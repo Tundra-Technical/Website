@@ -1,18 +1,70 @@
 @CHARSET "UTF-8";
 .contact-us{padding-bottom:155px;}
-.contact-us h2{margin-bottom:0px;font-size:14px;color:#000;}
+.contact-us h2{margin-bottom:0px;font-size:14px;color:#000; padding-top: 0px !important}
 .contact-us .address-list{background-color:transparent;border:none;width:auto;padding-bottom:5px;margin-top:0px;padding:0px;}
 .contact-us .address-item{position:relative;height:290px;display:block;width:100%;margin-left:0px;*left:-20px;}
-.contact-us h3{padding:0px;font-size:13px;background-color:transparent;color:#000;}
+.contact-us h3{padding:0px;background-color:transparent;color:#000;}
 /*.address-list h1{margin-left:25px;margin-top:10px;margin-bottom:0px;text-decoration:underline;display:block;}*/
 .contact-us .address{margin-left:25px;margin-top:25px;}
-.contact-us .city{margin-left:25px;margin-top:25px;font-size:15px;}
+.contact-us .city{margin-left:15px;font-size:15px;}
 /*.contact-us .address-list .address-item .map{position:absolute;right:15px;top:15px;border:1px solid #333333;}*/
 /*.contact-us .address-list .address-item .address {line-height: 18px !important}*/
+
+
+
+div#map_grouping
+{
+    clear: both;
+    width: 100%;
+    float: left;
+    padding-bottom: 40px;
+}
+
+
+div#map_item_container
+{
+    width: 100%;
+    clear: both;
+    display: inline-block;
+    padding-bottom: 30px;
+}
+
+div#map_item_container h2
+{
+    margin-top: 0px !important;
+    line-height: 15px;
+}
+
+
+
+div#map_item_container div#left
+{
+    width:40%;
+    float: left;
+
+}
+
+div#map_item_container div#right
+{
+    width: 60%;
+    float: left;
+}
+
 
 .address-wrapper {
     float: left;
     width: 35%;
+}
+
+ul.addresList
+{
+    width: 100% !important;
+    list-style: none;
+}
+
+li.addressItem a
+{
+    position: relative;
 }
 
 .map-wrapper {
@@ -22,7 +74,7 @@
 
 .map {
     border: 1px solid #333;
-    float: right;
+
 }
 
 @media screen and ( max-width: 480px ) {
