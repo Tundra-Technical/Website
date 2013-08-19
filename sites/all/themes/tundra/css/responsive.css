@@ -542,6 +542,16 @@
 
 }
 
+#pj-banner-link
+{
+    width: 320px;
+    height: 150px;
+    background-image: url('/sites/default/files/tundra-racing-header-320px.jpg');
+    display: block;
+    text-indent: -9999px;
+}
+
+
 div#map_item_container div#left
 {
     width:100% !important;
