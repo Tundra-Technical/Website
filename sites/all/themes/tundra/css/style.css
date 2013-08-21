@@ -83,6 +83,12 @@ th.views-field
     width: 200px;
 }
 
+#job_board_item_container #bottom_container div#sharethis
+{
+    float: right;
+    width: 100px;
+}
+
 #job_board_item_container #top_container div
 {
 	float: left;
