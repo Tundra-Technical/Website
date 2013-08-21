@@ -87,6 +87,7 @@ th.views-field
 {
     float: right;
     width: 100px;
+        padding-top: 8px;
 }
 
 #job_board_item_container #top_container div
@@ -743,7 +744,6 @@ zoom: 1;
 .view-job-board .views-field {
 
 	text-align: center;
-	font-size: 14px;
 	vertical-align: middle;
 }
 
