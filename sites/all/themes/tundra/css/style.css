@@ -77,6 +77,12 @@ th.views-field
     width: 75px;
 }
 
+#job_board_item_container #bottom_container div#applyButton
+{
+    float: right;
+    width: 200px;
+}
+
 #job_board_item_container #top_container div
 {
 	float: left;
