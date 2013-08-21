@@ -462,6 +462,7 @@ iframe#twitter-widget-0
 			}
 			.content .field-item {
 				overflow: hidden;
+				    text-align: justify;
 			}
 		/*#content ol, #content ul*/
 		/* ol.content-list, .ul.content-list */
