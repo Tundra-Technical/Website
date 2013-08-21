@@ -71,6 +71,12 @@ th.views-field
 	clear: both;
 }
 
+#job_board_item_container #bottom_container div#tooltip
+{
+    float: right;
+    width: 75px;
+}
+
 #job_board_item_container #top_container div
 {
 	float: left;
