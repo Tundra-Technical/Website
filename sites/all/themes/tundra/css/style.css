@@ -917,18 +917,19 @@ zoom: 1;
 
 .view-news .views-row {
 	display:block;
-	border:1px solid #292763;
-	padding:20px;
-	width:80%;
+	width:100%;
 	margin:0 auto;
-	background-color:#DDDDDD;
 	/* font-style:italic; */
-	margin-top:35px;
-	position:relative;
+}
+
+.view-news .views-field-body {
+    padding-left: 50px;
+    padding-top: 20px;
+    text-align: justify;
+    width: 652px;
 }
 
 .view-news .views-row-first {
-  margin-top:60px;
 }
 
 .view-news .content .field-type-image img,
