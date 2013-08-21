@@ -710,7 +710,7 @@ zoom: 1;
 
 /* Job Order details */
 
-.jobDetailsTable{width:100%;text-align:left;font-size:14px;margin-bottom:40px;border:1px solid #ccc;margin-top:10px;}
+.jobDetailsTable{width:100%;text-align:left;font-size:inherit;margin-bottom:40px;border:1px solid #ccc;margin-top:10px;}
 .jobDetailsTable td{padding:10px;border-bottom:1px solid #ccc;line-height: 1.5em;}
 .jobDetailsTable th{border:none;}
 .jobDetailsTable .property{width:20%;background-color:#E1E1E1;font-weight:bold;}
