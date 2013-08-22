@@ -771,13 +771,14 @@ zoom: 1;
         float: left;
         padding: 10px 10px;
 	line-height: 22px;
+        width: 9.42857142857%
 }
 
 .views-field.views-field-tooltip {
     padding: 10px 5px;
     width: 4%;
 }
-.views-field-title {
+.views-field.views-field-title {
     width:25%;
 }
 
