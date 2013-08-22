@@ -122,7 +122,12 @@ th.views-field
 
 }
 
-div.view-job-board div.view-content div.views-row-odd
+.view-job-board .views-row {
+    clear: left;
+    overflow: hidden;
+}
+
+.view-job-board div.view-content div.views-row-odd
 {
 	background-color: #F0F0F0;
 }
@@ -726,37 +731,31 @@ zoom: 1;
 
 /* Job Board */
 
-.view-job-board .view-content table {
+/*.view-job-board .view-content table {
 	width: 100%;
 	border-collapse: separate;
 	border-spacing: 0 3px;
 	margin-bottom: 20px;
-}
+}*/
 
-.view-job-board .view-content tr {
+/*.view-job-board .view-content tr {
 	border: 1px solid #000;
 	height: 100px;
-}
+}*/
 
-.view-job-board .view-content th {
+/*.view-job-board .view-content th {
 	padding: 5px;
 	border: none;
-}
+}*/
 
-.view-job-board .views-field {
-
-	text-align: center;
-	vertical-align: middle;
-}
-
-.view-job-board tbody {
+/*.view-job-board tbody {
 	background-color: #fff;
-}
+}*/
 
-.view-job-board .view-content tr {
+/*.view-job-board .view-content tr {
 	border: 1px solid #000;
 	height: 100%;
-}
+}*/
 
 .view-job-board .odd .views-field {
 	background-color: #f0f0f0;
@@ -766,8 +765,26 @@ zoom: 1;
 	/*font-size: 13px;*/
 	/*padding-left: 20px;*/
 	/*padding-right: 20px;*/
-        padding: 10px 20px;
+        font-size: 13px;
+        text-align: center;
+	vertical-align: middle;
+        float: left;
+        padding: 10px 10px;
 	line-height: 22px;
+}
+
+.views-field.views-field-tooltip {
+    padding: 10px 5px;
+    width: 4%;
+}
+.views-field-title {
+    width:25%;
+}
+
+.views-field.views-field-sharethis {
+    float: right;
+    padding: 10px 5px;
+    width: 4%;
 }
 
 .view-job-board .view-content td {
