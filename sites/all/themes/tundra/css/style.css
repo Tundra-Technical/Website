@@ -123,8 +123,13 @@ th.views-field
 }
 
 .view-job-board .views-row {
+    border-top: 1px solid #d8d8d8;
+    border-bottom: 1px solid #d8d8d8;
     clear: left;
     overflow: hidden;
+    padding-top: 10px;
+    padding-left: 5px;
+    margin: 5px 0;
 }
 
 .view-job-board div.view-content div.views-row-odd
@@ -769,33 +774,37 @@ zoom: 1;
         text-align: center;
 	vertical-align: middle;
         float: left;
-        padding: 10px 10px;
+        /*padding: 10px 10px;*/
+        padding-right: 5px;
+        padding-bottom: 10px;
 	line-height: 22px;
-        width: 9.57142857143%
+        width: 9.28571428571%
 }
 
 .views-field.views-field-tooltip {
-    padding: 10px 5px;
-    width: 4%;
+    width: 5%;
 }
 .views-field.views-field-title {
     width:25%;
 }
 
 .views-field.views-field-sharethis {
+    background-color: #fff;
+    border-left: 1px solid #d8d8d8;
     float: right;
-    padding: 10px 5px;
-    width: 4%;
+    width: 3%;
+    margin-top: -10px;
+    padding-bottom: 0;
 }
 
-.view-job-board .view-content td {
+/*.view-job-board .view-content td {
 	border-bottom: 1px solid #d8d8d8;
 	border-top: 1px solid #d8d8d8;
-}
+}*/
 
-.view-job-board .view-content .even td {
+/*.view-job-board .view-content .even td {
 	background-color: #f9f9f9;
-}
+}*/
 
 .view-job-board .view-content .title {
 	width: 10%;
