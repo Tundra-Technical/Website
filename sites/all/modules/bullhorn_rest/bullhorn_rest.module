@@ -339,8 +339,8 @@ for ($i=0; $i < $num; $i++) {
           $terms_array = array_keys($term);
           $node->field_job_board_location[LANGUAGE_NONE][0] = array('tid' => $terms_array['0']);
           $parent_term_id = $terms_array['0'];
-          print '<pre>The country taxonomy is:<br>';
-            print_r($term);
+          //print '<pre>The country taxonomy is:<br>';
+            //print_r($term);
         } else {
           $term = new STDClass();
           $term->name = strtolower($country);
