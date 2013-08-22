@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 .information-technology-talent .small-header{
-    padding:10px;
-    margin-top:5px;
+    padding:0px;
+    margin-top:0px;
 }
 
 .information-technology-talent .first {
@@ -16,17 +16,30 @@
             
 .information-technology-talent .first h3,
 .information-technology-talent .second h3 {
-    padding: 10px;
     display: inline-block;
     width: 100%;
 }
 
 .information-technology-talent ul {
-    margin-top:10px;
-    margin-left:auto;
-    margin-right:auto;
     list-style:disc;
     width:85%;
+}
+table.employers-table
+{
+    width: 900px;
+}
+
+table.employers-table tbody tr td
+{
+    width: 450px;
+}
+
+
+table.employers-table tbody tr td ul
+{
+    padding: 0px !important;
+    margin: 0px 0px 0px 30px !important;
+        text-align: left;
 }
 
 @media screen and ( max-width: 600px ) {                
