@@ -32,18 +32,4 @@ if(isset($_SESSION['bullhorn']['candidate']['applied']) && !empty($_SESSION['bul
 }
 print ($applied) ? 'Applied' : l('Apply','job-board/' . $row->_field_data['nid']['entity']->field_job_order_id['und'][0]['value'] . '/apply',array('attributes' => array('class' => array('apply','view-btn'))));
 
-// print l('Tell a Friend','job-board/'.$row->_field_data['nid']['entity']->field_job_order_id['und'][0]['value'] .'/referral', array(
-print l('Tell a Friend',$GLOBALS['base_url'].'/refer-friend?width=600&height=600&job_order='.$row->nid,
-    array('attributes' => array(
-        'class' => array(
-           'colorbox-node',
-            'view-btn',
-            'tell-friend',
-            ),
-//         'rel'   => array(
-//                 'lightmodal[|width:500px;height:500px;]'
-//             ),
-        )
-    )
- );
 ?>
