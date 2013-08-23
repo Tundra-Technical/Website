@@ -741,7 +741,7 @@ zoom: 1;
     line-height: 1.5em;
 }
 
-th.jobActions
+th.jobActions a.view-btn
 {
 	margin-top: 0px !important;
 }
