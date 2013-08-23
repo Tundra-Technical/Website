@@ -57,6 +57,11 @@ th.views-field
 	    padding-top: 5px;
 }
 
+table.jobDetailsTable thead tr:first
+{
+	background-color: #E1E1E1;
+}
+
 
 #job_board_item_container #top_container
 {
