@@ -57,7 +57,7 @@ th.views-field
 	    padding-top: 5px;
 }
 
-table.jobDetailsTable thead tr th:first
+table.jobDetailsTable thead tr th:first-child
 {
 	background-color: #E1E1E1;
 }
