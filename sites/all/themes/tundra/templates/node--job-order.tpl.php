@@ -84,7 +84,7 @@
  */
 //dpm($content,'Content');
 //print '<pre>';
-//print_r($node);
+//print_r($content);
 ?>
 <article class="node-<?php print $node->nid; ?> <?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 
@@ -112,7 +112,16 @@
       <thead>
           <tr>
               <th></th>
-              <th class="jobActions"><?php print render($content['field_application_link']); ?></th>
+              <th class="jobActions"><?php print render($content['field_application_link']); ?>
+                <?php print l('Tell a Friend',$GLOBALS['base_url'].'/refer-friend?width=600&height=600&job_order='.$node->nid,
+    array('attributes' => array(
+        'class' => array(
+           'colorbox-node',
+            'view-btn',
+            'tell-friend',
+            ))));
+        ?>
+              </th>
           </tr>
       </thead>
       <tbody>

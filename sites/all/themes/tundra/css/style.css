@@ -734,11 +734,16 @@ zoom: 1;
 .jobDetailsTable th{border:none;}
 .jobDetailsTable .property{width:20%;background-color:#E1E1E1;font-weight:bold;}
 .jobDetailsTable .jobActions{text-align:right;width:80%;height:60px;vertical-align:middle;border:1px solid #ccc;padding-right:10px;}
-.jobDetailsTable .jobActions a{font-size:11px;width:100px;line-height:13px;padding:5px;border:1px solid #ccc;background-color:#fff;color:#111;text-decoration:none;text-align:center;padding-top:8px;margin-left:10px;}
+.jobDetailsTable .jobActions a{font-size:11px;float:right;width:100px;line-height:13px;padding:5px;border:1px solid #ccc;background-color:#fff;color:#111;text-decoration:none;text-align:center;padding-top:8px;margin-left:10px;}
 .jobDetailsTable .jobActions a:visited{color:#111;}
 .jobDetailsTable .jobActions a:hover{background-color:#2A2763;color:#fff;}
 .jobDetailsTable span {
     line-height: 1.5em;
+}
+
+th.jobActions
+{
+	margin-top: 0px !important;
 }
 
 /* Job Board */
