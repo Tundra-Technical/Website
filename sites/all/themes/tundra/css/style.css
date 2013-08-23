@@ -52,6 +52,11 @@ th.views-field
 	padding-bottom: 20px;
 }
 
+.description
+{
+	    padding-top: 5px;
+}
+
 
 #job_board_item_container #top_container
 {
