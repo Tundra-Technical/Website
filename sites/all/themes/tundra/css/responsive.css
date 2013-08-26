@@ -544,14 +544,16 @@
 
 div.view-job-board div.views-field-title
 {
-    width: 100%;
-    clear: both;
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
 }
 
 div.view-job-board div.views-field-field-city
 {
-    width: 100%;
-    clear: both;
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
 }
 
 #pj-left-container
