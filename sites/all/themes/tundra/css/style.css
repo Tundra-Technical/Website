@@ -36,6 +36,12 @@ th.views-field
 	width: 20px !important;
 }
 
+body.i18n-fr div.views-field-title
+{
+	width: 13% !important;
+}
+
+
 #pj-banner-link
 {
 	width: 960px;
