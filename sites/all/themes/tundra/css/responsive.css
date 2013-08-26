@@ -542,6 +542,11 @@
 
 }
 
+div.view-job-board div.views-field-tooltip
+{
+    display: none !important;
+}
+
 div.view-job-board div.views-field-title
 {
     width: 100% !important;
