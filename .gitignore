@@ -3,6 +3,8 @@
 sites/*/settings*.php
 sites/default/files/*
 .htaccess
+phpmyadmin
+phpmyadmin/*
 
 # Ignore paths that contain user-generated content.
 /nbproject/*

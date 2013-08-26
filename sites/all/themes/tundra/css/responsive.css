@@ -542,6 +542,18 @@
 
 }
 
+div.view-job-board div.views-field-title
+{
+    width: 100%;
+    clear: both;
+}
+
+div.view-job-board div.views-field-field-city
+{
+    width: 100%;
+    clear: both;
+}
+
 #pj-left-container
 {
     width: 100%;
