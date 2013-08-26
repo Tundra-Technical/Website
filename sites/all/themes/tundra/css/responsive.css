@@ -556,6 +556,45 @@ div.view-job-board div.views-field-field-city
     text-align: left !important;
 }
 
+div.view-job-board div.views-field-field-category
+{
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
+}
+
+div.view-job-board div.views-field-field-published
+{
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
+}
+
+div.view-job-board div.views-field-nothing
+{
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
+}
+
+div.view-job-board div.views-field-nothing-1
+{
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
+}
+
+div.view-job-board div.views-field-sharethis
+{
+    width: 100% !important;
+    clear: both !important;
+    text-align: left !important;
+}
+
+
+
+
+
 #pj-left-container
 {
     width: 100%;
