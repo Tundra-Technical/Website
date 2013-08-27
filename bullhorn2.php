@@ -92,9 +92,11 @@ function doBullhornJobQuery($BhRestToken, $BhURL)
 
 function doBullhornEventJobQuery($BhRestToken, $BhURL)
 {
-	//$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status&where=id>=1&orderBy=+id&count=1000&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip&where=id>=10123&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id>=10123%20AND%20(status='Accepting%20Candidates'%20OR%20status='Placed')%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+	$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id>=10123%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
 	//$data = "query/JobOrder?fields=id,status&where=id>=1&orderBy=-id&count=5000&BhRestToken=".$BhRestToken;
-	$data = "event/subscription/jobs?maxEvents=100&BhRestToken=".$BhRestToken;
+	//$data = "event/subscription/jobs?maxEvents=100&BhRestToken=".$BhRestToken;
 	
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);

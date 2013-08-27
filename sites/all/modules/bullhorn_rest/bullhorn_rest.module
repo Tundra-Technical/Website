@@ -72,7 +72,9 @@ function doBullhornJobQuery($BhRestToken, $BhURL)
 
 	$item = $raw_result->fetchObject(); 
 
-	$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
+	//$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
+  $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+  
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
 		curl_setopt($tuCurl, CURLOPT_PORT , 443);
