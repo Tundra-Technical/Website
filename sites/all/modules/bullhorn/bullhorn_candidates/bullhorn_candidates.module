@@ -1459,8 +1459,10 @@ function bullhorn_candidates_register_mail_send($values) {
     $module = 'bullhorn_candiates';
     $key = 'candidate_register_message';
 
+    //print_r($values);
+    //exit();
     // Specify 'to' and 'from' addresses.
-    $to = $values['email'];
+    $to = $values->email;
     $site_name  = variable_get('site_name','Tundra Technical');
     $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
     $domain_pos = (strpos($site_mail,'@')+1);
@@ -1470,7 +1472,8 @@ function bullhorn_candidates_register_mail_send($values) {
     // "params" loads in additional context for email content completion in
     // hook_mail(). In this case, we want to pass in the values the user entered
     // into the form, which include the message body in $form_values['message'].
-    $params = $values;
+    //$params = $values;
+    $params = NULL;
     
     $language = $language;
 
