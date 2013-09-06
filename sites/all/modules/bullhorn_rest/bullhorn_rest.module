@@ -413,13 +413,6 @@ for ($i=0; $i < $num; $i++) {
 
     
 
-
-
-
-
-
-
-
     if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
     {
           $terms_array = array_keys($term);
@@ -480,9 +473,22 @@ for ($i=0; $i < $num; $i++) {
     //print_r($node);
     //exit();
 
-  	node_save($node);
+  	try 
+    {
+      node_save($node);
+      $success = TRUE;
+    }
+    catch (Exception $e) {
+        //print_r('NODE FAILED TO SAVE<br>');
 
-}
+        //print '<pre>';
+        //print_r($node);
+    }
+
+    //print_r('Node save was successful.  Nid is '.$node->nid.'<br>');
+
+}// END FOR LOOP
+//exit();
 }
 
 
