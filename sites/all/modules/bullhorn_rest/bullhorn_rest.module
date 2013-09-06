@@ -73,7 +73,10 @@ function doBullhornJobQuery($BhRestToken, $BhURL)
 	$item = $raw_result->fetchObject(); 
 
 	//$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
-  $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+  //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+  $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>=".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+  
+  
   
 	$tuCurl = curl_init();
 		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
@@ -154,6 +157,7 @@ function bullhorn_api_form($form, &$form_state) {
   return system_settings_form($form);
 }
 
+/*
 function bullhorn_rest_queue_cron_info()
 {
 
@@ -163,7 +167,7 @@ function bullhorn_rest_queue_cron_info()
   );
   return $queues;
 }
-
+*/
 function cat_id_to_name($id)
 {
   switch ($id) {
@@ -204,7 +208,7 @@ $session = doBullhornLogin($tokens->access_token);
   error_log($e->getMessage());
 }
 
-	$jeff = json_decode($session);
+$jeff = json_decode($session);
 
 $joborder = doBullhornJobQuery($jeff->BhRestToken, $jeff->restUrl);
 
@@ -213,8 +217,18 @@ $jeff2 = json_decode($joborder);
 //$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$joborder);
 $num = count($jeff2->data);
 //print '<pre>';
+//print_r($jeff2->data);
 //print_r($num);
+$tax_list = taxonomy_get_vocabularies();
+
+foreach ($tax_list as $item) {
+    if ($item->machine_name == 'job_board_location') {
+        $job_board_location_vid = $item->vid;
+    }
+}
+
 //print '</pre>';
+//exit();
 require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
 
 
@@ -371,7 +385,7 @@ for ($i=0; $i < $num; $i++) {
           $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $terms_array['0']);
         } else {
           $term = new STDClass();
-          $term->vid = 8;
+          $term->vid = $job_board_location_vid;
           $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
           $term->parent = $parent_term_id;
           $term->vocabulary_machine_name = "job_board_location";
