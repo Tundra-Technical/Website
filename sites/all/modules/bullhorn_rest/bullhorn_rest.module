@@ -524,9 +524,9 @@ function bullhorn_rest_views_query_alter(&$view, &$query) {
     //$view->query->fields['field_data_field_category_node_entity_type'] = NULL;
     //
    $arrayName = array(
-      field => 'field_data_field_job_board_location.field_job_board_location_tid', 
-      value => '574' ,
-      operator => '=' );
+      'field' => 'field_data_field_job_board_location.field_job_board_location_tid', 
+      'value' => '574' ,
+      'operator' => '=' );
    //array_push($view->query->where[1]['conditions'], $arrayName);
     //print '<pre>';
     //print_r($view->query->where[1]['conditions'] );
