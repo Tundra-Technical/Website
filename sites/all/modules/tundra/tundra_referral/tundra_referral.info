@@ -5,6 +5,6 @@ files[] = tundra_referral.module
 files[] = tundra_referral.install
 
 dependencies[] = tundra
-dependencies[] = bullhorn_job_order
+dependencies[] = bullhorn_job_board
 
 package = Tundra Technical

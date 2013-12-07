@@ -1,30 +1,329 @@
 <?php
-function _job_order_vocabularies() {
+function bullhorn_job_order_vocabularies() {
     return array(
-            'cities' => array(
-                    'name'         => 'Cities',
-                    'machine_name' => 'cities',
-                    'description'  => 'A vocabulary for Bullhorn city terms.',
-                    'module'       => 'bullhorn job order'
+        'job_board_location' => array(
+            'name'         => 'Job Board Location',
+            'machine_name' => 'job_board_location',
+            'description'  => 'A vocabulary for the Job Board location Hierarchical select.',
+//            'module'       => 'bullhorn job order',
+        ),
+        'cities' => array(
+            'name'         => 'Cities',
+            'machine_name' => 'cities',
+            'description'  => 'A vocabulary for Bullhorn city terms.',
+//            'module'       => 'bullhorn job order'
+        ),
+        'countries' => array(
+            'name'         => 'Countries',
+            'machine_name' => 'countries',
+            'description'  => 'A vocabulary for Bullhorn country terms.',
+//            'module'       => 'bullhorn job order'
+        ),
+        'job_types' => array(
+            'name'         => 'Employment Types',
+            'machine_name' => 'employment_types',
+            'description'  => 'A vocabulary for Bullhorn employment type terms.',
+//            'module'       => 'bullhorn job order',
+        ),
+        'categories' => array(
+            'name'         => 'Categories',
+            'machine_name' => 'categories',
+            'description'  => 'A vocabulary for Bullhorn category terms.',
+//            'module'       => 'bullhorn job order'
+        ),
+    );
+}
+
+/**
+ * Return an array of fields to be used during the install and uninstall process
+ * @return multitype:multitype:string number
+ */
+
+function bullhorn_job_order_install_fields() {
+    return array(
+        'field_job_order_id' => array(
+            'field_name'  => 'field_job_order_id',
+            'type'        => 'number_integer',
+            'cardinality' => 1
+        ),
+        'field_rate' => array(
+            'field_name'  => 'field_rate',
+            'type'        => 'number_decimal',
+            'cardinality' => 1
+        ),
+        'field_published' => array(
+            'field_name'  => 'field_published',
+            'type'        => 'datetime',
+            'cardinality' => 1
+        ),
+        'field_expires' => array(
+            'field_name'  => 'field_expires',
+            'type'        => 'datetime',
+            'cardinality' => 1
+        ),
+        'field_job_board_location' => array(
+            'field_name'  => 'field_job_board_location',
+            'type'        => 'taxonomy_term_reference',
+            'cardinality' => 1,
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'job_board_location',
+                        'parent' => '0',
+                    ),
+                ),
             ),
-            'countries' => array(
-                    'name'         => 'Countries',
-                    'machine_name' => 'countries',
-                    'description'  => 'A vocabulary for Bullhorn country terms.',
-                    'module'       => 'bullhorn job order'
+        ),
+        'field_city' => array(
+            'field_name'  => 'field_city',
+            'type'        => 'taxonomy_term_reference',
+            'cardinality' => 1,
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'cities',
+                        'parent' => '0',
+                    ),
+                ),
             ),
-            'job_types' => array(
-                    'name'         => 'Employment Types',
-                    'machine_name' => 'employment_types',
-                    'description'  => 'A vocabulary for Bullhorn employment type terms.',
-                    'module'       => 'bullhorn job order',
+        ),
+        'field_country' => array(
+            'field_name'  => 'field_country',
+            'type'        => 'taxonomy_term_reference',
+            'cardinality' => 1,
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'countries',
+                        'parent' => '0',
+                    ),
+                ),
             ),
-            'categories' => array(
-                    'name'         => 'Categories',
-                    'machine_name' => 'categories',
-                    'description'  => 'A vocabulary for Bullhorn category terms.',
-                    'module'       => 'bullhorn job order'
+        ),
+        'field_employment_type' => array(
+            'field_name'  => 'field_employment_type',
+            'type'        => 'taxonomy_term_reference',
+            'cardinality' => 1,
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'employment_types',
+                        'parent' => '0',
+                    ),
+                ),
             ),
+        ),
+        'field_category' => array(
+            'field_name'  => 'field_category',
+            'type'        => 'taxonomy_term_reference',
+            'cardinality' => 1,
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'categories',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+        ),
+        'field_skills'   => array( // TODO break this comma separated list into taxonomy terms for additional searchability on website
+            'field_name'  => 'field_skills',
+            'type'        => 'text',
+            'cardinality' => 1
+        ),
+    );
+}
+
+/**
+ * Return an array of instances to be used during the install and uninstall process
+ * @return multitype:multitype:string NULL multitype:string
+ */
+function bullhorn_job_order_install_instances() {
+    $t = get_t();
+    return array(
+        'field_job_order_id' => array(
+            'field_name' => 'field_job_order_id',
+            'label'      => $t('Job Order ID'),
+            'type'       => 'number_integer',
+            'widget'     => array(
+                'type' => 'number'
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+//                                                     'type'  => 'hidden',
+                ),
+            ),
+        ),
+        'field_rate' => array(
+            'field_name' => 'field_rate',
+            'label'      => $t('Rate'),
+            'type'       => 'number_decimal',
+            'widget'     => array(
+                'type' => 'number'
+            ),
+            'settings'   => array(
+                'prefix' => '$'
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'number_decimal',
+                    'settings' => array(
+                        'thousand_separator' => ','
+                    ),
+                ),
+            ),
+        ),
+        'field_published' => array(
+            'field_name' => 'field_published',
+            'label'      => $t('Published'),
+            'type'       => 'datetime',
+            'widget'     => array(
+                'type' => 'date_text'
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                ),
+            ),
+        ),
+        'field_expires' => array(
+            'field_name' => 'field_expires',
+            'label'      => $t('Expires'),
+            'type'       => 'datetime',
+            'widget'     => array(
+                'type' => 'date_text'
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                ),
+            ),
+        ),
+        'field_job_board_location' => array(
+            'field_name' => 'field_job_board_location',
+            'label'      => $t('Job Board Location'),
+            'type'       => 'taxonomy_term_reference',
+            'widget'     => array(
+                'type' => 'options_select'
+            ),
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'job_board_location',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'taxonomy_term_reference_plain'
+                ),
+            ),
+        ),
+        'field_city' => array(
+            'field_name' => 'field_city',
+            'label'      => $t('City'),
+            'type'       => 'taxonomy_term_reference',
+            'widget'     => array(
+                'type' => 'options_select'
+            ),
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'cities',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'taxonomy_term_reference_plain'
+                ),
+            ),
+        ),
+        'field_country' => array(
+            'field_name' => 'field_country',
+            'label'      => $t('Country'),
+            'type'       => 'taxonomy_term_reference',
+            'widget'     => array(
+                'type' => 'options_select'
+            ),
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'countries',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'taxonomy_term_reference_plain'
+                ),
+            ),
+        ),
+        'field_employment_type' => array(
+            'field_name' => 'field_employment_type',
+            'label'      => $t('Employment Type'),
+            'type'       => 'taxonomy_term_reference',
+            'widget'     => array(
+                'type' => 'options_select'
+            ),
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'employment_types',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'taxonomy_term_reference_plain'
+                ),
+            ),
+        ),
+        'field_category' => array(
+            'field_name' => 'field_category',
+            'label'      => $t('Category'),
+            'type'       => 'taxonomy_term_reference',
+            'widget'     => array(
+                'type' => 'options_select'
+            ),
+            'settings' => array(
+                'allowed_values' => array(
+                    array(
+                        'vocabulary' => 'categories',
+                        'parent' => '0',
+                    ),
+                ),
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                    'type'  => 'taxonomy_term_reference_plain'
+                ),
+            ),
+        ),
+        'field_skills'    => array(
+            'field_name' => 'field_skills',
+            'label'      => $t('Skills'),
+            'type'       => 'text',
+            'widget'     => array(
+                'type' => 'text_textfield',
+            ),
+            'display'    => array(
+                'default' => array(
+                    'label' => 'hidden',
+                ),
+            ),
+        ),
     );
 }
 

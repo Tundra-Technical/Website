@@ -6,6 +6,6 @@ package = Bullhorn
 files[] = bullhorn_candidates.module
 
 dependencies[] = bullhorn
-dependencies[] = bullhorn_job_order
+;dependencies[] = bullhorn_job_order
 
 version = 7.x-0.1-beta

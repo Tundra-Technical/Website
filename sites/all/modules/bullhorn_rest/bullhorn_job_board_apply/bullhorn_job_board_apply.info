@@ -1,0 +1,10 @@
+name = Bullhorn Job Board Apply
+description = This module provides the ability for bullhorn to connect up to their RESTful API and apply for a Job Order
+core = 7.x
+package = Bullhorn
+
+files[] = bullhorn_job_board_apply.module
+files[] = bullhorn_job_board_apply.inc
+
+dependencies[] = bullhorn_job_board
+dependencies[] = bullhorn_rest

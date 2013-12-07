@@ -1,543 +1,249 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: jnapoleone
+ * Date: 12/5/2013
+ * Time: 7:32 PM
+ */
 
 define('CLIENT_ID', '408396f4-461d-4194-b39a-4e046089ccc9');
 define('CLIENT_SECRET', 'G0TfQxq5Y00khGnzrsXOmpe1HAgnVG1n');
 define('USER', 'tundratecapi');
 define('PASS', '586sydney');
 
-function getAuthCode()
+
+/**
+ * Implements hook_menu().
+ */
+function bullhorn_rest_menu()
 {
-$url = 'https://auth.bullhornstaffing.com/oauth/authorize?client_id='.CLIENT_ID.'&response_type=code&action=Login&username='.USER.'&password='.PASS;
-$curl = curl_init( $url );
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HEADER, true);
-//curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($curl, CURLOPT_AUTOREFERER, true);
-curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 120);
-curl_setopt($curl, CURLOPT_TIMEOUT, 120);
+    $items = array();
 
-$content = curl_exec( $curl );
-curl_close( $curl );//die($content);
+    $items['admin/config/content/bullhorn_rest_api'] = array(
+        'title' => 'Settings for Bullhorn API',
+        'description' => 'Configuration for bullhorn api module',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('bullhorn_job_board_form'),
+        'access arguments' => array('access administration pages'),
+        'type' => MENU_NORMAL_ITEM,
+    );
 
-if(preg_match('#Location: (.*)#', $content, $r)) {
-$l = trim($r[1]);
-$temp = preg_split("/code=/", $l);
-$authcode = $temp[1];
+    return $items;
 }
 
-return $authcode;
+/**
+ * Implementation of hook_form()
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+
+function bullhorn_rest_form($form, &$form_state)
+{
+    $form['bullhorn_rest_api_client_id'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Please enter your Bullhorn client id'),
+        '#default_value' => variable_get('bullhorn_rest_api_client_id', ''),
+        '#size' => 55,
+        '#maxlength' => 55,
+        '#description' => t('Please enter your Bullhorn client id'),
+        '#required' => TRUE,
+    );
+
+    $form['bullhorn_rest_api_client_secret'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Please enter your Bullhorn client secret'),
+        '#default_value' => variable_get('bullhorn_rest_api_client_secret', ''),
+        '#size' => 55,
+        '#maxlength' => 55,
+        '#description' => t('Please enter your Bullhorn client secret'),
+        '#required' => TRUE,
+    );
+
+    $form['bullhorn_rest_api_username'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Please enter your Bullhorn username'),
+        '#default_value' => variable_get('bullhorn_rest_api_username', ''),
+        '#size' => 55,
+        '#maxlength' => 55,
+        '#description' => t('Please enter your Bullhorn username'),
+        '#required' => TRUE,
+    );
+
+    $form['bullhorn_rest_api_password'] = array(
+        '#type' => 'password',
+        '#title' => t('Please enter your Bullhorn password'),
+        '#default_value' => variable_get('bullhorn_rest_api_password', ''),
+        '#size' => 55,
+        '#maxlength' => 55,
+        '#description' => t('Please enter your Bullhorn password'),
+        '#required' => TRUE,
+    );
+
+    $form['bullhorn_rest_api_subscription_id'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('SubscriptionID'),
+        '#default_value' => variable_get('bullhorn_rest_api_subscription_id'),
+        '#size'          => 55,
+        '#maxlength'     => 55,
+        '#description'   => t('Please enter an arbitrary SubscriptionID.'),
+        '#required'      => TRUE,
+    );
+
+    return system_settings_form($form);
+}
+
+
+
+/**
+ * Bullhorn Rest API Login
+ *
+ * @return mixed
+ */
+
+function bullhorn_rest_api_login() {
+    try {
+        $auth_code = getAuthCode();
+        $auth      = doBullhornAuth($auth_code);
+        $tokens    = json_decode($auth);
+        $session   = doBullhornLogin($tokens->access_token);
+
+        return json_decode($session);
+
+    } catch (Exception $e) {
+        watchdog( 'bullhorn rest', 'Counld not log into the Bullhorn REST API.', array(), WATCHDOG_CRITICAL );
+    }
+}
+
+function getAuthCode()
+{
+    $url = 'https://auth.bullhornstaffing.com/oauth/authorize?client_id=' . CLIENT_ID . '&response_type=code&action=Login&username=' . USER . '&password=' . PASS;
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, true);
+//curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 120);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 120);
+
+    $content = curl_exec($curl);
+    curl_close($curl); //die($content);
+
+    if (preg_match('#Location: (.*)#', $content, $r)) {
+        $l = trim($r[1]);
+        $temp = preg_split("/code=/", $l);
+        $authcode = $temp[1];
+    }
+
+    return $authcode;
 }
 
 function doBullhornAuth($authCode)
 {
-$url = 'https://auth.bullhornstaffing.com/oauth/token?grant_type=authorization_code&code='.$authCode.'&client_id='.CLIENT_ID.'&client_secret='.CLIENT_SECRET;
+    $url = 'https://auth.bullhornstaffing.com/oauth/token?grant_type=authorization_code&code=' . $authCode . '&client_id=' . CLIENT_ID . '&client_secret=' . CLIENT_SECRET;
 
-$options = array(
-CURLOPT_RETURNTRANSFER => 1,
-CURLOPT_POST => true,
-CURLOPT_POSTFIELDS => array()
-);
+    $options = array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => array()
+    );
 
-$ch = curl_init( $url );
-curl_setopt_array( $ch, $options );
-$content = curl_exec( $ch );
+    $ch = curl_init($url);
+    curl_setopt_array($ch, $options);
+    $content = curl_exec($ch);
 
-curl_close( $ch ); //die($content);
+    curl_close($ch); //die($content);
 
-return $content;
+    return $content;
 
 }
 
 function doBullhornLogin($accessToken)
 {
-$url = 'https://rest.bullhornstaffing.com/rest-services/login?version=*&access_token='.$accessToken;
-$curl = curl_init( $url );
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $url = 'https://rest.bullhornstaffing.com/rest-services/login?version=*&access_token=' . $accessToken;
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 //curl_setopt($curl, CURLOPT_HEADER, true);
 //curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 //curl_setopt($curl, CURLOPT_AUTOREFERER, true);
 //curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 120);
 //curl_setopt($curl, CURLOPT_TIMEOUT, 120);
 
-$content = curl_exec( $curl );
-curl_close( $curl );
-return $content;
+    $content = curl_exec($curl);
+    curl_close($curl);
+    return $content;
 }
-
-function doBullhornJobQuery($BhRestToken, $BhURL)
-{
-	$raw_result = db_query("SELECT max(field_job_order_id_value) as val FROM field_data_field_job_order_id");
-
-	$item = $raw_result->fetchObject(); 
-
-	//$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
-  //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-  $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-  
-  
-  
-	$tuCurl = curl_init();
-		curl_setopt($tuCurl, CURLOPT_URL, $BhURL.$data);
-		curl_setopt($tuCurl, CURLOPT_PORT , 443);
-		curl_setopt($tuCurl, CURLOPT_VERBOSE, 0);
-		curl_setopt($tuCurl, CURLOPT_HEADER, 0);
-		curl_setopt($tuCurl, CURLOPT_SSLVERSION, 3); 
-		curl_setopt($tuCurl, CURLOPT_SSL_VERIFYPEER, 1); 
-		curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
-	$tuData = curl_exec($tuCurl);
-	curl_close($tuCurl);
-
-	return $tuData;
-}
-
-
-
 
 /**
-* Implements hook_menu().
-*/
-function bullhorn_rest_menu() {
-  $items = array();
+ * Bullhorn REST API Get Request
+ *
+ * @param $url
+ * @return mixed
+ */
 
-  $items['admin/config/content/bullhorn_rest_api'] = array(
-    'title' => 'Settings for Bullhorn API',
-    'description' => 'Configuration for bullhorn api module',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('bullhorn_api_form'),
-    'access arguments' => array('access administration pages'),
-    'type' => MENU_NORMAL_ITEM,
-  );
+function bullhorn_rest_api_get_request( $url ) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_PORT, 443);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $result = curl_exec($ch);
 
-  return $items;
-}
-
-function bullhorn_api_form($form, &$form_state) {
-  $form['bullhorn_rest_api_client_id'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Please enter your Bullhorn client id'),
-    '#default_value' => variable_get('bullhorn_rest_api_client_id', ''),
-    '#size' => 55,
-    '#maxlength' => 55,
-    '#description' => t('Please enter your Bullhorn client id'),
-    '#required' => TRUE,
-  );
-
-  $form['bullhorn_rest_api_client_secret'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Please enter your Bullhorn client secret'),
-    '#default_value' => variable_get('bullhorn_rest_api_client_secret', ''),
-    '#size' => 55,
-    '#maxlength' => 55,
-    '#description' => t('Please enter your Bullhorn client secret'),
-    '#required' => TRUE,
-  );
-
-  $form['bullhorn_rest_api_username'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Please enter your Bullhorn username'),
-    '#default_value' => variable_get('bullhorn_rest_api_username', ''),
-    '#size' => 55,
-    '#maxlength' => 55,
-    '#description' => t('Please enter your Bullhorn username'),
-    '#required' => TRUE,
-  );
-
-  $form['bullhorn_rest_api_password'] = array(
-    '#type' => 'password',
-    '#title' => t('Please enter your Bullhorn password'),
-    '#default_value' => variable_get('bullhorn_rest_api_password', ''),
-    '#size' => 55,
-    '#maxlength' => 55,
-    '#description' => t('Please enter your Bullhorn password'),
-    '#required' => TRUE,
-  );
-
-  return system_settings_form($form);
-}
-
-/*
-function bullhorn_rest_queue_cron_info()
-{
-
-	$queues['bullhorn_api'] = array(
-    'worker callback' => 'bullhorn_cron_process',
-    'time' => 60,
-  );
-  return $queues;
-}
-*/
-function cat_id_to_name($id)
-{
-  switch ($id) {
-    case '692418':
-      $name = "applications";
-      break;
-    case '692451':
-      $name = "engineering";
-      break;
-    case '692527':
-      $name = "erp/sap";
-      break;
-    case '696836':
-      $name = "infrastructure";
-      break;
-    case '738245':
-      $name = "pmo";
-      break;
-    case '692511':
-      $name = "other area(s)";
-      break;
-    
-  }
-
-  return $name;
-}
-
-function bullhorn_cron()
-{
-	try {
-$authCode = getAuthCode();//echo $authCode;die;
-$auth = doBullhornAuth($authCode);//echo $auth;die;
-$tokens = json_decode($auth);//print '<pre>';print_r($tokens);die;
-$session = doBullhornLogin($tokens->access_token);
-
-} catch (Exception $e) 
-{
-  error_log($e->getMessage());
-}
-
-$jeff = json_decode($session);
-
-$joborder = doBullhornJobQuery($jeff->BhRestToken, $jeff->restUrl);
-
-$jeff2 = json_decode($joborder);
-
-//$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$joborder);
-$num = count($jeff2->data);
-//print '<pre>';
-//print_r($jeff2->data);
-//print_r($num);
-$tax_list = taxonomy_get_vocabularies();
-
-foreach ($tax_list as $item) {
-    if ($item->machine_name == 'job_board_location') {
-        $job_board_location_vid = $item->vid;
-    }
-}
-
-//print '</pre>';
-//exit();
-require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
-
-
-
-
-
-for ($i=0; $i < $num; $i++) { 
-	$config = HTMLPurifier_Config::createDefault();
-	$config->set('HTML.AllowedElements', 'br,ul,ol,li');  
-	$config->set('Attr.AllowedClasses', '');  
-	$config->set('HTML.AllowedAttributes', '');  
-	$config->set('AutoFormat.RemoveEmpty', true);  
-	$temp = $jeff2->data[$i]->publicDescription;
-	$remarks = preg_replace('/<\?xml[^>]+\/>/im', '', $temp); 
-	$purifier = new HTMLPurifier($config);
-	$clean_html = $purifier->purify($remarks);
-	$clean_html = nl2br($clean_html);
-	
-	$node = new stdClass();
-  	$node->type = 'job_order';
-  	node_object_prepare($node);
-  	$node->title = ucfirst(strtolower($jeff2->data[$i]->title));
-
-  	$node->language = "en";
-
-    $full_category = $jeff2->data[$i]->categories;
-
-    
-    if ($full_category->total == 1) {
-      // This means this job is associated with a category so we can proceed.
-      
-      $category_data = $full_category->data;
-
-      // Now that I got the data, pull out the category ID
-      
-      $cat_id = $category_data[0]->id;
+    if($result === false) {
+        $ch_errno = curl_errno($ch);
+        $ch_error = curl_error($ch);
+//        dpm(curl_getinfo(($ch)), 'cURL get information');
+        watchdog( 'bullhorn rest', 'Failed to do a Bullhorn REST API GET request.', array(), WATCHDOG_CRITICAL );
+        curl_close($ch);
     }
 
-    $cat_name = cat_id_to_name($cat_id);
+    curl_close($ch);
 
-    
+    $response = json_decode($result);
 
-    if ($term = taxonomy_get_term_by_name($cat_name)) {
-          $terms_array = array_keys($term);
-          $node->field_category[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-        } else {
-          $term = new STDClass();
-          $term->name = $cat_name;
-          $term->vid = 1;
-          if (!empty($term->name)) {
-            $test = taxonomy_term_save($term);
-            $term = taxonomy_get_term_by_name($cat_name);
-            $tid = $term->tid;
-            $node->field_category[LANGUAGE_NONE][0]['tid'] = $tid;
-          }
-        }
-
-    $node->body[LANGUAGE_NONE][0]['value']   = $clean_html;
-    $node->body[LANGUAGE_NONE][0]['summary'] = text_summary($clean_html);
-    $node->body[LANGUAGE_NONE][0]['format']  = 'full_html';
-
-    $node->field_job_order_id[LANGUAGE_NONE][0]['value'] = $jeff2->data[$i]->id;
-
-    $alter_time = $jeff2->data[$i]->dateAdded / 1000;
-
-    $post_date = date("Y-m-d",$alter_time);
-
-    $post_date = $post_date." 00:00:00";
-
-    $node->field_published[LANGUAGE_NONE][0]['value'] = $post_date;
-
-
-
-    $alter_time = $jeff2->data[$i]->dateClosed / 1000;
-
-    $post_date = date("Y-m-d",$alter_time);
-
-    $post_date = $post_date." 00:00:00";
-
-    //$node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
-
-
-    /**
-     *
-     * TAXONOMY SEARCH FOR EMPLOYMENT TYPE
-     * 
-     */
-    
-    if ($term = taxonomy_get_term_by_name(strtolower($jeff2->data[$i]->employmentType))) {
-          $terms_array = array_keys($term);
-          $node->field_employment_type[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-        } else {
-          $term = new STDClass();
-          $term->name = ucwords(strtolower($jeff2->data[$i]->employmentType));
-          $term->vid = 1;
-          if (!empty($term->name)) {
-            $test = taxonomy_term_save($term);
-            $term = taxonomy_get_term_by_name($tag);
-            $tid = $term->tid;
-            $node->field_employment_type[LANGUAGE_NONE][0]['tid'] = $tid;
-          }
-        }
-
-    //$node->field_city[$node->language][0]['value'] = ucfirst(strtolower($jeff2->data[$i]->address->city));
-
-    if (strtolower($jeff2->data[$i]->address->countryID) == 1) {
-      $country = "United States";
-    }
-    else if (strtolower($jeff2->data[$i]->address->countryID) == 2216) {
-      $country = "Canada";
-    }
-    else
-    {
-      $country = "Canada";
-    }
-    
-    /**
-     *
-     * TAXONOMY SEARCH FOR JOB BOARD LOCATION COUNTRY
-     * 
-     */
-    
-    if ($term = taxonomy_get_term_by_name(strtolower($country),"job_board_location")) {
-          $terms_array = array_keys($term);
-          $node->field_job_board_location[LANGUAGE_NONE][0] = array('tid' => $terms_array['0']);
-          $parent_term_id = $terms_array['0'];
-          //print '<pre>The country taxonomy is:<br>';
-            //print_r($term);
-        } else {
-          $term = new STDClass();
-          $term->name = strtolower($country);
-          $term->vocabulary_machine_name = "job_board_location";
-          if (!empty($term->name)) {
-            $test = taxonomy_term_save($term);
-            $term = taxonomy_get_term_by_name(strtolower($country),"job_board_location");
-
-            $tid = $term->tid;
-            $parent_term_id = $tid;
-            $node->field_job_board_location[LANGUAGE_NONE][0]['tid'] = array('tid' => $tid);
-          }
-        }  
-
-
-    /**
-     *
-     * TAXONOMY SEARCH FOR JOB BOARD LOCATION CITY
-     * 
-     */
-    
-    if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location")) {
-          $terms_array = array_keys($term);
-          //print 'Terms array is:<br>';
-          //print_r($terms_array);
-          $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $terms_array['0']);
-        } else {
-          $term = new STDClass();
-          $term->vid = $job_board_location_vid;
-          $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
-          $term->parent = $parent_term_id;
-          $term->vocabulary_machine_name = "job_board_location";
-          if (!empty($term->name)) {
-            //print '<pre>Term is: ';
-            //print_r($term);
-            $test = taxonomy_term_save($term);
-            //print 'test holds';
-            //print_r($test);
-            
-            $term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)),"job_board_location");
-            //print 'The term after getting by name from job board location: ';
-            //print_r($term);
-            $temp = array_pop($term);
-            //print_r($temp);
-            $city_tid = $term->tid;
-            //exit();
-            $tid = $city_tid;
-            $node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => $tid);
-          }
-        }  
-
-        //$node->field_job_board_location[LANGUAGE_NONE][0] = 
-        //$node->field_job_board_location[LANGUAGE_NONE][1] = array('tid' => '584');
-
-    
-
-    if ($term = taxonomy_get_term_by_name(ucwords(strtolower($jeff2->data[$i]->address->city)))) 
-    {
-          $terms_array = array_keys($term);
-          $node->field_city[LANGUAGE_NONE][0]['tid'] = ucwords($terms_array['0']);
-    } else 
-    {
-          $term = new STDClass();
-          $term->name = ucwords(strtolower($jeff2->data[$i]->address->city));
-          $term->vid = 2;
-
-
-          if (!empty($term->name)) 
-          {
-            $test = taxonomy_term_save($term);
-   
-            //print_r($test);
-            $new_tid = $term->tid;
-            //print 'The new tid is '.$new_tid;
-			
-            $term = taxonomy_get_term_by_name($term->name);
-            //$jeff5 = array_shift($term);
-            //print_r($jeff5);
-            //exit();
-			//die();
-            $tid = $new_tid;
-            $node->field_city[LANGUAGE_NONE][0]['tid'] = $tid;
-          }
-    }
-
-    
-
-    if ($term = taxonomy_get_term_by_name($country)) {
-          $terms_array = array_keys($term);
-          $node->field_country[LANGUAGE_NONE][0]['tid'] = $terms_array['0'];
-        } else {
-          $term = new STDClass();
-          $term->name = $tag;
-          $term->vid = 1;
-          if (!empty($term->name)) {
-            $test = taxonomy_term_save($term);
-            $term = taxonomy_get_term_by_name($tag);
-            $tid = $term->tid;
-            $node->field_country[LANGUAGE_NONE][0]['tid'] = $tid;
-          }
-        }
-
-    $skill_list = ucfirst(strtolower($jeff2->data[$i]->skillList));
-
-    $skill_list = substr($skill_list, 0,250);
-
-    $node->field_skills[LANGUAGE_NONE][0]['value'] = $skill_list;
-
- 
-    $path = 'joborder/programmatically_created_node_' . date('YmdHis');
-    $node->path = array('alias' => $path);
-    $node->uid = 1;
-    //print '<pre>';
-    //print_r($node);
-    //exit();
-
-  	try 
-    {
-      node_save($node);
-      $success = TRUE;
-    }
-    catch (Exception $e) {
-        //print_r('NODE FAILED TO SAVE<br>');
-
-        //print '<pre>';
-        //print_r($node);
-    }
-
-    //print_r('Node save was successful.  Nid is '.$node->nid.'<br>');
-
-}// END FOR LOOP
-//exit();
+    return $response;
 }
 
+/**
+ * Bullhorn REST API Get Request
+ *
+ * @param $url
+ * @return mixed
+ */
 
+function bullhorn_rest_api_json_put_request( $url, $data ) {
+    $json = json_encode( $data );
+    dpm( $json );
 
-function bullhorn_rest_form_alter($form, $form_state, $form_id)
-{
-  if ($form_id == "views_exposed_form" && $form_state['view']->name == "job_board" && $form_state['view']->current_display == "page") 
-  {
-      
-      $form = NULL;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_PORT, 443);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+//    curl_setopt($ch, CURLOPT_HTTPHEADER, array('BhRestToken:' . $session_obj->BhRestToken)); //After much searching and trial and error this was the key
+    $result = curl_exec($ch);
 
-      //print '<pre>';
-      //print_r($form); 
-      //print '</pre>';
+    if($result === false) {
+        $ch_errno = curl_errno($ch);
+        $ch_error = curl_error($ch);
+//        dpm(curl_getinfo(($ch)),'CURL INFO');
+        watchdog( 'bullhorn rest', 'Failed to do a Bullhorn REST API PUT request with JSON encoded body.', array(), WATCHDOG_CRITICAL );
+        curl_close($ch);
+    }
 
-      return $form;
-       
-  }
-  //return $form;
+    curl_close($ch);
 
+    $response = json_decode($result);
+
+    return $response;
 }
-
-function bullhorn_rest_views_query_alter(&$view, &$query) {
-
- 
-//simple example: change the order of the master display
-  //if you want to do it only  on a certain display add something
-  // like  "&&$view->current_display == 'panel_page_1'"
-  if($view->name == "job_board")
-  {
-    //print '<pre>';
-    //print_r($view->query->fields['field_data_field_city_node_entity_type'] );
-    //$view->query->fields['field_data_field_category_node_entity_type'] = NULL;
-    //
-   $arrayName = array(
-      'field' => 'field_data_field_job_board_location.field_job_board_location_tid', 
-      'value' => '574' ,
-      'operator' => '=' );
-   //array_push($view->query->where[1]['conditions'], $arrayName);
-    //print '<pre>';
-    //print_r($view->query->where[1]['conditions'] );
-    //print '</pre>';
-  }
-
-}
-
-
-
-
-
-
-

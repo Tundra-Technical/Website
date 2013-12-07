@@ -1,5 +1,7 @@
 name = Bullhorn REST
-description = This module provides the ability for bullhorn to connect up to their RESTful API to extract job orders
+description = This module provides the ability for bullhorn to connect up to their RESTful API
 core = 7.x
-package = Tundra
+package = Bullhorn
 configure = admin/config/content/bullhorn_rest_api
+
+files[] = bullhorn_rest.inc
