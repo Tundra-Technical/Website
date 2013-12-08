@@ -520,6 +520,7 @@ function bullhorn_job_board_get_jobs ()
     }
     // END FOR LOOP
 //exit();
+    print '';
 }
 
 /**
