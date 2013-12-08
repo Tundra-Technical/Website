@@ -14,7 +14,7 @@ function bullhorn_job_board_menu() {
     $items['admin/config/content/bullhorn_get_jobs'] = array(
         'title'            => 'Bullhorn Get Jobs',
         'description'      => 'Get Jobs from Bullhorn',
-        'page callback'    => 'bullhorn_job_board_jobs',
+        'page callback'    => 'bullhorn_job_board_get_jobs',
         'access arguments' => array('access administration pages'),
         'type'             => MENU_NORMAL_ITEM,
     );
