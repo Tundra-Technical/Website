@@ -143,6 +143,7 @@ function bullhorn_job_board_candidate_mail_send( $values ) {
     // hook_mail(). In this case, we want to pass in the values the user entered
     // into the form, which include the message body in $form_values['message'].
     $params = $values;
+    dpm($params);
 
 
     // The language of the e-mail. This will one of three values:
