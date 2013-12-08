@@ -218,7 +218,7 @@ function bullhorn_rest_api_get_request( $url ) {
 
 function bullhorn_rest_api_json_put_request( $url, $data ) {
     $json = json_encode( $data );
-    dpm( $json );
+//    dpm( $json );
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
