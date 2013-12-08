@@ -526,39 +526,48 @@ function bullhorn_job_board_get_jobs ()
 /**
  * Implementation of hook_form_views_exposed_form_alter()
  *
+ * Alter the job-board exposed form and set the default country based on the domain name entry point if that country
+ * name term exists
+ *
  * @param $form
  * @param $form_state
  */
 
 function bullhorn_job_board_form_views_exposed_form_alter( &$form, &$form_state ) {
 
-    // Get the domain variables
-    $domain = domain_get_domain();
+    // Select the exposed for that we are looking for, the one on the job-board page
+    if( strpos( $form['#id'], 'views-exposed-form-job-board-page' ) !== FALSE ) {
 
-    // Set a list of country names and their associated domain names
-    $country_domain = array(
-        'Canada'         => 'tundratechnical.ca',
-        'United States'  => 'tundratechnical.com',
-        'India'          => 'tundratechnical.in',
-        'United Kingdom' => 'tundratechnical.co.uk'
-    );
+        // Get the domain variables
+        $domain = domain_get_domain();
 
-     // Set the country by which domain is viewed
-    $country_name = array();
-    foreach( $country_domain as $d ) {
-        if(strpos($domain['subdomain'], $d)) {
-            $country_name = array_keys($country_domain,$d);
+        // Set a list of country names and their associated domain names
+        $country_domain = array(
+            'Canada'         => 'tundratechnical.ca',
+            'United States'  => 'tundratechnical.com',
+            'India'          => 'tundratechnical.in',
+            'United Kingdom' => 'tundratechnical.co.uk'
+        );
+
+         // Set the country by which domain is viewed
+        $country_name = array();
+        foreach( $country_domain as $d ) {
+            if( strpos($domain['subdomain'], $d) !== FALSE ) {
+                $country_name = array_keys( $country_domain, $d );
+            }
         }
-    }
 
-    // Get the country tid
-    $country_tid = taxonomy_get_term_by_name($country_name[0],'job_board_location');
+        // Get the country tid
+        $country_tid = taxonomy_get_term_by_name( $country_name[0], 'job_board_location') ;
+        $tid = array_keys( $country_tid );
 
-    if( !empty( $country_tid ) ) {
-        $tid = array_keys($country_tid);
+        // Continue to set the default country if the country name term exists
+        if( !empty( $tid[0] ) && is_numeric( $tid[0] ) ) {
+            if( empty( $form_state['view']->exposed_input['term_node_tid_depth'] ) ) {
 
-        $form_state['input']['term_node_tid_depth'] = $tid[0];
-        $form_state['input']['tid']                 = $tid[0];
+                $form_state['input']['term_node_tid_depth'] = $tid[0];
+            }
+        }
     }
 }
 
