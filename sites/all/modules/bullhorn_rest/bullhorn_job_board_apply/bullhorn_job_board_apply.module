@@ -175,14 +175,15 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
         watchdog( 'bullhorn job board apply', 'The JobOrder ID for %job_order_id does not exist or could not be created', array( '%job_order_id' => $job_order_id ), WATCHDOG_DEBUG );
     } else {
         $jsid = $result->changedEntityId;
-        $aid = bullhorn_job_order_apply_candidate_job_order_id_save( $jid, $cid, $jsid, $job_order_id );
+        $mess = array( 'first_name' => $first_name, 'last_name' => $last_name, 'title' => $title );
+        $aid = bullhorn_job_order_apply_candidate_job_order_id_save( $jid, $cid, $jsid, $job_order_id, $mess );
     }
 
     // Send an confirmation email to tche Candidate and an alert to Tundra of the Job application
     $values = array('first_name' => $first_name,'last_name' => $last_name,'email' => $email,'job_title' => $title);
     dpm( $values );
-    bullhorn_job_board_candidate_mail_send($values);
-    bullhorn_job_board_employee_mail_send($values);
+    bullhorn_job_board_apply_candidate_mail_send( $values );
+    bullhorn_job_board_apply_employee_mail_send( $values );
 
     drupal_set_message( t( 'Thank you for applying for the position of :title.', array( ':title' => $title ) ), 'status' );
     drupal_goto( $return_path );

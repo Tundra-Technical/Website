@@ -49,7 +49,7 @@ function bullhorn_job_order_apply_process_job_order_id( $job_order_id, $title ) 
  * @param $job_order_id: JobOrder ID
  */
 
-function bullhorn_job_order_apply_candidate_job_order_id_save( $jid, $cid, $jsid, $job_order_id ) {
+function bullhorn_job_order_apply_candidate_job_order_id_save( $jid, $cid, $jsid, $job_order_id, $mess ) {
 
     $aid = 0;
 
@@ -59,7 +59,7 @@ function bullhorn_job_order_apply_candidate_job_order_id_save( $jid, $cid, $jsid
         $aid = _job_order_application_save ($jid, $cid, $jsid );
         if( !$aid ) {
 //            drupal_set_message(t('A technical error occured and we were unable to complete your request. A report is being filed. Please try again later.'),'error');
-            watchdog('bullhorn job board apply','Failed to create {bullhorn_job_order_applications} record for Candidate (:first_name :last_name) for Job Order (:title :job_order_id).',array(':first_name' => $first_name,':last_name' => $last_name,':title' => $title, ':job_order_id' => $job_order_id),WATCHDOG_ERROR);
+            watchdog('bullhorn job board apply','Failed to create {bullhorn_job_order_applications} record for Candidate (:first_name :last_name) for Job Order (:title :job_order_id).',array(':first_name' => $mess['first_name'], ':last_name' => $mess['last_name'], ':title' => $mess['title'], ':job_order_id' => $job_order_id),WATCHDOG_ERROR);
 //            drupal_goto($return_path);
         } else {
             // Add the Job Order ID to the current users session
@@ -127,11 +127,11 @@ function _job_order_save( $job_order_id, $title ) {
  *   There are just two relevant items: $form_values['email'] and
  *   $form_values['message'].
  */
-function bullhorn_job_board_candidate_mail_send( $values ) {
+function bullhorn_job_board_apply_candidate_mail_send( $values ) {
     global $language;
     // All system mails need to specify the module and template key (mirrored from
     // hook_mail()) that the message they want to send comes from.
-    $module = 'bullhorn_job_board';
+    $module = 'bullhorn_job_board_apply';
     $key = 'candidate_message';
 
     // Specify 'to' and 'from' addresses.
@@ -168,7 +168,7 @@ function bullhorn_job_board_candidate_mail_send( $values ) {
     // Send the mail, and check for success. Note that this does not guarantee
     // message delivery; only that there were no PHP-related issues encountered
     // while sending.
-    $result = drupal_mail($module, $key, $to, $language, $params, $from, $send);
+    $result = drupal_mail( $module, $key, $to, $language, $params, $from, $send );
 //    if ($result['result'] == TRUE) {
 //        drupal_set_message(t('Your message has been sent.'));
 //    }
@@ -189,7 +189,7 @@ function bullhorn_job_board_candidate_mail_send( $values ) {
  *   There are just two relevant items: $form_values['email'] and
  *   $form_values['message'].
  */
-function bullhorn_job_board_employee_mail_send($values) {
+function bullhorn_job_board_apply_employee_mail_send($values) {
     global $language;
     // All system mails need to specify the module and template key (mirrored from
     // hook_mail()) that the message they want to send comes from.
@@ -252,7 +252,7 @@ function bullhorn_job_board_employee_mail_send($values) {
  * Implements hook_mail_alter()
  * @param type $message
  */
-function bullhorn_job_board_mail_alter(&$message) {
+function bullhorn_job_board_apply_mail_alter(&$message) {
     $site_name  = variable_get('site_name','Tundra Technical');
     $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
     $domain_pos = (strpos($site_mail,'@')+1);
