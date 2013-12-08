@@ -193,7 +193,7 @@ function bullhorn_job_board_apply_employee_mail_send($values) {
     global $language;
     // All system mails need to specify the module and template key (mirrored from
     // hook_mail()) that the message they want to send comes from.
-    $module = 'bullhorn_job_board';
+    $module = 'bullhorn_job_board_apply';
     $key = 'employee_message';
 
     // Specify 'to' and 'from' addresses.
