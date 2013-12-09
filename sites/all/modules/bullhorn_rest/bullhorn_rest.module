@@ -19,11 +19,11 @@ function bullhorn_rest_menu()
 {
     $items = array();
 
-    $items['admin/config/content/bullhorn_rest_api'] = array(
+    $items['admin/config/content/bullhorn/bullhorn_rest_api'] = array(
         'title' => 'Settings for Bullhorn API',
         'description' => 'Configuration for bullhorn api module',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('bullhorn_job_board_form'),
+        'page arguments' => array('bullhorn_rest_form'),
         'access arguments' => array('access administration pages'),
         'type' => MENU_NORMAL_ITEM,
     );

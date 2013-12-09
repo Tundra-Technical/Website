@@ -11,7 +11,7 @@ function bullhorn_job_board_menu() {
 
     $items = array();
 
-    $items['admin/config/content/bullhorn_get_jobs'] = array(
+    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
         'title'            => 'Bullhorn Get Jobs',
         'description'      => 'Get Jobs from Bullhorn',
         'page callback'    => 'bullhorn_job_board_get_jobs',
@@ -19,7 +19,7 @@ function bullhorn_job_board_menu() {
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    $items['admin/config/content/bullhorn_event_subscribe'] = array(
+    $items['admin/config/content/bullhorn/bullhorn_event_subscribe'] = array(
         'title'            => 'Bullhorn Event Subscribe',
         'description'      => 'Subscribe to Bullhorn Events Create and Delete',
         'page callback'    => 'bullhorn_job_board_event_subscription',
@@ -27,7 +27,7 @@ function bullhorn_job_board_menu() {
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    $items['admin/config/content/bullhorn_get_subscribed_events'] = array(
+    $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
         'title'            => 'Bullhorn Get Subscribed Events',
         'description'      => 'Get subscribed events from Bullhorn.',
         'page callback'    => 'bullhorn_job_board_get_subscribed_events',

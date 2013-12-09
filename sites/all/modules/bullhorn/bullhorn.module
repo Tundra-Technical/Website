@@ -16,11 +16,11 @@ $client = new stdClass();
 
 function bullhorn_permission() {
     return array (
-                'administer bullhorn' => array(
-                            'title' => t('Administer Bullhorn'),
-                            'description' => t('Perform administration tasks for the Bullhorn module')
-                        )
-            );
+        'administer bullhorn' => array(
+            'title' => t('Administer Bullhorn'),
+            'description' => t('Perform administration tasks for the Bullhorn module')
+        )
+    );
 }
 
 /**
@@ -29,16 +29,17 @@ function bullhorn_permission() {
 
 function bullhorn_menu() {
     $items = array();
-    $items['admin/config/bullhorn'] = array(
-                'title' => 'Bullhorn',
-                'page callback'    => 'drupal_get_form',
-                'page arguments'   => array('bullhorn_form'),
-                'access arguments' => array('administer bullhorn')
-            );
-    $items['admin/config/bullhorn/rest-api-config'] = array(
-                'title' => 'Bullhorn REST API Config',
-                'description' => "Configure your Bullhorn REST API access."
-            );
+    $items['admin/config/content/bullhorn'] = array(
+        'title' => 'Bullhorn',
+//                'page callback'    => 'drupal_get_form',
+//                'page arguments'   => array('bullhorn_form'),
+        'access arguments' => array('administer bullhorn'),
+        'type' => MENU_LOCAL_TASK,
+    );
+//    $items['admin/config/bullhorn/rest-api-config'] = array(
+//                'title' => 'Bullhorn REST API Config',
+//                'description' => "Configure your Bullhorn REST API access."
+//            );
 //     $items['admin/config/bullhorn/access-token'] = array(
 //                 'title' => 'View Bullhorn Access Token',
 //                 'description' => 'Your Bullhorn Access Token.',
@@ -46,7 +47,7 @@ function bullhorn_menu() {
 //                 'access arguments' => array('administer bullhorn'),
 //                 'type'          => MENU_LOCAL_TASK
 //             );
-    
+
     return $items;
 }
 
