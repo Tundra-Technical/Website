@@ -33,9 +33,9 @@ function _bullhorn_get_subscribed_events ( $session ) {
     if($result === false) {
         $ch_errno = curl_errno($ch);
         $ch_error = curl_error($ch);
-        dpm($ch_errno,'Error number');
-        dpm($ch_error,'Error message');
-        dpm(curl_getinfo(($ch)), 'cURL get information');
+//        dpm($ch_errno,'Error number');
+//        dpm($ch_error,'Error message');
+//        dpm(curl_getinfo(($ch)), 'cURL get information');
         curl_close($ch);
     }
 
@@ -154,7 +154,7 @@ function _bullhorn_get_category_name_by_id( $cat_id, $session ) {
 
     $response = bullhorn_rest_api_get_request( $url );
 
-    dpm($response);
+//    dpm($response);
 
     return $response;
 }

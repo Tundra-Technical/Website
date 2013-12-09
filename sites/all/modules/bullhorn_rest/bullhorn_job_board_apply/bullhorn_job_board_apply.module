@@ -181,7 +181,6 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
 
     // Send an confirmation email to tche Candidate and an alert to Tundra of the Job application
     $values = array('first_name' => $first_name,'last_name' => $last_name,'email' => $email,'job_title' => $title);
-    dpm( $values );
     bullhorn_job_board_apply_candidate_mail_send( $values );
     bullhorn_job_board_apply_employee_mail_send( $values );
 
