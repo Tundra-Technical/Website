@@ -191,6 +191,57 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
 }
 
 /**
+ * Implementation of hook_mail
+ * @param string $key
+ * @param string $message
+ * @param mixed $params
+ */
+function bullhorn_job_board_apply_mail($key,&$message,$params) {
+    // Each message is associated with a language, which may or may not be the
+    // current user's selected language, depending on the type of e-mail being
+    // sent. This $options array is used later in the t() calls for subject
+    // and body to ensure the proper translation takes effect.
+    $options = array(
+        'langcode' => $message['language']->language,
+    );
+
+    switch ($key) {
+        // Send a simple message from the contact form.
+        case 'candidate_message':
+            $message['subject'] = t('@site-name: @job_title', array('@site-name' => variable_get('site_name', 'Tundra Technical'),'@job_title' => $params['job_title']), $options);
+            // Note that the message body is an array, not a string.
+            //$message['body'][] = t('@name sent you the following message:', array('@name' => $user->name), $options);
+            // Because this is just user-entered text, we do not need to translate it.
+            $message['body'][] = t('Hello @first_name @last_name,
+
+Thank you for applying for the position of @job_title.
+
+Networking pays off in many ways. And at Tundra Technical Solutions, your network of great business colleagues and contacts can pay off for you in a big way. Our industry exclusive referral program, the \'Tundra Referral Incentive program\' (T.R.I.P) pays you a cash reward for helping us place your referrals.
+
+- For every person you provide who accepts a position, you\'ll receive a $250 Cash Bonus.
+- For every third successfully-placed referrals, you\'ll receive a trip to the Caribbean.
+- Visit the T.R.I.P page to learn more about our program and the terms and conditions. Or click here.',array('@first_name' => $params['first_name'],'@last_name' => $params['last_name'],'@job_title' => $params['job_title']));
+
+            // Since user-entered text may have unintentional HTML entities in it like
+            // '<' or '>', we need to make sure these entities are properly escaped,
+            // as the body will later be transformed from HTML to text, meaning
+            // that a normal use of '<' will result in truncation of the message.
+            if(isset($params['message']) && !empty($params['message'])) {
+                $message['body'][] = check_plain($params['message']);
+            }
+            break;
+        case 'employee_message':
+            $message['subject'] = t('@site-name: @job_title',array('@site-name' => variable_get('site_name','Tundra Technical'),'@job_title' => $params['job_title']),$options);
+
+            $message['body'][] = t("@first_name @last_name has applied for the position of @job_title.",array('@first_name' => $params['first_name'],'@last_name' => $params['last_name'],'@job_title' => $params['job_title']));
+            if(isset($params['message']) && !empty($params['message'])) {
+                $message['body'][] = check_plain($params['message']);
+            }
+            break;
+    }
+}
+
+/**
  * Implementation of hook_node_view($node,$view_mode,$langcode)
  * @param $node
  * @param $view_mode
