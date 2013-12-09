@@ -394,7 +394,6 @@ function bullhorn_job_board_get_jobs ()
     $joborder = bullhorn_job_board_query($session_obj->BhRestToken, $session_obj->restUrl);
 
     $joborder_obj = json_decode($joborder);
-    dpm($joborder_obj);
 
 //$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$joborder);
     $num = count($joborder_obj->data);
