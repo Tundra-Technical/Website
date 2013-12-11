@@ -30,7 +30,7 @@ function bullhorn_job_board_menu() {
     $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
         'title'            => 'Bullhorn Get Subscribed Events',
         'description'      => 'Get subscribed events from Bullhorn.',
-        'page callback'    => 'bullhorn_job_board_get_subscribed_events',
+        'page callback'    => 'bullhorn_job_board_subscribed_events',
         'access arguments' => array('access administration pages'),
         'type'             => MENU_NORMAL_ITEM,
     );
@@ -46,9 +46,9 @@ function bullhorn_job_board_query($BhRestToken, $BhURL)
 
     //$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
     //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
-//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
 
     $tuCurl = curl_init();
@@ -76,32 +76,6 @@ function bullhorn_rest_queue_cron_info()
   return $queues;
 }
 */
-function cat_id_to_name($id)
-{
-    switch ($id) {
-        case '692418':
-            $name = "applications";
-            break;
-        case '692451':
-            $name = "engineering";
-            break;
-        case '692527':
-            $name = "erp/sap";
-            break;
-        case '696836':
-            $name = "infrastructure";
-            break;
-        case '738245':
-            $name = "pmo";
-            break;
-        case '692511':
-            $name = "other area(s)";
-            break;
-
-    }
-
-    return $name;
-}
 
 function bullhorn_job_board_event_subscription () {
 
@@ -132,11 +106,10 @@ function bullhorn_job_board_event_subscription () {
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('BhRestToken:' . $session_obj->BhRestToken)); //After much searching and trial and error this was the key
     $result = curl_exec($ch);
 
-    $ch_errno = curl_errno($ch);
-    $ch_error = curl_error($ch);
-
     if($result === false) {
-        curl_close($ch);
+        $ch_errno = curl_errno($ch);
+        $ch_error = curl_error($ch);
+        watchdog( 'bullhorn_job_board', 'cURL request failed. Error No.: ( %errno ), Error: ( %error )', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_DEBUG );
     }
 
     curl_close($ch);
@@ -155,157 +128,435 @@ function bullhorn_job_board_subscribed_events () {
 
     $session_obj = bullhorn_rest_api_login();
 
-    // Get the subscribed events from Bullhorn
+//    // Get the subscribed events from Bullhorn
+//
+//    $response = _bullhorn_job_board_get_subscribed_events($session_obj);
+//
+//    if( empty($response) ) {
+//        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
+//        exit;
+//    }
+//
+//    // Set the current requestId for this event
+//    // TODO use request_id to get data returned from this request after its been done already
+//    // i.e. to recover from a failure to perform this request the first time
+//    $request_id = $response->requestId;
+//    variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
+//
+//    // Set the events Array
+//    $events = $response->events;
 
-    $response = bullhorn_get_subscribed_events($session_obj);
+    // Set an Array of test events
+    $events_array = array(
+            'requestId' => 1,
+            'events'    => array(
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('phone'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10870
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10869
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'DELETED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10850
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('address'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10857
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('payRate','address'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10856
+                )
+            )
+    );
 
-    if( empty($response) ) {
-        exit;
-    }
-
-    // Set the current requestId for this event
-    // TODO use request_id to get data returned from this request after its been done already
-    // i.e. to recover from a failure to perform this request the first time
-    $request_id = $response->requestId;
-    variable_set('bullhorn_request_id',$request_id); // Let's save it in the variables table for now
-
-    // Set the events Array
-    $events = $response->events;
+    $events = $events_array['events'];
 
 
-    foreach( $events as $event ) {
-        switch( $event->entityEventType ) {
-            case 'INSERTED':
-                bullhorn_do_inserted_events( $event, $session_obj );
-                exit;
-            case 'UPDATED':
-                bullhorn_do_updated_events( $event, $session_obj );
-                exit;
-            case 'DELETED':
-                bullhorn_do_deleted_events( $event, $session_obj );
-                exit;
-            default:
-                watchdog('bullhorn_rest_api',t('Unknown entityEventType %event_type'),array('%event_type' => $event->entityEventType));
-        }
-    }
+    // Get INSERTED events
+    $inserted = _bullhorn_job_board_get_events_by_event_type( $events, 'inserted' );
+
+    // If $inserted Array is not empty then process INSERTED Events
+    $insert_result = bullhorn_job_board_insert( $inserted, $session_obj );
+
+    // Get UPDATED events
+    $updated = _bullhorn_job_board_get_events_by_event_type( $events, 'updated' );
+
+    // If $update Array is not empty then process UPDATED Events
+    $update_result = bullhorn_job_board_update( $updated, $session_obj );
+
+    // Get DELETED events
+    $deleted = _bullhorn_job_board_get_events_by_event_type( $events, 'deleted' );
+
+    // If $delete Array is not empty then process DELETED Events
+    $delete_result = bullhorn_job_board_delete( $deleted, $session_obj );
+
+    return '';
 }
 
 /**
- * Bullhorn Do Inserted Event
+ * Bullhorn Job Board Insert
  *
  * @param $event
  * @param $session
  */
 
-function bullhorn_job_board_inserted_events( $event, $session ) {
+function bullhorn_job_board_insert( $inserted, $session ) {
 
-    // Set the entityId
-    $entity_id = $event->entityId;
+    // Set the entityIds
+    // Create a comma separated list of entityIds (JobOrderIds) for use in IN parameter query
+    $entity_ids = '';
+    foreach( $inserted as $insert ) {
+        // If the $insert->entityId is set, not empty and does not already exist as a
+        // field_job_order_id attached to a node in the system then add it to the list
+        if( isset( $insert->entityId ) && !empty( $insert->entityId ) && ( !$entity = _bullhorn_job_board_find_node_by_job_order_id( $insert->entityId ) ) ) {
+//        if( isset( $insert->entityId ) && !empty( $insert->entityId ) ) {
+            $entity_ids .= $insert->entityId . ',';
+        }
+    }
+
+    // If $entity_ids is empty then end the execution
+    if( empty( $entity_ids ) ) {
+        watchdog( 'bullhorn_job_board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id', array(), WATCHDOG_NOTICE );
+        return false;
+    }
+
+    // Trim the last comma
+    $entity_ids = trim($entity_ids,',');
 
     // Build a REST URI path to retrieve data for the inserted JobOrder
-
+    // TODO put this request in a function
     $bh_rest_token = $session->BhRestToken;
-    $uri = 'query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=id=' . $entity_id . '%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
+    $fields = _bullhorn_job_board_job_order_fields_clause();
+    $uri = 'query/JobOrder?fields=' . $fields . '&where=id%20IN%20(' . $entity_ids . ')%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
     $url = $session->restUrl . $uri;
 
     // Do the REST request
     $response = bullhorn_rest_api_get_request( $url );
 
-    // Take the result and create a job_order node, and any Taxonomy terms if applicable
-    // TODO modularize the create node function and make it reusable
+    // If $response is empty then end execution
+    if( empty( $response ) || !$response->count ) {
+        watchdog( 'bullhorn_job_board', 'Found INSERTED event and the REST request returned no data.', array(), WATCHDOG_DEBUG );
+        return false;
+    }
 
+    // Get the data array
+    $data = $response->data;
+
+//    // If $data is empty then end execution
+//    if( empty( $data ) ) {
+//        return false;
+//    }
+
+    // Loop through the $data set(s) and create job_order nodes
+    foreach( $data as $insert_data ) {
+        $insert_node = bullhorn_job_board_job_order_insert( $insert_data );
+        try {
+            node_save($insert_node);
+            watchdog( 'bullhorn_job_board', 'Node inserted (%title).', array( '%title' => $insert_node->title ), WATCHDOG_INFO );
+            $success = TRUE;
+        } catch (Exception $e) {
+            watchdog( 'bullhorn job board', 'Failed to save node. Error: ( %error ), File: ( %file ), Function: ( %function ).', array( '%error' => $e, '%file' => __FILE__, '%function' => __FUNCTION__ ), WATCHDOG_CRITICAL);
+        }
+    }
+
+    return '';
 }
 
 /**
- * Bullhorn Do Updated Events
+ * Bullhorn Job Board Update
  *
  * @param $event
  * @param $session
  * @return bool
  */
 
-function bullhorn_job_board_updated_events( $event, $session ) {
+function bullhorn_job_board_update( $updated, $session ) {
 
-    // Make an Array of job_order fields and their associated Bullhorn JobOrder property values
+    // Set an Array to store all update data
+    $updates = array();
 
-    $job_order_fields = array(
-        'title'                    => 'title',
-        'body'                     => 'publicDescription',
-        'field_job_order_id'       => 'id',
-        'field_rate'               => 'payRate',
-        'field_published'          => 'dateAdded',
-        'field_expires'            => 'dateEnd',
-        'field_job_board_location' => 'address',
-//        'field_city'               => 'address',
-//        'field_country'            => 'address',
-        'field_employment_type'    => 'employmentType',
-        'field_category'           => 'categories',
-        'field_skills'             => 'skillList',
-    );
+    $entity_job_order_fields = _bullhorn_job_board_entity_job_order_fields_association();
 
-    // Load job_order nodes
-    // Or query the database for all field_job_order_id_value(s)? You'll have to load the job_order nodes eventually
-    // if it passes...
-
-    $query = new EntityFieldQuery();
-    $result = $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'job_order')
-        ->execute();
-    $job_orders = node_load_multiple(array_keys($result['node']));
-
-    // Set the entityId
-    $entity_id = $event->entityId;
-
-    // If the $entity_id is a value equal to one of the field_job_order_id_value(s) then continue
-    $node = new stdClass();
-    $node->nid = false;
-
-    foreach ( $job_orders as $job_order ) {
-        if( isset( $job_order->field_job_order_id ) && !empty( $job_order->field_job_order_id ) && $job_order->field_job_order_id == $entity_id ) {
-            $node->nid = $job_order->nid;
-            break;
+    // Add the supported fields and the node entity information for the give updatedEntity
+    foreach( $updated as $update) {
+        foreach( $update->updatedProperties as $updated_property) {
+            if( array_key_exists( $updated_property, $entity_job_order_fields ) ) {
+                $query = new EntityFieldQuery();
+                $query->entityCondition( 'entity_type', 'node' )
+                    ->entityCondition( 'bundle', 'job_order' )
+                    ->fieldCondition( 'field_job_order_id', 'value', $update->entityId );
+                $entity = $query->execute();
+                if( empty( $entity ) ) {
+                    continue;
+                }
+                $updates[$update->entityId]['updated_properties'][] = $updated_property;
+                $updates[$update->entityId]['node'] = $entity['node'];
+            }
         }
     }
 
-    if ( !$node->nid ) {
+    // If none of the updatedProperties are on the list of $entity_job_order_fields then end execution
+    if( empty( $updates ) ) {
+        watchdog( 'bullhorn_job_board', 'UPDATED event ran and no applicable were found.', array(), WATCHDOG_NOTICE );
         return false;
     }
 
-    // Set the updatedProperty
-    $update_property = $event->updatedProperty;
+    $entity_ids = array_keys( $updates );
 
-    // If the property is a field used for the job_order bundle then continue
+    // Set an comma separated list of the entityId(s) for use in REST request
+    $entity_ids_str = implode( $entity_ids, ',' );
+    $entity_ids_str = trim ( $entity_ids_str, ',' );
 
-    if ( !in_array( $update_property, $job_order_fields ) ) {
-        return false;
-    }
-
-    // Build a REST URI path to get the updated property
-
-    $uri = 'query/JobOrder?fields=' . $update_property . '&where=id=' . $entity_id . '&BhRestToken=' . $session->BhRestToken;
+    // Build a REST request path to retrieve data for the updated JobOrder(s)
+    // TODO put this request in a function
+    $bh_rest_token = $session->BhRestToken;
+    $fields = _bullhorn_job_board_job_order_fields_clause();
+    $uri = 'query/JobOrder?fields='. $fields .'&where=id%20IN%20(' . $entity_ids_str . ')%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
     $url = $session->restUrl . $uri;
 
     // Do the REST request
+    $updates_response = bullhorn_rest_api_get_request( $url );
 
-    $response = bullhorn_rest_api_get_request( $url );
-
-    if( empty( $response ) ) {
+    // If $response is empty then end execution
+    if( empty( $updates_response ) ) {
+        watchdog( 'bullhorn_job_board', 'UPDATED event ran and REST request returned empty.', array(), WATCHDOG_DEBUG );
         return false;
     }
 
-    // Set the $data of the response
+    // Get the data array
+    $updates_data = $updates_response->data;
 
-    $data = $response->data;
+    // Associate $updates_data with the $updates
+    foreach( $updates_data as $update_data ) {
+        foreach( $updates as $entity_id => $update ) {
+            if( $update_data->id == $entity_id ) {
+                $updates[$entity_id]['updated_data'] = $update_data;
+            }
+        }
+    }
 
-    // Create a properly formatted node and save the job_order using its nid and update the affected field(s)
 
-    switch ( $update_property ) {
+    // Loop through the $updates  and update job_order nodes
+    foreach( $updates as $update_data ) {
+        $nid = array_shift( array_keys( $update_data['node'] ) );
+        $node = node_load( $nid );
+        $data = $update_data['updated_data'];
+        $properties = $update_data['updated_properties'];
+        foreach( $properties as $property ) {
+            $update_node = bullhorn_job_board_job_order_update( $node, $data, $property );
+        }
+        try {
+            node_save( $update_node );
+            watchdog( 'bullhorn_job_board', 'Update node: %title.', array( '%title' => $update_node->title ), WATCHDOG_INFO );
+        } catch( Exception $e ) {
+            watchdog( 'bullhorn_job_board', 'Failed to save node ( %nid ).', array( '%nid' => $node->nid ), WATCHDOG_EMERGENCY );
+        }
+    }
+
+    return '';
+}
+
+/**
+ * Bullhorn Job Board Delete
+ * 
+ * @param $event
+ * @param $session
+ */
+
+function bullhorn_job_board_delete( $deleted, $session ) {
+
+    $job_order_ids = array();
+    foreach( $deleted as $delete ) {
+        $job_order_ids[] = $delete->entityId;
+    }
+
+    if( empty( $job_order_ids ) ) {
+        watchdog( 'bullhorn_job_board', 'Found DELETED event with no enetityId(s).', array(), WATCHDOG_DEBUG );
+        return false;
+    }
+
+    // Get nid(s) for job_order nodes with field_job_order_id(s) in $deleted[$i]->entityId
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition( 'entity_type', 'node' )
+        ->entityCondition( 'bundle', 'job_order' )
+        ->fieldCondition( 'field_job_order_id', 'value', $job_order_ids, 'IN' );
+    $result = $query->execute();
+
+    if( empty( $result ) ) {
+        watchdog( 'bullhorn_job_board', 'Found DELETED event and failed to find job_order_id(s).', array(), WATCHDOG_DEBUG );
+        return false;
+    }
+
+    $job_order_nids = array_keys( $result['node'] );
+
+    // Delete the job_order node using the entity_id
+    try {
+        node_delete_multiple( $job_order_nids );
+        watchdog( 'bullhorn_job_board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => explode( $job_order_nids, ',' ) ), WATCHDOG_NOTICE );
+    } catch( Exception $e ) {
+        watchdog( 'bullhorn_job_board', 'Node(s) deleted. nids ( %nids ).', array( '%nids' => explode( $job_order_nids, ',' ) ), WATCHDOG_EMERGENCY );
+    }
+}
+
+/**
+ * Bullhorn Job Board Node Insert
+ *
+ * @param $data
+ * @return bool
+ */
+
+function bullhorn_job_board_job_order_insert( $data ) {
+
+    // Create a node Object
+    $node = new stdClass();
+    $node->type = 'job_order';
+    node_object_prepare($node);
+
+    // Set the node language
+    $node->language = "en";
+
+    // Set the node Title
+    $node->title = ucfirst( strtolower( $data->title ) );
+
+    // Attach the JobOrder ID for this node
+    $node->field_job_order_id[LANGUAGE_NONE][0]['value'] = $data->id;
+
+    // Attach the payRate
+    $node->field_rate[LANGUAGE_NONE][0]['value'] = (float) $data->payRate;
+
+    // Clean the body HTML
+    $clean_html = _bullhorn_job_board_clean_body_html( $data->publicDescription );
+    // Attach the node Body, Summary and set the format
+    $node->body[LANGUAGE_NONE][0]['value'] = $clean_html;
+    $node->body[LANGUAGE_NONE][0]['summary'] = text_summary($clean_html);
+    $node->body[LANGUAGE_NONE][0]['format'] = 'full_html';
+
+    // Process and attach the Published date for this node
+    $alter_time = $data->dateAdded / 1000;
+    $post_date = date("Y-m-d", $alter_time);
+    $post_date = $post_date . " 00:00:00";
+    $node->field_published[LANGUAGE_NONE][0]['value'] = $post_date;
+
+    // Process and attach the Expires data for this node
+    $alter_time = $data->dateClosed / 1000;
+    $post_date = date("Y-m-d", $alter_time);
+    $post_date = $post_date . " 00:00:00";
+    $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
+
+    // Set the Category name
+    // TODO query Bullhorn for the category name instead of hardcoding an Array of category_id to category_names
+    // because new categories can be introduced
+    $cat_name = _bullhorn_job_board_category_id_to_name( $data->categories->data[0]->id );
+
+    // Process the Category name and attach it to the node
+    $field_category = _bullhorn_job_board_process_taxonomy_term('categories',$cat_name);
+    $node->field_category[LANGUAGE_NONE][0]['tid'] = $field_category;
+
+    // Process and attach the Employment Type to the node
+    $employment_type_term = ucwords(strtolower($data->employmentType));
+    $field_employment_type = _bullhorn_job_board_process_taxonomy_term('employment_types',$employment_type_term);
+    $node->field_employment_type[LANGUAGE_NONE][0] = array( 'tid' => $field_employment_type );
+
+    // Process the Country and City terms for this node. Associate the City with its applicable Country and attach
+    // the City to the node. The View's exposed filter is set to a depth of 1 and will display all Cities for the
+    // applicable Country when selected
+    $country = _bullhorn_job_board_process_country_id( $data->address->countryID );
+    $field_job_board_location = array();
+    $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $country );
+    $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $data->address->city, $country );
+    $node->field_job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[1] );
+
+    // Process and attach the City to the node
+    $field_city = _bullhorn_job_board_process_taxonomy_term( 'cities', ucwords( strtolower( $data->address->city ) ) );
+    $node->field_city[LANGUAGE_NONE][0] = array( 'tid' => $field_city );
+
+    // Process and attach the Country to the node
+    $field_country = _bullhorn_job_board_process_taxonomy_term( 'countries' , $country );
+    $node->field_country[LANGUAGE_NONE][0] = array( 'tid' => $field_country );
+
+    // Attach the Skill List to the node
+    // TODO make the Skill List a vocabulary with an unlimited number of values
+    $skill_list = ucfirst(strtolower($data->skillList));
+    $skill_list = substr($skill_list, 0, 250);
+    $node->field_skills[LANGUAGE_NONE][0]['value'] = $skill_list;
+
+    // Set and attach the path to the node
+    // TODO I'd rather have the job title plus the JobOrderID as the title
+//    $path = 'joborder/programmatically_created_node_' . date('YmdHis');
+//    $node->path = array('alias' => $path);
+    $node->path['pathauto'] = TRUE;
+    $node->uid = 1;
+
+    return $node;
+}
+
+/**
+ * Bullhorn Job Board Node Update
+ *
+ * @param $data
+ * @return bool
+ */
+
+function bullhorn_job_board_job_order_update( $node, $data, $property ) {
+
+    switch ( $property ) {
         case 'title':
             $node->title = ucfirst(strtolower($data->title));
             break;
 
         case 'publicDescription':
-            $body = _bullhorn_process_body_field( $data->publicDescription );
+            $body = _bullhorn_job_board_clean_body_html( $data->publicDescription );
 
             $node->body[LANGUAGE_NONE][0]['value'] = $body;
             $node->body[LANGUAGE_NONE][0]['summary'] = text_summary( $body );
@@ -317,7 +568,7 @@ function bullhorn_job_board_updated_events( $event, $session ) {
             break;
 
         case 'payRate':
-            $node->field_rate[LANGUAGE_NONE][0]['value'] = $data->payRate;
+            $node->field_rate[LANGUAGE_NONE][0]['value'] = (string) $data->payRate;
             break;
 
         case 'dateAdded':
@@ -328,48 +579,47 @@ function bullhorn_job_board_updated_events( $event, $session ) {
             break;
 
         case 'dateEnd':
-            $node->field_expires[LANGUAGE_NONE][0]['value'] = $data->dateEnd;
+            $alter_time = $data->dateClosed / 1000;
+            $post_date = date("Y-m-d", $alter_time);
+            $post_date = $post_date . " 00:00:00";
+            $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
             break;
 
         case 'address':
-            $country = _bullhorn_process_country_id( $data->address->countryID );
+            // Process and attach the job_board_location term for this node
+            $country = _bullhorn_job_board_process_country_id( $data->address->countryID );
             $field_job_board_location = array();
-            $field_job_board_location[] = _bullhorn_process_taxonomy_term( 'job_board_location', $country );
-            $field_job_board_location[] = _bullhorn_process_taxonomy_term( 'job_board_location', $data->address->city, $country );
+            $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $country );
+            $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $data->address->city, $country );
 
-            $node->job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[0] );
-            $node->job_board_location[LANGUAGE_NONE][1] = array( 'tid' => $field_job_board_location[1] );
+//            $node->field_job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[0] );
+            $node->field_job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[1] );
+
+            // Process and update the country term for this node
+            $field_country = _bullhorn_job_board_process_taxonomy_term( 'countries', $country );
+            $node->field_country[LANGUAGE_NONE][0] = array( 'tid' => $field_country );
+
+            // Process and update the city term for this node
+            $field_city = _bullhorn_job_board_process_taxonomy_term( 'cities', $data->address->city );
+            $node->field_city[LANGUAGE_NONE][0] = array( 'tid' => $field_city );
             break;
 
         case 'employmentType':
-            $field_employment_type = _bullhorn_process_taxonomy_term( 'field_employment_type', $data->employmentType );
-            $node->field_employment_type[LANGUAGE_NONE][0] = array( 'tid' => $field_employment_type[0] );
+            $field_employment_type = _bullhorn_job_board_process_taxonomy_term( 'field_employment_type', $data->employmentType );
+            $node->field_employment_type[LANGUAGE_NONE][0] = array( 'tid' => $field_employment_type );
             break;
 
         case 'categories':
-            $field_category = _bullhorn_process_taxonomy_term( 'field_category', $data->categories );
-            $node->field_category[LANGUAGE_NONE][0] = array( 'tid' => $field_category[0] );
+            $field_category = _bullhorn_job_board_process_taxonomy_term( 'field_category', $data->categories );
+            $node->field_category[LANGUAGE_NONE][0] = array( 'tid' => $field_category );
             break;
 
         case 'skillList':
             $node->field_skills[LANGUAGE_NONE][0]['value'] = $data->skillList;
             break;
     }
-}
 
-/**
- * Bullhorn Do Deleted Event
- * 
- * @param $event
- * @param $session
- */
-
-function bullhorn_job_board_deleted_events( $event, $session ) {
-
-    // Set the entityId
-    $entity_id = $event->entityId;
-
-    // Delete the job_order node using the entity_id
+    return $node;
 }
 
 /**
@@ -377,8 +627,9 @@ function bullhorn_job_board_deleted_events( $event, $session ) {
  */
 
 //function bullhorn_cron()
-function bullhorn_job_board_get_jobs ()
-{
+function bullhorn_job_board_get_jobs () {
+    // Set the session
+    $session = json_encode( array( ) );
     try {
         $authCode = getAuthCode(); //echo $authCode;die;
         $auth = doBullhornAuth($authCode); //echo $auth;die;
@@ -391,14 +642,14 @@ function bullhorn_job_board_get_jobs ()
 
     $session_obj = json_decode($session);
 
-    $joborder = bullhorn_job_board_query($session_obj->BhRestToken, $session_obj->restUrl);
+    $job_order = bullhorn_job_board_query($session_obj->BhRestToken, $session_obj->restUrl);
 
-    $joborder_obj = json_decode($joborder);
+    $job_order_obj = json_decode($job_order);
 
-//$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$joborder);
-    $num = count($joborder_obj->data);
+//$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$job_order);
+    $num = count($job_order_obj->data);
 //print '<pre>';
-//print_r($joborder_obj->data);
+//print_r($job_order_obj->data);
 //print_r($num);
     $tax_list = taxonomy_get_vocabularies();
 
@@ -408,8 +659,6 @@ function bullhorn_job_board_get_jobs ()
         }
     }
 
-//print '</pre>';
-//exit();
     require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
 
 
@@ -419,7 +668,7 @@ function bullhorn_job_board_get_jobs ()
         $config->set('Attr.AllowedClasses', '');
         $config->set('HTML.AllowedAttributes', '');
         $config->set('AutoFormat.RemoveEmpty', true);
-        $temp = $joborder_obj->data[$i]->publicDescription;
+        $temp = $job_order_obj->data[$i]->publicDescription;
         $remarks = preg_replace('/<\?xml[^>]+\/>/im', '', $temp);
         $purifier = new HTMLPurifier($config);
         $clean_html = $purifier->purify($remarks);
@@ -428,7 +677,7 @@ function bullhorn_job_board_get_jobs ()
         $node = new stdClass();
         $node->type = 'job_order';
         node_object_prepare($node);
-        $node->title = ucfirst(strtolower($joborder_obj->data[$i]->title));
+        $node->title = ucfirst(strtolower($job_order_obj->data[$i]->title));
 
         $node->language = "en";
 
@@ -438,7 +687,7 @@ function bullhorn_job_board_get_jobs ()
         $node->body[LANGUAGE_NONE][0]['format'] = 'full_html';
 
         // Get the category(ies)
-        $full_category = $joborder_obj->data[$i]->categories;
+        $full_category = $job_order_obj->data[$i]->categories;
 
         // Set the Category for this job_order
         if ($full_category->total == 1) {
@@ -449,57 +698,58 @@ function bullhorn_job_board_get_jobs ()
         }
 
         // Set the Category name
-        $cat_name = cat_id_to_name($cat_id);
+        $cat_name = _bullhorn_job_board_category_id_to_name($cat_id);
 
         // Process the Category name and attach it to the node
-        $field_category = _bullhorn_process_taxonomy_term('categories',$cat_name);
+        $field_category = _bullhorn_job_board_process_taxonomy_term('categories',$cat_name);
         $node->field_category[LANGUAGE_NONE][0]['tid'] = $field_category;
 
         // Attach the JobOrder ID for this node
-        $node->field_job_order_id[LANGUAGE_NONE][0]['value'] = $joborder_obj->data[$i]->id;
+        $node->field_job_order_id[LANGUAGE_NONE][0]['value'] = $job_order_obj->data[$i]->id;
 
         // Process and attach the Published date for this node
-        $alter_time = $joborder_obj->data[$i]->dateAdded / 1000;
+        $alter_time = $job_order_obj->data[$i]->dateAdded / 1000;
         $post_date = date("Y-m-d", $alter_time);
         $post_date = $post_date . " 00:00:00";
         $node->field_published[LANGUAGE_NONE][0]['value'] = $post_date;
 
         // Process and attach the Expires data for this node
-        $alter_time = $joborder_obj->data[$i]->dateClosed / 1000;
+        $alter_time = $job_order_obj->data[$i]->dateClosed / 1000;
         $post_date = date("Y-m-d", $alter_time);
         $post_date = $post_date . " 00:00:00";
         $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
 
         // Process and attach the Employment Type to this node
-        $employment_type_term = ucwords(strtolower($joborder_obj->data[$i]->employmentType));
-        $field_employment_type = _bullhorn_process_taxonomy_term('employment_types',$employment_type_term);
+        $employment_type_term = ucwords(strtolower($job_order_obj->data[$i]->employmentType));
+        $field_employment_type = _bullhorn_job_board_process_taxonomy_term('employment_types',$employment_type_term);
         $node->field_employment_type[LANGUAGE_NONE][0] = array( 'tid' => $field_employment_type );
 
         // Process the Country and City terms for this node. Associate the City with its applicable Country and attach
         // the City to the node. The View's exposed filter is set to a depth of 1 and will display all Cities for the
         // applicable Country when selected
-        $country = _bullhorn_process_country_id( $joborder_obj->data[$i]->address->countryID );
+        $country = _bullhorn_job_board_process_country_id( $job_order_obj->data[$i]->address->countryID );
         $field_job_board_location = array();
-        $field_job_board_location[] = _bullhorn_process_taxonomy_term( 'job_board_location', $country );
-        $field_job_board_location[] = _bullhorn_process_taxonomy_term( 'job_board_location', $joborder_obj->data[$i]->address->city, $country );
+        $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $country );
+        $field_job_board_location[] = _bullhorn_job_board_process_taxonomy_term( 'job_board_location', $job_order_obj->data[$i]->address->city, $country );
 //        $node->field_job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[0] );
         $node->field_job_board_location[LANGUAGE_NONE][0] = array( 'tid' => $field_job_board_location[1] );
 
 
-        $field_city = _bullhorn_process_taxonomy_term( 'cities', ucwords( strtolower( $joborder_obj->data[$i]->address->city ) ) );
+        $field_city = _bullhorn_job_board_process_taxonomy_term( 'cities', ucwords( strtolower( $job_order_obj->data[$i]->address->city ) ) );
         $node->field_city[LANGUAGE_NONE][0] = array( 'tid' => $field_city );
 
-        $field_country = _bullhorn_process_taxonomy_term( 'countries' , $country );
+        $field_country = _bullhorn_job_board_process_taxonomy_term( 'countries' , $country );
         $node->field_country[LANGUAGE_NONE][0] = array( 'tid' => $field_country );
 
-        $skill_list = ucfirst(strtolower($joborder_obj->data[$i]->skillList));
+        $skill_list = ucfirst(strtolower($job_order_obj->data[$i]->skillList));
 
         $skill_list = substr($skill_list, 0, 250);
 
         $node->field_skills[LANGUAGE_NONE][0]['value'] = $skill_list;
 
-        $path = 'joborder/programmatically_created_node_' . date('YmdHis');
-        $node->path = array('alias' => $path);
+//        $path = 'joborder/programmatically_created_node_' . date('YmdHis');
+//        $node->path = array('alias' => $path);
+        $node->path['pathauto'] = TRUE;
         $node->uid = 1;
         //print '<pre>';
         //print_r($node);
@@ -508,11 +758,9 @@ function bullhorn_job_board_get_jobs ()
         try {
             node_save($node);
             $success = TRUE;
+            watchdog( 'bullhorn_job_board', 'Saved job_order. Title: ( %title ).', array( '%title' => $job_order_obj->data[$i]->title ), WATCHDOG_NOTICE );
         } catch (Exception $e) {
-            //print_r('NODE FAILED TO SAVE<br>');
-
-            //print '<pre>';
-            //print_r($node);
+            watchdog( 'bullhorn_job_board', 'Failed to save job_order. Exception: ( %e ), File ( %file ), Function ( %function ).', array( '%e' => $e, '%file' => __FILE__, '%function' => __FUNCTION__), WATCHDOG_EMERGENCY );
         }
 
         //print_r('Node save was successful.  Nid is '.$node->nid.'<br>');

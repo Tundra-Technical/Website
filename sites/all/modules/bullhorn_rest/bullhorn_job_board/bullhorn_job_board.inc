@@ -13,7 +13,7 @@
  * @return mixed
  */
 
-function _bullhorn_get_subscribed_events ( $session ) {
+function _bullhorn_job_board_get_subscribed_events ( $session ) {
 
     $subscription_id = variable_get('bullhorn_rest_api_subscription_id');
 
@@ -33,9 +33,7 @@ function _bullhorn_get_subscribed_events ( $session ) {
     if($result === false) {
         $ch_errno = curl_errno($ch);
         $ch_error = curl_error($ch);
-//        dpm($ch_errno,'Error number');
-//        dpm($ch_error,'Error message');
-//        dpm(curl_getinfo(($ch)), 'cURL get information');
+        watchdog( 'bullhorn_job_board', 'Failed cURL request. Error No.: ( %errno ), Error: ( %error ).', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_EMERGENCY );
         curl_close($ch);
     }
 
@@ -54,7 +52,7 @@ function _bullhorn_get_subscribed_events ( $session ) {
  * @return Purified|string
  */
 
-function _bullhorn_process_body_field( $body ) {
+function _bullhorn_job_board_clean_body_html( $body ) {
 
     // Require HTMLPurifier
     require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
@@ -86,7 +84,7 @@ function _bullhorn_process_body_field( $body ) {
  * @return array
  */
 
-function _bullhorn_process_taxonomy_term( $vocabulary, $term, $parent = false ) {
+function _bullhorn_job_board_process_taxonomy_term( $vocabulary, $term, $parent = false ) {
     $tid = '';
 
     if ($_term = taxonomy_get_term_by_name(ucwords(strtolower($term)), $vocabulary)) {
@@ -118,8 +116,6 @@ function _bullhorn_process_taxonomy_term( $vocabulary, $term, $parent = false ) 
         }
     }
 
-//    dpm($tid);
-
     return $tid;
 }
 
@@ -129,7 +125,7 @@ function _bullhorn_process_taxonomy_term( $vocabulary, $term, $parent = false ) 
  * @return string
  */
 
-function _bullhorn_process_country_id( $id ) {
+function _bullhorn_job_board_process_country_id( $id ) {
 
     switch ( $id ) {
         case 1:
@@ -147,16 +143,120 @@ function _bullhorn_process_country_id( $id ) {
     return $country;
 }
 
-function _bullhorn_get_category_name_by_id( $cat_id, $session ) {
+function _bullhorn_job_board_get_category_name_by_id( $cat_id, $session ) {
 
     $uri = 'query/Category?fields=id,dateAdded,description,enabled,name,occupation,skills,specialties,type&where=id='. $cat_id .'&BhRestToken=' . $session->BhRestToken;
     $url = $session->restUrl . $uri;
 
     $response = bullhorn_rest_api_get_request( $url );
 
-//    dpm($response);
-
     return $response;
+}
+
+/**
+ * Bullhorn Job Board Get Events By Event Type
+ *
+ * Create a list for handling an event type
+ *
+ * @param $events
+ * @param $event_type
+ * @return array
+ */
+
+function _bullhorn_job_board_get_events_by_event_type ( $events, $event_type ) {
+
+    $_events = array();
+
+    // Loop through the $events and create an new array for the $event_type
+    foreach( $events as $event ) {
+        // If the $event->entityEventType property is equal to the $event_type then push it on to the $_events Array
+        if( strtolower($event->entityEventType) == strtolower($event_type) ) {
+            $_events[] = $event;
+        }
+    }
+
+    return $_events;
+}
+
+function _bullhorn_job_board_find_node_by_job_order_id( $job_order_id ) {
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition( 'entity_type', 'node' )
+        ->entityCondition( 'bundle', 'job_order' )
+        ->fieldCondition( 'field_job_order_id', 'value', $job_order_id );
+    $result = $query->count()->execute();
+
+    return $result;
+}
+
+
+function _bullhorn_job_board_category_id_to_name($id)
+{
+    switch ($id) {
+        case '692418':
+            $name = "applications";
+            break;
+        case '692451':
+            $name = "engineering";
+            break;
+        case '692527':
+            $name = "erp/sap";
+            break;
+        case '696836':
+            $name = "infrastructure";
+            break;
+        case '738245':
+            $name = "pmo";
+            break;
+        case '692511':
+            $name = "other area(s)";
+            break;
+
+    }
+
+    return $name;
+}
+
+function _bullhorn_job_board_entity_job_order_fields_association() {
+    // Set an Array of Bullhorn JobOrder Entity fields used on the job_order bundle
+    return array(
+        'title'             => 'title',
+        'publicDescription' => 'body',
+        'id'                => 'field_job_order_id',
+        'payRate'           => 'field_rate',
+        'dateAdded'         => 'field_published',
+        'dateEnd'           => 'field_expires',
+        'address'           => array(
+            'city' => array(
+                'field_city',
+                'job_board_location',
+            ),
+            'countryID' => array(
+                'field_country',
+                'job_board_location',
+            ),
+        ),
+        'employmentType'    => 'field_employment_type',
+        'categories'        => 'field_category',
+        'skillList'         => 'field_skills',
+    );
+}
+
+function _bullhorn_job_board_job_order_fields_clause(){
+
+    $job_order_fields = _bullhorn_job_board_entity_job_order_fields_association();
+
+    $fields = '';
+
+    foreach( $job_order_fields as $bullhorn_field => $job_order_field ) {
+        $fields .= $bullhorn_field . ',';
+    }
+
+    if( !empty( $fields) ) {
+        $fields = trim( $fields, ',' );
+    }
+
+    return $fields;
 }
 
 /**
