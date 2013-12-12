@@ -11,27 +11,30 @@ function bullhorn_job_board_menu() {
 
     $items = array();
 
-    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
-        'title'            => 'Bullhorn Get Jobs',
-        'description'      => 'Get Jobs from Bullhorn',
-        'page callback'    => 'bullhorn_job_board_get_jobs',
+    $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
+        'title'            => 'Get Subscribed Events (Runs in Cron)',
+        'description'      => 'Get subscribed events from Bullhorn.',
+        'page callback'    => 'bullhorn_job_board_subscribed_events',
         'access arguments' => array('access administration pages'),
+        'weight'           => 2,
         'type'             => MENU_NORMAL_ITEM,
     );
 
     $items['admin/config/content/bullhorn/bullhorn_event_subscribe'] = array(
-        'title'            => 'Bullhorn Event Subscribe',
-        'description'      => 'Subscribe to Bullhorn Events Create and Delete',
+        'title'            => 'Subscribe to events',
+        'description'      => 'Subscribe to Bullhorn Events INSERTED, UPDATED and DELETED',
         'page callback'    => 'bullhorn_job_board_event_subscription',
         'access arguments' => array('access administration pages'),
+        'weight'           => 3,
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
-        'title'            => 'Bullhorn Get Subscribed Events',
-        'description'      => 'Get subscribed events from Bullhorn.',
-        'page callback'    => 'bullhorn_job_board_subscribed_events',
+    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
+        'title'            => 'Get all Jobs (Deprecated)',
+        'description'      => 'Get Jobs from Bullhorn',
+        'page callback'    => 'bullhorn_job_board_get_jobs',
         'access arguments' => array('access administration pages'),
+        'weight'           => 4,
         'type'             => MENU_NORMAL_ITEM,
     );
 
@@ -44,11 +47,11 @@ function bullhorn_job_board_query($BhRestToken, $BhURL)
 
     $item = $raw_result->fetchObject();
 
-    //$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateClosed,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
-    //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    //$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateEnd,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
+    //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
+//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
-    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateClosed,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
 
     $tuCurl = curl_init();
@@ -122,7 +125,7 @@ function bullhorn_job_board_event_subscription () {
  * Bullhorn Do Subscribed Events
  */
 
-function bullhorn_job_board_subscribed_events () {
+function bullhorn_job_board_subscribed_events() {
 
     // Log in to the Bullhorn REST API
 
@@ -194,7 +197,7 @@ function bullhorn_job_board_subscribed_events () {
 //                    'eventMetadata' => (object) array(),
 //                    'entityEventType' => 'DELETED',
 //                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10850
+//                    'entityId' => 10895
 //                ),
 //                (object) array(
 //                    'eventId' => 'ID:JBM-40004219',
@@ -274,7 +277,6 @@ function bullhorn_job_board_insert( $inserted, $session ) {
     $entity_ids = trim($entity_ids,',');
 
     // Build a REST URI path to retrieve data for the inserted JobOrder
-    // TODO put this request in a function
     $bh_rest_token = $session->BhRestToken;
     $fields = _bullhorn_job_board_job_order_fields_clause();
     $uri = 'query/JobOrder?fields=' . $fields . '&where=id%20IN%20(' . $entity_ids . ')%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
@@ -358,7 +360,6 @@ function bullhorn_job_board_update( $updated, $session ) {
     $entity_ids_str = trim ( $entity_ids_str, ',' );
 
     // Build a REST request path to retrieve data for the updated JobOrder(s)
-    // TODO put this request in a function
     $bh_rest_token = $session->BhRestToken;
     $fields = _bullhorn_job_board_job_order_fields_clause();
     $uri = 'query/JobOrder?fields='. $fields .'&where=id%20IN%20(' . $entity_ids_str . ')%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
@@ -443,9 +444,9 @@ function bullhorn_job_board_delete( $deleted, $session ) {
     // Delete the job_order node using the entity_id
     try {
         node_delete_multiple( $job_order_nids );
-        watchdog( 'bullhorn_job_board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => explode( $job_order_nids, ',' ) ), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn_job_board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $job_order_nids ) ), WATCHDOG_NOTICE );
     } catch( Exception $e ) {
-        watchdog( 'bullhorn_job_board', 'Node(s) deleted. nids ( %nids ).', array( '%nids' => explode( $job_order_nids, ',' ) ), WATCHDOG_EMERGENCY );
+        watchdog( 'bullhorn_job_board', 'Node(s) deleted. nids ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
     }
 }
 
@@ -489,7 +490,7 @@ function bullhorn_job_board_job_order_insert( $data ) {
     $node->field_published[LANGUAGE_NONE][0]['value'] = $post_date;
 
     // Process and attach the Expires data for this node
-    $alter_time = $data->dateClosed / 1000;
+    $alter_time = $data->dateEnd / 1000;
     $post_date = date("Y-m-d", $alter_time);
     $post_date = $post_date . " 00:00:00";
     $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
@@ -532,7 +533,6 @@ function bullhorn_job_board_job_order_insert( $data ) {
     $node->field_skills[LANGUAGE_NONE][0]['value'] = $skill_list;
 
     // Set and attach the path to the node
-    // TODO I'd rather have the job title plus the JobOrderID as the title
 //    $path = 'joborder/programmatically_created_node_' . date('YmdHis');
 //    $node->path = array('alias' => $path);
     $node->path['pathauto'] = TRUE;
@@ -542,10 +542,12 @@ function bullhorn_job_board_job_order_insert( $data ) {
 }
 
 /**
- * Bullhorn Job Board Node Update
+ * Bullhorn Job Board Job Order Update
  *
+ * @param $node
  * @param $data
- * @return bool
+ * @param $property
+ * @return mixed
  */
 
 function bullhorn_job_board_job_order_update( $node, $data, $property ) {
@@ -579,7 +581,7 @@ function bullhorn_job_board_job_order_update( $node, $data, $property ) {
             break;
 
         case 'dateEnd':
-            $alter_time = $data->dateClosed / 1000;
+            $alter_time = $data->dateEnd / 1000;
             $post_date = date("Y-m-d", $alter_time);
             $post_date = $post_date . " 00:00:00";
             $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
@@ -623,11 +625,21 @@ function bullhorn_job_board_job_order_update( $node, $data, $property ) {
 }
 
 /**
- * Bullhorn Get Jobs
+ * Bullhorn Job Board Cron
  */
 
-//function bullhorn_cron()
+function bullhorn_job_board_cron() {
+    debug('Bullhorn Job Board Cron');
+
+    // Run the Bullhorn Job Board Subscribed Events
+    bullhorn_job_board_subscribed_events();
+}
+
+/**
+ * Bullhorn Job Board Get Jobs
+ */
 function bullhorn_job_board_get_jobs () {
+
     // Set the session
     $session = json_encode( array( ) );
     try {
@@ -714,7 +726,7 @@ function bullhorn_job_board_get_jobs () {
         $node->field_published[LANGUAGE_NONE][0]['value'] = $post_date;
 
         // Process and attach the Expires data for this node
-        $alter_time = $job_order_obj->data[$i]->dateClosed / 1000;
+        $alter_time = $job_order_obj->data[$i]->dateEnd / 1000;
         $post_date = date("Y-m-d", $alter_time);
         $post_date = $post_date . " 00:00:00";
         $node->field_expires[LANGUAGE_NONE][0]['value'] = $post_date;
