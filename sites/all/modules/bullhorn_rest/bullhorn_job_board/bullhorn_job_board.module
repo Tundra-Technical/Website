@@ -635,12 +635,12 @@ function bullhorn_job_board_job_order_update( $node, $data, $property ) {
  * Bullhorn Job Board Cron
  */
 
-function bullhorn_job_board_cron() {
+/*function bullhorn_job_board_cron() {
 
     // Run the Bullhorn Job Board Subscribed Events
     bullhorn_job_board_subscribed_events();
 
-}
+}*/
 
 /**
  * Bullhorn Job Board Get Jobs
