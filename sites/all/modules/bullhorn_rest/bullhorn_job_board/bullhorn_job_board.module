@@ -49,9 +49,9 @@ function bullhorn_job_board_query($BhRestToken, $BhURL)
 
     //$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateEnd,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
     //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
-    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
 
     $tuCurl = curl_init();
@@ -131,98 +131,98 @@ function bullhorn_job_board_subscribed_events() {
 
     $session_obj = bullhorn_rest_api_login();
 
-    // Get the subscribed events from Bullhorn
-
-    $response = _bullhorn_job_board_get_subscribed_events($session_obj);
-
-    if( empty($response) ) {
-        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
-        exit;
-    }
-
-    // Set the current requestId for this event
-    // TODO use request_id to get data returned from this request after its been done already
-    // i.e. to recover from a failure to perform this request the first time
-    $request_id = $response->requestId;
-    variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
-
-    // Set the events Array
-    $events = $response['events'];
+//    // Get the subscribed events from Bullhorn
+//
+//    $response = _bullhorn_job_board_get_subscribed_events($session_obj);
+//
+//    if( empty($response) ) {
+//        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
+//        exit;
+//    }
+//
+//    // Set the current requestId for this event
+//    // TODO use request_id to get data returned from this request after its been done already
+//    // i.e. to recover from a failure to perform this request the first time
+//    $request_id = $response->requestId;
+//    variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
+//
+//    // Set the events Array
+//    $events = $response['events'];
 
     // Set an Array of test events
-//    $events_array = array(
-//            'requestId' => 1,
-//            'events'    => array(
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'updatedProperties' => array('phone'),
-//                    'entityEventType' => 'UPDATED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10871
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'entityEventType' => 'INSERTED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10870
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'entityEventType' => 'INSERTED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10869
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'entityEventType' => 'INSERTED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10871
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'entityEventType' => 'DELETED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10895
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'updatedProperties' => array('address'),
-//                    'entityEventType' => 'UPDATED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10857
-//                ),
-//                (object) array(
-//                    'eventId' => 'ID:JBM-40004219',
-//                    'eventType' => 'ENTITY',
-//                    'entityName' => 'JobOrder',
-//                    'eventMetadata' => (object) array(),
-//                    'updatedProperties' => array('payRate','address'),
-//                    'entityEventType' => 'UPDATED',
-//                    'eventTimestamp'  => 1234567890,
-//                    'entityId' => 10856
-//                )
-//            )
-//    );
-//
-//    $events = $events_array['events'];
+    $events_array = array(
+            'requestId' => 1,
+            'events'    => array(
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('phone'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10870
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10869
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'DELETED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10895
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('address'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10857
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('payRate','address'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10856
+                )
+            )
+    );
+
+    $events = $events_array['events'];
 
 
     // Get INSERTED events
@@ -269,7 +269,7 @@ function bullhorn_job_board_insert( $inserted, $session ) {
 
     // If $entity_ids is empty then end the execution
     if( empty( $entity_ids ) ) {
-        watchdog( 'bullhorn_job_board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id', array(), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn_job_board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id(s)', array(), WATCHDOG_NOTICE );
         return false;
     }
 
@@ -304,10 +304,10 @@ function bullhorn_job_board_insert( $inserted, $session ) {
         $insert_node = bullhorn_job_board_job_order_insert( $insert_data );
         try {
             node_save($insert_node);
-            watchdog( 'bullhorn_job_board', 'Node inserted (%title).', array( '%title' => $insert_node->title ), WATCHDOG_INFO );
+            watchdog( 'bullhorn_job_board', 'Found INSERTED event and inserted node title: (%title).', array( '%title' => $insert_node->title ), WATCHDOG_INFO );
             $success = TRUE;
         } catch (Exception $e) {
-            watchdog( 'bullhorn job board', 'Failed to save node. Error: ( %error ), File: ( %file ), Function: ( %function ).', array( '%error' => $e, '%file' => __FILE__, '%function' => __FUNCTION__ ), WATCHDOG_CRITICAL);
+            watchdog( 'bullhorn job board', 'Found INSERTED event and failed to save node. Error: ( %exception ), File: ( %file ), Function: ( %function ).', array( '%exception' => $e, '%file' => __FILE__, '%function' => __FUNCTION__ ), WATCHDOG_CRITICAL);
         }
     }
 
@@ -349,7 +349,7 @@ function bullhorn_job_board_update( $updated, $session ) {
 
     // If none of the updatedProperties are on the list of $entity_job_order_fields then end execution
     if( empty( $updates ) ) {
-        watchdog( 'bullhorn_job_board', 'UPDATED event ran and no applicable were found.', array(), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn_job_board', 'Found UPDATED event and no applicable job_order fields were found.', array(), WATCHDOG_NOTICE );
         return false;
     }
 
@@ -370,7 +370,7 @@ function bullhorn_job_board_update( $updated, $session ) {
 
     // If $response is empty then end execution
     if( empty( $updates_response ) ) {
-        watchdog( 'bullhorn_job_board', 'UPDATED event ran and REST request returned empty.', array(), WATCHDOG_DEBUG );
+        watchdog( 'bullhorn_job_board', 'Found UPDATED event and REST request returned empty.', array(), WATCHDOG_DEBUG );
         return false;
     }
 
@@ -398,9 +398,9 @@ function bullhorn_job_board_update( $updated, $session ) {
         }
         try {
             node_save( $update_node );
-            watchdog( 'bullhorn_job_board', 'Update node: %title.', array( '%title' => $update_node->title ), WATCHDOG_INFO );
+            watchdog( 'bullhorn_job_board', 'Found UPDATED event and updated node title: %title.', array( '%title' => $update_node->title ), WATCHDOG_INFO );
         } catch( Exception $e ) {
-            watchdog( 'bullhorn_job_board', 'Failed to save node ( %nid ).', array( '%nid' => $node->nid ), WATCHDOG_EMERGENCY );
+            watchdog( 'bullhorn_job_board', 'Found UPDATED event and failed to save node ( %nid ).', array( '%nid' => $node->nid ), WATCHDOG_EMERGENCY );
         }
     }
 
@@ -422,7 +422,7 @@ function bullhorn_job_board_delete( $deleted, $session ) {
     }
 
     if( empty( $job_order_ids ) ) {
-        watchdog( 'bullhorn_job_board', 'Found DELETED event with no enetityId(s).', array(), WATCHDOG_DEBUG );
+        watchdog( 'bullhorn_job_board', 'Found DELETED event with no entityId(s).', array(), WATCHDOG_DEBUG );
         return false;
     }
 
@@ -446,7 +446,7 @@ function bullhorn_job_board_delete( $deleted, $session ) {
         node_delete_multiple( $job_order_nids );
         watchdog( 'bullhorn_job_board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $job_order_nids ) ), WATCHDOG_NOTICE );
     } catch( Exception $e ) {
-        watchdog( 'bullhorn_job_board', 'Node(s) deleted. nids ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
+        watchdog( 'bullhorn_job_board', 'Found DELETED event and failed to delete node(s): ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
     }
 }
 
@@ -657,6 +657,7 @@ function bullhorn_job_board_get_jobs () {
     $job_order = bullhorn_job_board_query($session_obj->BhRestToken, $session_obj->restUrl);
 
     $job_order_obj = json_decode($job_order);
+    dpm( $job_order_obj );
 
 //$cleanse = str_replace(array("\r\n","\n","\r"),'<br />',$job_order);
     $num = count($job_order_obj->data);
