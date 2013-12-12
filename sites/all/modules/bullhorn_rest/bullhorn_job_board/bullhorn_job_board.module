@@ -131,96 +131,96 @@ function bullhorn_job_board_subscribed_events() {
 
     $session_obj = bullhorn_rest_api_login();
 
-//    // Get the subscribed events from Bullhorn
-//
-//    $response = _bullhorn_job_board_get_subscribed_events($session_obj);
-//
-//    if( empty($response) ) {
-//        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
-//        exit;
-//    }
-//
-//    // Set the current requestId for this event
-//    // TODO use request_id to get data returned from this request after its been done already
-//    // i.e. to recover from a failure to perform this request the first time
-//    $request_id = $response->requestId;
-//    variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
-//
-//    // Set the events Array
-//    $events = $response['events'];
+    // Get the subscribed events from Bullhorn
+
+    $response = _bullhorn_job_board_get_subscribed_events($session_obj);
+
+    if( empty($response) ) {
+        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
+        exit;
+    }
+
+    // Set the current requestId for this event
+    // TODO use request_id to get data returned from this request after its been done already
+    // i.e. to recover from a failure to perform this request the first time
+    $request_id = $response->requestId;
+    variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
+
+    // Set the events Array
+    $events = $response['events'];
 
     // Set an Array of test events
-    $events_array = array(
-            'requestId' => 1,
-            'events'    => array(
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'updatedProperties' => array('phone'),
-                    'entityEventType' => 'UPDATED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10871
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'entityEventType' => 'INSERTED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10870
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'entityEventType' => 'INSERTED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10869
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'entityEventType' => 'INSERTED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10871
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'entityEventType' => 'DELETED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10895
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'updatedProperties' => array('address'),
-                    'entityEventType' => 'UPDATED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10857
-                ),
-                (object) array(
-                    'eventId' => 'ID:JBM-40004219',
-                    'eventType' => 'ENTITY',
-                    'entityName' => 'JobOrder',
-                    'eventMetadata' => (object) array(),
-                    'updatedProperties' => array('payRate','address'),
-                    'entityEventType' => 'UPDATED',
-                    'eventTimestamp'  => 1234567890,
-                    'entityId' => 10856
-                )
-            )
-    );
+//    $events_array = array(
+//            'requestId' => 1,
+//            'events'    => array(
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'updatedProperties' => array('phone'),
+//                    'entityEventType' => 'UPDATED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10871
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'entityEventType' => 'INSERTED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10870
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'entityEventType' => 'INSERTED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10869
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'entityEventType' => 'INSERTED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10871
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'entityEventType' => 'DELETED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10895
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'updatedProperties' => array('address'),
+//                    'entityEventType' => 'UPDATED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10857
+//                ),
+//                (object) array(
+//                    'eventId' => 'ID:JBM-40004219',
+//                    'eventType' => 'ENTITY',
+//                    'entityName' => 'JobOrder',
+//                    'eventMetadata' => (object) array(),
+//                    'updatedProperties' => array('payRate','address'),
+//                    'entityEventType' => 'UPDATED',
+//                    'eventTimestamp'  => 1234567890,
+//                    'entityId' => 10856
+//                )
+//            )
+//    );
 
     $events = $events_array['events'];
 
