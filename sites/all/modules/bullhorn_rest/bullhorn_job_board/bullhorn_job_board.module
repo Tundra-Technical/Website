@@ -289,6 +289,8 @@ function bullhorn_job_board_insert( $inserted, $session ) {
     $uri = 'query/JobOrder?fields=' . $fields . '&where=id%20IN%20(' . $entity_ids . ')%20AND%20isPublic=1&BhRestToken=' . $bh_rest_token;
     $url = $session->restUrl . $uri;
 
+    dpm( $url, 'inserted url' );
+
     // Do the REST request
     $response = bullhorn_rest_api_get_request( $url );
 
