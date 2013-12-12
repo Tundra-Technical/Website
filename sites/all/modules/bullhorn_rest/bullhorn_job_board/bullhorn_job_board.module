@@ -147,7 +147,7 @@ function bullhorn_job_board_subscribed_events() {
     variable_set('bullhorn_event_request_id',$request_id); // Let's save it in the variables table for now
 
     // Set the events Array
-    $events = $response['events'];
+    $events = $response->events;
 
     // Set an Array of test events
 //    $events_array = array(
@@ -221,8 +221,8 @@ function bullhorn_job_board_subscribed_events() {
 //                )
 //            )
 //    );
-
-    $events = $events_array['events'];
+//
+//    $events = $events_array['events'];
 
 
     // Get INSERTED events
