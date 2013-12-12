@@ -134,7 +134,7 @@ function bullhorn_job_board_subscribed_events() {
     // Get the subscribed events from Bullhorn
 
     $response = _bullhorn_job_board_get_subscribed_events($session_obj);
-    debug( $response );
+    dpm( $response );
 
     if( empty($response) ) {
         watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
@@ -229,17 +229,23 @@ function bullhorn_job_board_subscribed_events() {
     // Get INSERTED events
     $inserted = _bullhorn_job_board_get_events_by_event_type( $events, 'inserted' );
 
+    dpm( $inserted );
+
     // If $inserted Array is not empty then process INSERTED Events
     $insert_result = bullhorn_job_board_insert( $inserted, $session_obj );
 
     // Get UPDATED events
     $updated = _bullhorn_job_board_get_events_by_event_type( $events, 'updated' );
 
+    dpm( $updated );
+
     // If $update Array is not empty then process UPDATED Events
     $update_result = bullhorn_job_board_update( $updated, $session_obj );
 
     // Get DELETED events
     $deleted = _bullhorn_job_board_get_events_by_event_type( $events, 'deleted' );
+
+    dpm( $deleted );
 
     // If $delete Array is not empty then process DELETED Events
     $delete_result = bullhorn_job_board_delete( $deleted, $session_obj );
