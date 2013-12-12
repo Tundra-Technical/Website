@@ -134,6 +134,7 @@ function bullhorn_job_board_subscribed_events() {
     // Get the subscribed events from Bullhorn
 
     $response = _bullhorn_job_board_get_subscribed_events($session_obj);
+    debug( $response );
 
     if( empty($response) ) {
         watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
