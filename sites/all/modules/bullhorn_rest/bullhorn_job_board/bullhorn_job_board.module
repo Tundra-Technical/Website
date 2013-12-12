@@ -629,10 +629,10 @@ function bullhorn_job_board_job_order_update( $node, $data, $property ) {
  */
 
 function bullhorn_job_board_cron() {
-    debug('Bullhorn Job Board Cron');
 
     // Run the Bullhorn Job Board Subscribed Events
     bullhorn_job_board_subscribed_events();
+
 }
 
 /**
