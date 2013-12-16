@@ -39,7 +39,7 @@ function job_board_get_subscribed_events ( $session, $request_id=0 ) {
     if($result === false) {
         $ch_errno = curl_errno($ch);
         $ch_error = curl_error($ch);
-        watchdog( 'bullhorn_job_board', 'Failed cURL request. Error No.: ( %errno ), Error: ( %error ).', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_EMERGENCY );
+        watchdog( 'bullhorn job board', 'Failed cURL request. Error No.: ( %errno ), Error: ( %error ).', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_EMERGENCY );
         curl_close($ch);
     }
 
@@ -310,9 +310,9 @@ function job_board_delete_job_order_terms( $terms ) {
 function job_board_test_events() {
 
     // Set an Array of test events
-    $events = array(
+    $events = (object) array(
             'requestId' => 1,
-            'events'    => (object) array(
+            'events'    => array(
                 (object) array(
                     'eventId' => 'ID:JBM-40004219',
                     'eventType' => 'ENTITY',
