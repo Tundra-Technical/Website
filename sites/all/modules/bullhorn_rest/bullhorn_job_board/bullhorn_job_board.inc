@@ -7,17 +7,23 @@
  */
 
 /**
- * Bullhorn Get Subscribed Events
+ * Get Subscribed Events
  *
  * @param $session
+ * @param $request_id
  * @return mixed
  */
 
-function _bullhorn_job_board_get_subscribed_events ( $session ) {
+function job_board_get_subscribed_events ( $session, $request_id=0 ) {
 
     $subscription_id = variable_get('bullhorn_rest_api_subscription_id');
 
-    $uri = 'event/subscription/' . $subscription_id .'?maxEvents=100&BhRestToken=' . $session->BhRestToken;
+    $query = 'maxEvents=100';
+    if( $request_id ) {
+        $query = 'requestId=' . $request_id;
+    }
+
+    $uri = 'event/subscription/' . $subscription_id .'?' . $query . '&BhRestToken=' . $session->BhRestToken;
     $url = $session->restUrl . $uri;
 
     $ch = curl_init();
@@ -46,13 +52,13 @@ function _bullhorn_job_board_get_subscribed_events ( $session ) {
 }
 
 /**
- * Bullhorn Process Body field
+ * Process Body field
  *
  * @param $body
  * @return Purified|string
  */
 
-function _bullhorn_job_board_clean_body_html( $body ) {
+function job_board_clean_body_html( $body ) {
 
     // Require HTMLPurifier
     require_once 'sites/all/libraries/htmlpurifier/library/HTMLPurifier.auto.php';
@@ -75,7 +81,7 @@ function _bullhorn_job_board_clean_body_html( $body ) {
 }
 
 /**
- * Bullhorn Process Taxonomy Term
+ * Process Taxonomy Term
  * Get the tid and create terms if necessary from the supplied variables
  *
  * @param $vocabulary: the machine name of the vocabulary.
@@ -84,7 +90,7 @@ function _bullhorn_job_board_clean_body_html( $body ) {
  * @return array
  */
 
-function _bullhorn_job_board_process_taxonomy_term( $vocabulary, $term, $parent = false ) {
+function job_board_process_taxonomy_term( $vocabulary, $term, $parent = false ) {
     $tid = '';
 
     if ($_term = taxonomy_get_term_by_name(ucwords(strtolower($term)), $vocabulary)) {
@@ -120,12 +126,12 @@ function _bullhorn_job_board_process_taxonomy_term( $vocabulary, $term, $parent 
 }
 
 /**
- * Bullhorn Process Country ID
+ * Process Country ID
  * @param $id
  * @return string
  */
 
-function _bullhorn_job_board_process_country_id( $id ) {
+function job_board_process_country_id( $id ) {
 
     switch ( $id ) {
         case 1:
@@ -143,7 +149,7 @@ function _bullhorn_job_board_process_country_id( $id ) {
     return $country;
 }
 
-function _bullhorn_job_board_get_category_name_by_id( $cat_id, $session ) {
+function job_board_get_category_name_by_id( $cat_id, $session ) {
 
     $uri = 'query/Category?fields=id,dateAdded,description,enabled,name,occupation,skills,specialties,type&where=id='. $cat_id .'&BhRestToken=' . $session->BhRestToken;
     $url = $session->restUrl . $uri;
@@ -154,7 +160,7 @@ function _bullhorn_job_board_get_category_name_by_id( $cat_id, $session ) {
 }
 
 /**
- * Bullhorn Job Board Get Events By Event Type
+ * Job Board Get Events By Event Type
  *
  * Create a list for handling an event type
  *
@@ -163,7 +169,7 @@ function _bullhorn_job_board_get_category_name_by_id( $cat_id, $session ) {
  * @return array
  */
 
-function _bullhorn_job_board_get_events_by_event_type ( $events, $event_type ) {
+function job_board_sort_events_by_event_type ( $events, $event_type ) {
 
     $_events = array();
 
@@ -178,7 +184,7 @@ function _bullhorn_job_board_get_events_by_event_type ( $events, $event_type ) {
     return $_events;
 }
 
-function _bullhorn_job_board_find_node_by_job_order_id( $job_order_id ) {
+function job_board_count_node_by_job_order_id( $job_order_id ) {
 
     $query = new EntityFieldQuery();
     $query->entityCondition( 'entity_type', 'node' )
@@ -189,8 +195,19 @@ function _bullhorn_job_board_find_node_by_job_order_id( $job_order_id ) {
     return $result;
 }
 
+function job_board_get_node_by_job_order_id( $job_order_id ) {
 
-function _bullhorn_job_board_category_id_to_name($id)
+    $query = new EntityFieldQuery();
+    $query->entityCondition( 'entity_type', 'node' )
+        ->entityCondition( 'bundle', 'job_order' )
+        ->fieldCondition( 'field_job_order_id', 'value', $job_order_id );
+    $result = $query->execute();
+
+    return $result;
+}
+
+
+function job_board_category_id_to_name($id)
 {
     switch ($id) {
         case '692418':
@@ -217,8 +234,8 @@ function _bullhorn_job_board_category_id_to_name($id)
     return $name;
 }
 
-function _bullhorn_job_board_entity_job_order_fields_association() {
-    // Set an Array of Bullhorn JobOrder Entity fields used on the job_order bundle
+function job_board_entity_job_order_fields_association() {
+    // Set an Array of JobOrder Entity fields used on the job_order bundle
     return array(
         'title'             => 'title',
         'publicDescription' => 'body',
@@ -239,12 +256,13 @@ function _bullhorn_job_board_entity_job_order_fields_association() {
         'employmentType'    => 'field_employment_type',
         'categories'        => 'field_category',
         'skillList'         => 'field_skills',
+        'isPublic'          => 'status',
     );
 }
 
-function _bullhorn_job_board_job_order_fields_clause(){
+function job_board_job_order_fields_clause(){
 
-    $job_order_fields = _bullhorn_job_board_entity_job_order_fields_association();
+    $job_order_fields = job_board_entity_job_order_fields_association();
 
     $fields = '';
 
@@ -259,8 +277,117 @@ function _bullhorn_job_board_job_order_fields_clause(){
     return $fields;
 }
 
+function job_board_delete_job_order_terms( $terms ) {
+    foreach( $terms as $field => $nids ) {
+
+        foreach( $nids as $nid => $tids ){
+
+            foreach( $tids as $tid ){
+
+                $query = new EntityFieldQuery();
+                $query->entityCondition( 'entity_type', 'node' )
+                    ->entityCondition( 'bundle', 'job_order' )
+                    ->fieldCondition( $field , 'tid', $tid );
+                $result = $query->count()->execute();
+
+                if( !$result ) {
+                    $deleted = taxonomy_term_delete( $tid );
+                }
+            }
+        }
+    }
+}
+
 /**
- * Bullhorn Process Job Board Location Term Field
+ * Job Board Test Events
+ *
+ * Return a hypothetical response to a REST request
+ * for JobOrder INSERTED, UPDATED and DELETED events
+ *
+ * @return array
+ */
+
+function job_board_test_events() {
+
+    // Set an Array of test events
+    $events = array(
+            'requestId' => 1,
+            'events'    => (object) array(
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('phone'),
+                    'entityEventType' => 'UPDATED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10870
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10869
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'INSERTED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10871
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'entityEventType' => 'DELETED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10895
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('address'),
+                    'entityEventType' => 'DELETED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10857
+                ),
+                (object) array(
+                    'eventId' => 'ID:JBM-40004219',
+                    'eventType' => 'ENTITY',
+                    'entityName' => 'JobOrder',
+                    'eventMetadata' => (object) array(),
+                    'updatedProperties' => array('payRate','address'),
+                    'entityEventType' => 'DELETED',
+                    'eventTimestamp'  => 1234567890,
+                    'entityId' => 10856
+                )
+            )
+    );
+
+    return $events;
+
+}
+
+/**
+ * Process Job Board Location Term Field
  *
  * @param $address
  * @return array
