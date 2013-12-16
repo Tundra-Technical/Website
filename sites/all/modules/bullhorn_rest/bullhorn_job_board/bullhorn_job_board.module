@@ -534,10 +534,20 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // iteration
             if( empty( $node ) && $insert ){
 
+                // This update signals an
+                // JobOrder that has changed
+                // 'public' status and must
+                // be inserted into the system
+                // therefore add it to the
+                // $inserts list
                 $inserts[] = $update_data;
-                continue;
-            } elseif ( empty( $node ) ) {
+
+                // As a result of the above condition
+                // there is no node in the system
+                // to update yet. Therefore remove
+                // it from the $updates list
                 unset( $updates[$update_data->id] );
+
                 continue;
             }
 
