@@ -1484,7 +1484,7 @@ function bullhorn_candidates_register_mail_send($values) {
     if($result['result'] == FALSE) {
         watchdog('drupal_mail',"Register email failed: To: @to",array('@to' => $to),WATCHDOG_DEBUG);
     } else {
-        watchdog('bullhorn candidates','Register emal sent to @email.',array('@email' => $to),WATCHDOG_INFO);
+        watchdog('bullhorn candidates','Register email sent to @email.',array('@email' => $to),WATCHDOG_INFO);
     }
     return $result;
 }
