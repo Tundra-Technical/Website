@@ -74,9 +74,9 @@ function bullhorn_job_board_query( $BhRestToken, $BhURL ) {
 
     //$data = "query/JobOrder?fields=id,address,dateAdded,employmentType,skillList,publicDescription,title,dateEnd,categories&where=id>".$item->val."&orderBy=+id&BhRestToken=".$BhRestToken;
     //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
-//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
-    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+//    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
     $tuCurl = curl_init();
     curl_setopt($tuCurl, CURLOPT_URL, $BhURL . $data);
