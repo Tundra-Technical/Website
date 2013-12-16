@@ -171,6 +171,11 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     // event updates
     $updates = array();
 
+    // Set an Array
+    // to collect all
+    // event updates
+    $deletes = array();
+
     // Get INSERTED events
     $inserted = job_board_sort_events_by_event_type( $events, 'inserted' );
 
@@ -186,12 +191,18 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     // Get DELETED events
     $deleted = job_board_sort_events_by_event_type( $events, 'deleted' );
 
+//    dpm( $inserted, 'inserted' );
+//    dpm( $inserts, 'inserts' );
+//    dpm( $updated, 'updated' );
+//    dpm( $updates, 'updates' );
+//    dpm( $deleted, 'deleted' );
+
     // If $delete Array is not empty then process DELETED Events
     $delete_result = bullhorn_job_board_delete( $deleted );
 
     // Save all the found INSERTED JobOrder
     // Events
-    bullhorn_job_board_insert( $updates );
+    bullhorn_job_board_insert( $inserts );
 
     // Update all the found UPDATED JobOrder
     // Events
@@ -259,7 +270,7 @@ function bullhorn_job_board_subscribed_events() {
 
     // Save all the found INSERTED JobOrder
     // Events
-    bullhorn_job_board_insert( $updates );
+    bullhorn_job_board_insert( $inserts );
 
     // Update all the found UPDATED JobOrder
     // Events
@@ -522,6 +533,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // continue to the next loop
             // iteration
             if( empty( $node ) && $insert ){
+
                 $inserts[] = $update_data;
                 continue;
             } elseif ( empty( $node ) ) {
