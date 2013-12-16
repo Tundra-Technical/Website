@@ -127,7 +127,7 @@ function bullhorn_job_board_events_subscribe () {
     if($result === false) {
         $ch_errno = curl_errno($ch);
         $ch_error = curl_error($ch);
-        watchdog( 'bullhorn_job_board', 'cURL request failed. Error No.: ( %errno ), Error: ( %error )', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_DEBUG );
+        watchdog( 'bullhorn job board', 'cURL request failed. Error No.: ( %errno ), Error: ( %error )', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_DEBUG );
     }
 
     curl_close($ch);
@@ -156,6 +156,11 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     }
 
     $response = job_board_get_subscribed_events( $session_obj, $bullhorn_event_request_id );
+
+    if( empty($response) ) {
+        watchdog( 'bullhorn job board', 'Ran subscribed events fore request id ( %id )and result was empty.', array( '%id' => $bullhorn_event_request_id ), WATCHDOG_INFO );
+        exit;
+    }
 
     // Get the events from the
     // Response
@@ -196,9 +201,10 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
 //    dpm( $updated, 'updated' );
 //    dpm( $updates, 'updates' );
 //    dpm( $deleted, 'deleted' );
+//    dpm( $deletes, 'deletes' );
 
     // If $delete Array is not empty then process DELETED Events
-    $delete_result = bullhorn_job_board_delete( $deleted );
+    $delete_result = bullhorn_job_board_get_deletes( $deleted, $deletes );
 
     // Save all the found INSERTED JobOrder
     // Events
@@ -207,6 +213,10 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     // Update all the found UPDATED JobOrder
     // Events
     bullhorn_job_board_update( $updates );
+
+    // Delete all the found DELETED JobOrder
+    // Events and any unused taxonomy terms
+    bullhorn_job_board_delete( $deletes );
 
     // Print dpm or debug result to the screen
     return '';
@@ -227,7 +237,7 @@ function bullhorn_job_board_subscribed_events() {
     $response = job_board_get_subscribed_events( $session_obj );
 
     if( empty($response) ) {
-        watchdog( 'bullhorn_job_board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
+        watchdog( 'bullhorn job board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
         exit;
     }
 
@@ -236,6 +246,9 @@ function bullhorn_job_board_subscribed_events() {
     // first time
     $request_id = $response->requestId;
     variable_set( 'bullhorn_event_request_id', $request_id ); // Let's save it in the variables table for now and save ourselves a request
+
+    // Test response for debugging
+//    $response = job_board_test_events();
 
     // Set the events Array
     $events = $response->events;
@@ -249,6 +262,11 @@ function bullhorn_job_board_subscribed_events() {
     // to collect all
     // event updates
     $updates = array();
+
+    // Set an Array
+    // to collect all
+    // event deletes
+    $deletes = array();
 
     // Get INSERTED events
     $inserted = job_board_sort_events_by_event_type( $events, 'inserted' );
@@ -266,7 +284,7 @@ function bullhorn_job_board_subscribed_events() {
     $deleted = job_board_sort_events_by_event_type( $events, 'deleted' );
 
     // If $delete Array is not empty then process DELETED Events
-    $delete_result = bullhorn_job_board_delete( $deleted );
+    $delete_result = bullhorn_job_board_get_deletes( $deleted, $deletes );
 
     // Save all the found INSERTED JobOrder
     // Events
@@ -275,6 +293,10 @@ function bullhorn_job_board_subscribed_events() {
     // Update all the found UPDATED JobOrder
     // Events
     bullhorn_job_board_update( $updates );
+
+    // Delete all the found DELETED JobOrder
+    // Events and any unused taxonomy terms
+    bullhorn_job_board_delete( $deletes );
 
     // Print dpm or debug result to the screen
     return '';
@@ -331,7 +353,7 @@ function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
     // then end the execution
     if( empty( $entity_ids ) ) {
 
-        watchdog( 'bullhorn_job_board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id(s)', array(), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn job board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id(s)', array(), WATCHDOG_NOTICE );
         return false;
 
     }
@@ -362,7 +384,7 @@ function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
         // continue to the next chunk of INSERTED entityIds
         if( empty( $_response ) || ( isset( $_response->count ) && !$_response->count ) ) {
 
-            watchdog( 'bullhorn_job_board', 'Found INSERTED events and a REST request for entityIds ( %ids ) returned no results.', array( '%ids' => $ids_in ), WATCHDOG_DEBUG );
+            watchdog( 'bullhorn job board', 'Found INSERTED events and a REST request for entityIds ( %ids ) returned no results.', array( '%ids' => $ids_in ), WATCHDOG_DEBUG );
             continue;
 
         }
@@ -450,7 +472,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
 
     // If none of the updatedProperties are on the list of $entity_job_order_fields then end execution
     if( empty( $updates ) ) {
-        watchdog( 'bullhorn_job_board', 'Found UPDATED event and no applicable job_order fields were found.', array(), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn job board', 'Found UPDATED event and no applicable job_order fields were found.', array(), WATCHDOG_NOTICE );
         return false;
     }
 
@@ -494,7 +516,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
                 unset( $updates[$id] );
             }
 
-            watchdog( 'bullhorn_job_board', 'Found UPDATED event and REST request returned no results.', array(), WATCHDOG_DEBUG );
+            watchdog( 'bullhorn job board', 'Found UPDATED event and REST request returned no results.', array(), WATCHDOG_DEBUG );
             return false;
         }
 
@@ -618,10 +640,11 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
  * delete it.
  *
  * @param $deleted
+ * @param $deletes
  * @return bool
  */
 
-function bullhorn_job_board_delete( $deleted ) {
+function bullhorn_job_board_get_deletes( $deleted, &$deletes ) {
 
     // If there are no $deleted
     // events then end execution
@@ -638,7 +661,7 @@ function bullhorn_job_board_delete( $deleted ) {
     }
 
     if( empty( $job_order_ids ) ) {
-        watchdog( 'bullhorn_job_board', 'Found DELETED event with no entityId(s).', array(), WATCHDOG_DEBUG );
+        watchdog( 'bullhorn job board', 'Found DELETED event with no entityId(s).', array(), WATCHDOG_DEBUG );
         return false;
     }
 
@@ -651,7 +674,7 @@ function bullhorn_job_board_delete( $deleted ) {
     $result = $query->execute();
 
     if( empty( $result ) ) {
-        watchdog( 'bullhorn_job_board', 'Found DELETED event and failed to find job_order_id(s).', array(), WATCHDOG_DEBUG );
+        watchdog( 'bullhorn job board', 'Found DELETED event and failed to find job_order_id(s).', array(), WATCHDOG_DEBUG );
         return false;
     }
 
@@ -677,23 +700,10 @@ function bullhorn_job_board_delete( $deleted ) {
         }
     }
 
-    // Delete the job_order node using the entity_id
-    try {
-
-        node_delete_multiple( $job_order_nids );
-        watchdog( 'bullhorn_job_board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $job_order_nids ) ), WATCHDOG_NOTICE );
-
-    } catch( Exception $e ) {
-
-        watchdog( 'bullhorn_job_board', 'Found DELETED event and failed to delete node(s): ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
-
-    }
-
-    // Using the terms attached to the deleted nodes,
-    // find any of them attached to any other job_order
-    // nodes in the system and if they aren't then delete
-    // the term
-    job_board_delete_job_order_terms( $job_order_terms );
+    $deletes = array(
+        'job_order_nids' => $job_order_nids,
+        'job_order_terms' => $job_order_terms,
+    );
 }
 
 /**
@@ -884,7 +894,7 @@ function bullhorn_job_board_insert( $inserts ) {
 
 //    // If $response is empty then end execution
 //    if( empty( $response ) || !$response->count ) {
-//        watchdog( 'bullhorn_job_board', 'Found INSERTED event and the REST request returned no data.', array(), WATCHDOG_DEBUG );
+//        watchdog( 'bullhorn job board', 'Found INSERTED event and the REST request returned no data.', array(), WATCHDOG_DEBUG );
 //        return false;
 //    }
 //
@@ -906,7 +916,7 @@ function bullhorn_job_board_insert( $inserts ) {
         try {
             
             node_save($node);
-            watchdog( 'bullhorn_job_board', 'Found INSERTED event and inserted node title: (%title).', array( '%title' => $node->title ), WATCHDOG_INFO );
+            watchdog( 'bullhorn job board', 'Found INSERTED event and inserted node title: (%title).', array( '%title' => $node->title ), WATCHDOG_INFO );
             $success = TRUE;
             
         } catch (Exception $e) {
@@ -961,15 +971,42 @@ function bullhorn_job_board_update( $updates ) {
         try {
 
             node_save( $updated_node );
-            watchdog( 'bullhorn_job_board', 'Found UPDATED event and updated node title: %title.', array( '%title' => $updated_node->title ), WATCHDOG_INFO );
+            watchdog( 'bullhorn job board', 'Found UPDATED event and updated node title: %title.', array( '%title' => $updated_node->title ), WATCHDOG_INFO );
 
         } catch( Exception $e ) {
-
-            watchdog( 'bullhorn_job_board', 'Found UPDATED event and failed to save node ( %nid ).', array( '%nid' => $node->nid ), WATCHDOG_EMERGENCY );
+            watchdog( 'bullhorn job board', 'Found UPDATED event and failed to save node ( %nid ).', array( '%nid' => $node->nid ), WATCHDOG_EMERGENCY );
 
         }
     }
 
+}
+
+function bullhorn_job_board_delete( $deletes ) {
+
+    $job_order_nids  = $deletes['job_order_nids'];
+    $job_order_terms = $deletes['job_order_terms'];
+
+    // Delete the job_order node using the entity_id
+    try {
+
+        node_delete_multiple( $job_order_nids );
+        $success = true;
+        watchdog( 'bullhorn job board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $job_order_nids ) ), WATCHDOG_NOTICE );
+
+    } catch( Exception $e ) {
+
+        $success = false;
+        watchdog( 'bullhorn job board', 'Found DELETED event and failed to delete node(s): ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
+
+    }
+
+    // Using the terms attached to the deleted nodes,
+    // find any of them attached to any other job_order
+    // nodes in the system and if they aren't then delete
+    // the term
+    if( $success ) {
+        job_board_delete_job_order_terms( $job_order_terms );
+    }
 }
 
 /**
@@ -1107,9 +1144,9 @@ function bullhorn_job_board_get_jobs () {
         try {
             node_save($node);
             $success = TRUE;
-            watchdog( 'bullhorn_job_board', 'Saved job_order. Title: ( %title ).', array( '%title' => $job_order_obj->data[$i]->title ), WATCHDOG_NOTICE );
+            watchdog( 'bullhorn job board', 'Saved job_order. Title: ( %title ).', array( '%title' => $job_order_obj->data[$i]->title ), WATCHDOG_NOTICE );
         } catch (Exception $e) {
-            watchdog( 'bullhorn_job_board', 'Failed to save job_order. Exception: ( %e ), File ( %file ), Function ( %function ).', array( '%e' => $e, '%file' => __FILE__, '%function' => __FUNCTION__), WATCHDOG_EMERGENCY );
+            watchdog( 'bullhorn job board', 'Failed to save job_order. Exception: ( %e ), File ( %file ), Function ( %function ).', array( '%e' => $e, '%file' => __FILE__, '%function' => __FUNCTION__), WATCHDOG_EMERGENCY );
         }
 
         //print_r('Node save was successful.  Nid is '.$node->nid.'<br>');
