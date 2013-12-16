@@ -189,8 +189,12 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     // If $delete Array is not empty then process DELETED Events
     $delete_result = bullhorn_job_board_delete( $deleted );
 
+    // Save all the found INSERTED JobOrder
+    // Events
     bullhorn_job_board_insert( $updates );
 
+    // Update all the found UPDATED JobOrder
+    // Events
     bullhorn_job_board_update( $updates );
 
     // Print dpm or debug result to the screen
@@ -216,9 +220,9 @@ function bullhorn_job_board_subscribed_events() {
         exit;
     }
 
-    // Set the current requestId for this event
-    // TODO use request_id to get data returned from this request after its been done already
-    // i.e. to recover from a failure to perform this request the first time
+    // Set the current requestId for this event i.e. to
+    // recover from a failure to perform this request the
+    // first time
     $request_id = $response->requestId;
     variable_set( 'bullhorn_event_request_id', $request_id ); // Let's save it in the variables table for now and save ourselves a request
 
@@ -253,8 +257,12 @@ function bullhorn_job_board_subscribed_events() {
     // If $delete Array is not empty then process DELETED Events
     $delete_result = bullhorn_job_board_delete( $deleted );
 
+    // Save all the found INSERTED JobOrder
+    // Events
     bullhorn_job_board_insert( $updates );
 
+    // Update all the found UPDATED JobOrder
+    // Events
     bullhorn_job_board_update( $updates );
 
     // Print dpm or debug result to the screen
@@ -282,6 +290,12 @@ function bullhorn_job_board_subscribed_events() {
  */
 
 function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
+
+    // If there are no $inserted
+    // events then end execution
+    if( empty( $inserted ) ) {
+        return true;
+    }
 
     // Set the entityIds
     $entity_ids = array();
@@ -375,6 +389,12 @@ function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
  */
 
 function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $session ) {
+
+    // If there are no $updated
+    // events then end execution
+    if( empty( $updated ) ) {
+        return true;
+    }
 
     // Start by reducing the $updated events to those that
     // have properties that we use on the job_order bundle
@@ -564,12 +584,32 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
 /**
  * Bullhorn Job Board Delete
  *
+ * Delete any job_order nodes in the system
+ * that are found to have matching
+ * field_job_order_id(s) to the DELETED
+ * JobOrder entityId(s).
+ *
+ * Collect all the term references for the
+ * deleted and nodes. After deleting the
+ * nodes check to see if any term is attached
+ * to any other job_order nodes and if not
+ * delete it.
+ *
  * @param $deleted
  * @return bool
  */
 
 function bullhorn_job_board_delete( $deleted ) {
 
+    // If there are no $deleted
+    // events then end execution
+    if( empty( $deleted ) ) {
+        return true;
+    }
+
+    // Collect the $job_order_ids(
+    // entityId(s)) for searching
+    // and deleting nodes
     $job_order_ids = array();
     foreach( $deleted as $delete ) {
         $job_order_ids[] = $delete->entityId;
