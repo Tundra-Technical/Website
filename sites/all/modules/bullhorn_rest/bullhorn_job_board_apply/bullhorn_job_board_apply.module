@@ -50,7 +50,7 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
     // Sanitize our Job Order ID
     if(empty($job_order_id) || !is_numeric($job_order_id)) {
         drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
-        watchdog('bullhorn job board',"Job Order application failed, Job Order ID (:job_order_id) was empty or not numeric. Function :function.", array(':job_order_id' => $job_order_id,':function' => __FUNCTION__),WATCHDOG_ERROR);
+        watchdog( 'bullhorn job board apply',"Job Order application failed, Job Order ID (:job_order_id) was empty or not numeric. Function :function.", array(':job_order_id' => $job_order_id,':function' => __FUNCTION__),WATCHDOG_ERROR);
         drupal_goto($return_path);
     }
 
@@ -65,23 +65,23 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
     // Sanitize our Bullhorn Candidate User ID
     if(empty($cuid) || !is_numeric($cuid)) {
         drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
-        watchdog('bullhorn job board',"Job Order application failed, Candidate Bullhorn User ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        watchdog( 'bullhorn job board apply',"Job Order application failed, Candidate Bullhorn User ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
         drupal_goto($return_path);
     }
 
     // Sanitize our Candidate ID
     if(empty($cid) || !is_numeric($cid)) {
         drupal_set_message(t('For technical reasons we could not process your request. Please try again later.'),'error');
-        watchdog('bullhorn job board',"Job Order application failed, Candidate ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        watchdog( 'bullhorn job board apply',"Job Order application failed, Candidate ID was empty or not numeric. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
         drupal_goto($return_path);
     }
 
     // Report these variables if they are empty
     if(empty($first_name)) {
-        watchdog('bullhorn job board',"Candidate's first name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        watchdog( 'bullhorn job board apply',"Candidate's first name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
     }
     if(empty($last_name)) {
-        watchdog('bullhorn job board',"Candidate's last name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
+        watchdog( 'bullhorn job board apply',"Candidate's last name was empty during the Job Application process. Function :function.", array(':function' => __FUNCTION__),WATCHDOG_ERROR);
     }
 
     // Log in to Bullhorn REST API
