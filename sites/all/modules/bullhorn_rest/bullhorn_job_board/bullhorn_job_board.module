@@ -1153,9 +1153,9 @@ function bullhorn_rest_views_query_alter(&$view, &$query)
  * Bullhorn Job Board Cron
  */
 
-/*function bullhorn_job_board_cron() {
+function bullhorn_job_board_cron() {
 
     // Run the Bullhorn Job Board Subscribed Events
     bullhorn_job_board_subscribed_events();
 
-}*/
+}
