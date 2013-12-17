@@ -162,6 +162,8 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
         exit;
     }
 
+//    dpm( $response );
+
     // Get the events from the
     // Response
     $events = $response->events;
@@ -208,15 +210,21 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
 
     // Save all the found INSERTED JobOrder
     // Events
-    bullhorn_job_board_insert( $inserts );
+    if( !empty( $inserts ) ) {
+        bullhorn_job_board_insert( $inserts );
+    }
 
     // Update all the found UPDATED JobOrder
     // Events
-    bullhorn_job_board_update( $updates );
+    if( !empty( $updates ) ) {
+        bullhorn_job_board_update( $updates );
+    }
 
     // Delete all the found DELETED JobOrder
     // Events and any unused taxonomy terms
-    bullhorn_job_board_delete( $deletes );
+    if( !empty( $deletes ) ) {
+        bullhorn_job_board_delete( $deletes );
+    }
 
     // Print dpm or debug result to the screen
     return '';
@@ -288,15 +296,21 @@ function bullhorn_job_board_subscribed_events() {
 
     // Save all the found INSERTED JobOrder
     // Events
-    bullhorn_job_board_insert( $inserts );
+    if( !empty( $inserts ) ) {
+        bullhorn_job_board_insert( $inserts );
+    }
 
     // Update all the found UPDATED JobOrder
     // Events
-    bullhorn_job_board_update( $updates );
+    if( !empty( $updates ) ) {
+        bullhorn_job_board_update( $updates );
+    }
 
     // Delete all the found DELETED JobOrder
     // Events and any unused taxonomy terms
-    bullhorn_job_board_delete( $deletes );
+    if( !empty( $deletes ) ) {
+        bullhorn_job_board_delete( $deletes );
+    }
 
     // Print dpm or debug result to the screen
     return '';
@@ -435,6 +449,8 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
     // Get an associative Array of JobOrder Entity/job_order bundle fields that we use
     $entity_job_order_fields = job_board_entity_job_order_fields_association();
 
+    $_updates = array();
+
     // Loop through the $updated
     // events
     foreach( $updated as $update) {
@@ -461,17 +477,18 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             if( array_key_exists( $updated_property, $entity_job_order_fields ) ) {
 
                 // Reduce duplicates
-                if( isset( $updates[$update->entityId]['updated_properties'] ) && in_array( $updated_property, $updates[$update->entityId]['updated_properties'] ) ) {
+
+                if( isset( $_updates[$update->entityId]['updated_properties'] ) && in_array( $updated_property, $_updates[$update->entityId]['updated_properties'] ) ) {
                     continue;
                 }
 
-                $updates[$update->entityId]['updated_properties'][] = $updated_property;
+                $_updates[$update->entityId]['updated_properties'][] = $updated_property;
             }
         }
     }
 
     // If none of the updatedProperties are on the list of $entity_job_order_fields then end execution
-    if( empty( $updates ) ) {
+    if( empty( $_updates ) ) {
         watchdog( 'bullhorn job board', 'Found UPDATED event and no applicable job_order fields were found.', array(), WATCHDOG_NOTICE );
         return false;
     }
@@ -479,7 +496,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
     // Set an Array of $entity_ids by
     // getting the keys of the $updates
     // Array
-    $entity_ids = array_keys( $updates );
+    $entity_ids = array_keys( $_updates );
 
     // Split the $entity_ids into chunks of 15
     $entity_id_chunks = array_chunk( $entity_ids, '15' );
@@ -513,7 +530,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // entityId(s) requested in
             // this chunk
             foreach( $id_chunk as $id ) {
-                unset( $updates[$id] );
+                unset( $_updates[$id] );
             }
 
             watchdog( 'bullhorn job board', 'Found UPDATED event and REST request returned no results.', array(), WATCHDOG_DEBUG );
@@ -537,13 +554,16 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // If isPublic is one one of the updatedProperties then we assume that this is
             // a JobOrder ready to be published to the website
             $insert = false;
-            if( in_array( 'isPublic', $updates[$update_data->id]['updated_properties'] ) ) {
+            if( in_array( 'isPublic', $_updates[$update_data->id]['updated_properties'] ) ) {
                 $insert = true;
             }
 
             // Get the $node from the field_data_field_job_order_id table for the
             // current $updates_data
             $node = job_board_get_node_by_job_order_id( $update_data->id );
+
+//            dpm( $node, 'node' );
+//            dpm( $insert, 'insert' );
 
             // If the JobOrder is an insert
             // because its isPublic property
@@ -568,7 +588,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
                 // there is no node in the system
                 // to update yet. Therefore remove
                 // it from the $updates list
-                unset( $updates[$update_data->id] );
+                unset( $_updates[$update_data->id] );
 
                 continue;
             }
@@ -578,12 +598,14 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // field_data_field_job_order_id table then associate $updated_data
             // with the $updates
             if( !empty( $node ) ) {
-                foreach( $updates as $entity_id => $update ) {
-                    if( $update_data->id == $entity_id ) {
-                        $updates[$entity_id]['updated_data'] = $update_data;
-                        $updates[$entity_id]['node']         = $node;
-                    }
-                }
+//                foreach( $updates as $entity_id => $update ) {
+//                    if( $update_data->id == $entity_id ) {
+                        debug( $update_data->id . ' added.' );
+                        $updates[$update_data->id]['updated_properties'] = $_updates[$updated_data->id]['updated_properties'];
+                        $updates[$update_data->id]['updated_data']       = $update_data;
+                        $updates[$update_data->id]['node']               = $node;
+//                    }
+//                }
             }
         }
 
@@ -591,22 +613,30 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
         // are not part of the update response because
         // they do not meet the request conditions
 
+//        dpm( $id_chunk, 'id_chunk' );
         // Loop through the $id_chunk
-        foreach( $id_chunk as $id ) {
+        /*foreach( $id_chunk as $id ) {
+
+            dpm( $id, 'id' );
 
             // Set a flag to
             // determine if
             // the $id is found
             $found_id = false;
 
-            // Loop through the $updated_data received
+            // Loop through the $updates received
             // as a response to this chunk of $updates
             // and find the $id
-            foreach( $updated_data as $update_data ) {
+            dpm( $updated_data );
+//            foreach( $updated_data as $update_data ) {
+            foreach( $updates as $update_data ){
 
+                dpm( $update_data, 'update data' );
                 // If the $id is found in the
                 // $updated_data then return true
-                if( $id == $update_data->id ) {
+//                if( $id == $update_data->id ) {
+                if( $id == array_keys( $update_data ) ) {
+                    debug( $id . ' found' );
                     $found_id = true;
                 }
             }
@@ -616,9 +646,10 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             // was not found then unset it
             // in the $updates Array
             if( !$found_id ) {
+                dpm( $updates, 'id not found' );
                 unset( $updates[$id] );
             }
-        }
+        }*/
     }
 
     // Print dpm or debug result to the screen
@@ -678,10 +709,10 @@ function bullhorn_job_board_get_deletes( $deleted, &$deletes ) {
         return false;
     }
 
-    $job_order_nids = array_keys( $result['node'] );
+    $deletes['job_order_nids'] = array_keys( $result['node'] );
 
     // Load the nodes affected by the delete
-    $nodes = node_load_multiple( $job_order_nids );
+    $nodes = node_load_multiple( $deletes['job_order_nids'] );
 
     // Get the taxonomy terms for each node
     $job_order_terms = array(
@@ -696,14 +727,14 @@ function bullhorn_job_board_get_deletes( $deleted, &$deletes ) {
     // fields attached to all of the nodes being deleted
     foreach( $job_order_terms as $field_name => $terms ) {
         foreach( $nodes as $node ) {
-            $job_order_terms[$field_name][$node->nid] = field_get_items( 'node', $node, $field_name );
+            $deletes['job_order_terms'][$field_name][$node->nid] = field_get_items( 'node', $node, $field_name );
         }
     }
 
-    $deletes = array(
+    /*$deletes = array(
         'job_order_nids' => $job_order_nids,
         'job_order_terms' => $job_order_terms,
-    );
+    );*/
 }
 
 /**
@@ -944,7 +975,7 @@ function bullhorn_job_board_update( $updates ) {
     foreach( $updates as $update ) {
         // Get the nid which must be a scalar value
         // for node_load()
-        $nid          = array_keys( $updates['node'] );
+        $nid          = array_keys( $update['node'] );
         $nid          = array_shift( $nid );
 
         // Load the node
@@ -955,11 +986,11 @@ function bullhorn_job_board_update( $updates ) {
         $updated_node = new stdClass();
 
         // Get the updated data for the updated node
-        $data         = $updates['updated_data'];
+        $data         = $update['updated_data'];
 
         // Get the properties that will be updated for
         // the node
-        $properties   = $updates['updated_properties'];
+        $properties   = $update['updated_properties'];
 
         // Loop through the properties
         // updating and adding them to the
@@ -983,20 +1014,17 @@ function bullhorn_job_board_update( $updates ) {
 
 function bullhorn_job_board_delete( $deletes ) {
 
-    $job_order_nids  = $deletes['job_order_nids'];
-    $job_order_terms = $deletes['job_order_terms'];
-
     // Delete the job_order node using the entity_id
     try {
 
-        node_delete_multiple( $job_order_nids );
+        node_delete_multiple( $deletes['job_order_nids'] );
         $success = true;
-        watchdog( 'bullhorn job board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $job_order_nids ) ), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn job board', 'Found DELETED event and deleted node(s): %nodes', array( '%nodes' => implode( ',', $deletes['job_order_nids'] ) ), WATCHDOG_NOTICE );
 
     } catch( Exception $e ) {
 
         $success = false;
-        watchdog( 'bullhorn job board', 'Found DELETED event and failed to delete node(s): ( %nids ).', array( '%nids' => implode( ',', $job_order_nids ) ), WATCHDOG_EMERGENCY );
+        watchdog( 'bullhorn job board', 'Found DELETED event and failed to delete node(s): ( %nids ).', array( '%nids' => implode( ',', $deletes['job_order_nids'] ) ), WATCHDOG_EMERGENCY );
 
     }
 
@@ -1005,7 +1033,7 @@ function bullhorn_job_board_delete( $deletes ) {
     // nodes in the system and if they aren't then delete
     // the term
     if( $success ) {
-        job_board_delete_job_order_terms( $job_order_terms );
+        job_board_delete_job_order_terms( $deletes['job_order_terms'] );
     }
 }
 
