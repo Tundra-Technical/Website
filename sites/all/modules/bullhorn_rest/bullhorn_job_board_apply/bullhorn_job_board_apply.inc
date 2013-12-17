@@ -302,12 +302,12 @@ Networking pays off in many ways. And at Tundra Technical Solutions, your networ
  * Implements hook_mail_alter()
  * @param type $message
  */
-//function bullhorn_job_board_apply_mail_alter(&$message) {
-//    $site_name  = variable_get('site_name','Tundra Technical');
-//    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
-//    $domain_pos = (strpos($site_mail,'@')+1);
-//    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
-//    $message['headers']['Return-Path'] = $site_name . ' <noreply@'.$domain.'>';
-//    $message['headers']['Sender']      = $site_name . ' <noreply@'.$domain.'>';
-//    $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
-//}
+function bullhorn_job_board_apply_mail_alter(&$message) {
+    $site_name  = variable_get('site_name','Tundra Technical');
+    $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
+    $domain_pos = (strpos($site_mail,'@')+1);
+    $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
+    $message['headers']['Return-Path'] = $site_name . ' <noreply@'.$domain.'>';
+    $message['headers']['Sender']      = $site_name . ' <noreply@'.$domain.'>';
+    $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
+}
