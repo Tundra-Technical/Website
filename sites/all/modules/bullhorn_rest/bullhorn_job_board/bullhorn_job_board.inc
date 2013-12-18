@@ -16,7 +16,7 @@
 
 function job_board_get_subscribed_events ( $session, $request_id=0 ) {
 
-    $subscription_id = variable_get('bullhorn_rest_api_subscription_id');
+    $subscription_id = variable_get('bullhorn_job_board_subscription_id');
 
     $query = 'maxEvents=100';
     if( $request_id ) {
@@ -41,13 +41,14 @@ function job_board_get_subscribed_events ( $session, $request_id=0 ) {
         $ch_error = curl_error($ch);
         watchdog( 'bullhorn job board', 'Failed cURL request. Error No.: ( %errno ), Error: ( %error ).', array( '%errno' => $ch_errno, '%error' => $ch_error ), WATCHDOG_EMERGENCY );
         curl_close($ch);
+        return false;
     }
 
     curl_close($ch);
 
-    $response = json_decode($result);
+//    $response = json_decode($result);
 
-    return $response;
+    return $result;
 
 }
 
@@ -209,6 +210,7 @@ function job_board_get_node_by_job_order_id( $job_order_id ) {
 
 function job_board_category_id_to_name($id)
 {
+    $name = '';
     switch ($id) {
         case '692418':
             $name = "applications";
