@@ -11,12 +11,22 @@ function bullhorn_job_board_menu() {
 
     $items = array();
 
+    $items['admin/config/content/bullhorn/job_board_settings'] = array(
+        'title'            => 'Settings for Job Board',
+        'description'      => 'Configuration the Job Board module related settings.',
+        'page callback'    => 'drupal_get_form',
+        'page arguments'   => array('bullhorn_job_board_form'),
+        'access arguments' => array('access administration pages'),
+        'weight'           => 2,
+        'type'             => MENU_NORMAL_ITEM,
+    );
+
     $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
         'title'            => 'Get Subscribed Events (Runs in Cron)',
         'description'      => 'Get subscribed events from Bullhorn.',
         'page callback'    => 'bullhorn_job_board_subscribed_events',
         'access arguments' => array('access administration pages'),
-        'weight'           => 2,
+        'weight'           => 3,
         'type'             => MENU_NORMAL_ITEM,
     );
 
@@ -25,7 +35,7 @@ function bullhorn_job_board_menu() {
         'description'      => 'Get subscribed events from Bullhorn using the last request id.',
         'page callback'    => 'bullhorn_job_board_subscribed_events_request_by_id',
         'access arguments' => array('access administration pages'),
-        'weight'           => 3,
+        'weight'           => 4,
         'type'             => MENU_NORMAL_ITEM,
     );
 
@@ -43,20 +53,67 @@ function bullhorn_job_board_menu() {
         'description'      => 'Subscribe to Bullhorn Events INSERTED, UPDATED and DELETED',
         'page callback'    => 'bullhorn_job_board_events_subscribe',
         'access arguments' => array('access administration pages'),
-        'weight'           => 4,
-        'type'             => MENU_NORMAL_ITEM,
-    );
-
-    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
-        'title'            => 'Get all Jobs (Deprecated)',
-        'description'      => 'Get Jobs from Bullhorn',
-        'page callback'    => 'bullhorn_job_board_get_jobs',
-        'access arguments' => array('access administration pages'),
         'weight'           => 5,
         'type'             => MENU_NORMAL_ITEM,
     );
 
+    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
+        'title'            => 'Get all Jobs (Deprecated - Remove)',
+        'description'      => 'Get Jobs from Bullhorn',
+        'page callback'    => 'bullhorn_job_board_get_jobs',
+        'access arguments' => array('access administration pages'),
+        'weight'           => 6,
+        'type'             => MENU_NORMAL_ITEM,
+    );
+
+    $items['admin/config/content/bullhorn/bullhorn_list_jobs'] = array(
+        'title'            => 'List all Jobs (Remove)',
+        'description'      => 'List all Jobs for Tundra from Bullhorn',
+        'page callback'    => 'bullhorn_job_board_list_jobs',
+        'access arguments' => array('access administration pages'),
+        'weight'           => 7,
+        'type'             => MENU_NORMAL_ITEM,
+    );
+
     return $items;
+}
+
+/**
+ * Implementation of hook_form()
+ *
+ * @param $form
+ * @param $form_state
+ */
+
+function bullhorn_job_board_form( $form, &$form_state ) {
+
+    $form['bullhorn_job_board_cron_interval'] = array(
+        '#type'          => 'select',
+        '#title'         => t('Job Board Cron Inveral'),
+        '#default_value' => variable_get('bullhorn_job_board_cron_interval', 60 * 60 ),
+        '#options' => array(
+//            60 => t('1 minute'),
+//            300 => t('5 minutes'),
+            3600 => t('1 hour'),
+            60 * 60 * 24 => t('1 day'),
+        ),
+//        '#size'          => 55,
+//        '#maxlength'     => 55,
+        '#description'   => t('Please select a time after which cron will respond to a processing request.'),
+        '#required'      => TRUE,
+    );
+
+    $form['bullhorn_job_board_subscription_id'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('SubscriptionID'),
+        '#default_value' => variable_get('bullhorn_job_board_subscription_id', 'tundrate'),
+        '#size'          => 55,
+        '#maxlength'     => 55,
+        '#description'   => t('Please enter an arbitrary SubscriptionID to get JobOrder events from Bullhorn.'),
+        '#required'      => TRUE,
+    );
+
+    return system_settings_form($form);
 }
 
 /**
@@ -76,20 +133,71 @@ function bullhorn_job_board_query( $BhRestToken, $BhURL ) {
     //$data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,dateEnd,categories,status,publishedZip,isPublic&where=id".$item->val."%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=".$BhRestToken;
 //    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription&where=id>" . $item->val . "%20AND%20isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
 
-    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,status,publishedZip,isPublic,publicDescription,payRate&where=isPublic=1&orderBy=-id&count=20&BhRestToken=" . $BhRestToken;
+    $data = "query/JobOrder?fields=title,id,address,dateAdded,employmentType,skillList,dateEnd,categories,publishedZip,publicDescription,payRate,isDeleted,isOpen,isPublic,status&where=isDeleted=false%20AND%20isOpen=true%20AND%20isPublic=1%20AND%20(status='Accepting%20Candidates'%20OR%20status='Candidate%20Submitted')&orderBy=-id&count=200&BhRestToken=" . $BhRestToken;
 
-    $tuCurl = curl_init();
-    curl_setopt($tuCurl, CURLOPT_URL, $BhURL . $data);
-    curl_setopt($tuCurl, CURLOPT_PORT, 443);
-    curl_setopt($tuCurl, CURLOPT_VERBOSE, 0);
-    curl_setopt($tuCurl, CURLOPT_HEADER, 0);
-    curl_setopt($tuCurl, CURLOPT_SSLVERSION, 3);
-    curl_setopt($tuCurl, CURLOPT_SSL_VERIFYPEER, 1);
-    curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
-    $tuData = curl_exec($tuCurl);
-    curl_close($tuCurl);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $BhURL . $data);
+    curl_setopt($ch, CURLOPT_PORT, 443);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-    return $tuData;
+    if( !$result = curl_exec( $ch ) ) {
+        dpm( curl_error( $ch ) );
+    }
+
+    curl_close($ch);
+
+    return $result;
+}
+
+/**
+ * Bullhorn Job Board Get Jobs
+ */
+function bullhorn_job_board_list_jobs () {
+
+    // Set the session
+    $session = json_encode( array( ) );
+    try {
+        $authCode = getAuthCode(); //echo $authCode;die;
+        $auth = doBullhornAuth($authCode); //echo $auth;die;
+        $tokens = json_decode($auth); //print '<pre>';print_r($tokens);die;
+        $session = doBullhornLogin($tokens->access_token);
+
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+    }
+
+    $session_obj = json_decode($session);
+
+    $response = bullhorn_job_board_query($session_obj->BhRestToken, $session_obj->restUrl);
+
+    $job_orders = json_decode($response);
+
+//    dpm( $job_orders );
+
+    $output = '';
+    $rows = array();
+    $header = array( 'id', 'Title', 'isPublic', 'isOpen', 'isDeleted', 'Status' );
+    foreach( $job_orders->data as $key => $job_order ) {
+        $rows[] = array(
+            $job_order->id,
+            $job_order->title,
+            ( ( $job_order->isPublic == 1 ) ? '1' : '0'),
+            ( ( $job_order->isOpen ) ? 'true' : 'false' ),
+            ( ( $job_order->isDeleted ) ? 'true' : 'false' ),
+            $job_order->status
+        );
+    }
+
+    return theme( 'table', array( 'header' => $header, 'rows' => $rows, 'empty' => 'No Job Orders' ) );
+
+//    debug( $output );
+
+    // Print out dpm
+    return '';
 }
 
 /**
@@ -98,7 +206,7 @@ function bullhorn_job_board_query( $BhRestToken, $BhURL ) {
 
 function bullhorn_job_board_events_subscribe () {
 
-    $subscription_id = variable_get('bullhorn_rest_api_subscription_id');
+    $subscription_id = variable_get('bullhorn_job_board_subscription_id');
 
     $session_obj = bullhorn_rest_api_login();
 
@@ -155,18 +263,19 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
         $bullhorn_event_request_id = $request_id;
     }
 
-    $response = job_board_get_subscribed_events( $session_obj, $bullhorn_event_request_id );
+    $result = job_board_get_subscribed_events( $session_obj, $bullhorn_event_request_id );
 
-    if( empty($response) ) {
+    if( !$result || empty($result) ) {
         watchdog( 'bullhorn job board', 'Ran subscribed events fore request id ( %id )and result was empty.', array( '%id' => $bullhorn_event_request_id ), WATCHDOG_INFO );
-        exit;
+        return null;
     }
 
-//    dpm( $response );
+    // Decode the JSON result
+    $result_obj = json_decode( $result );
 
     // Get the events from the
     // Response
-    $events = $response->events;
+    $events = $result_obj->events;
 
     // Set and Array
     // to collect all
@@ -242,24 +351,27 @@ function bullhorn_job_board_subscribed_events() {
 
     // Get the subscribed events from Bullhorn
 
-    $response = job_board_get_subscribed_events( $session_obj );
+    $result = job_board_get_subscribed_events( $session_obj );
 
-    if( empty($response) ) {
-        watchdog( 'bullhorn job board', 'Ran subscribed events and result was empty.', array(), WATCHDOG_INFO );
-        exit;
+    if( !$result || empty($result) ) {
+        watchdog( 'bullhorn job board', 'Ran subscribed events and request failed or result was empty.', array(), WATCHDOG_INFO );
+        return null;
     }
+
+    // Decode the JSON
+    $result_obj = json_decode( $result );
 
     // Set the current requestId for this event i.e. to
     // recover from a failure to perform this request the
     // first time
-    $request_id = $response->requestId;
+    $request_id = $result_obj->requestId;
     variable_set( 'bullhorn_event_request_id', $request_id ); // Let's save it in the variables table for now and save ourselves a request
 
-    // Test response for debugging
-//    $response = job_board_test_events();
+    // Test result for debugging
+//    $result = job_board_test_events();
 
     // Set the events Array
-    $events = $response->events;
+    $events = $result_obj->events;
 
     // Set and Array
     // to collect all
@@ -313,7 +425,7 @@ function bullhorn_job_board_subscribed_events() {
     }
 
     // Print dpm or debug result to the screen
-    return '';
+//    return '';
 }
 
 /**
@@ -409,7 +521,7 @@ function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
     }
 
     // Print dpm or debug result to the screen
-    return '';
+//    return '';
 }
 
 /**
@@ -1277,12 +1389,23 @@ function bullhorn_rest_views_query_alter(&$view, &$query)
 
 
 /**
- * Bullhorn Job Board Cron
+ * Implementation of hook_cron(). Bullhorn Job Board Cron
  */
 
 function bullhorn_job_board_cron() {
 
-    // Run the Bullhorn Job Board Subscribed Events
-    bullhorn_job_board_subscribed_events();
+    // Default to an hourly interval. Of course, cron has to be running at least
+    // hourly for this to work.
+    $interval = variable_get('bullhorn_job_board_cron_interval', 60 * 60);
+    // We usually don't want to act every time cron runs (which could be every
+    // minute) so keep a time for the next run in a variable.
 
+    if ( time() >= variable_get( 'bullhorn_job_board_cron_next_execution', 0 ) ) {
+
+        // Run the Bullhorn Job Board Subscribed Events
+        bullhorn_job_board_subscribed_events();
+
+        // Set and save the nex cron execution
+        variable_set('bullhorn_job_board_cron_next_execution', time() + $interval);
+    }
 }
