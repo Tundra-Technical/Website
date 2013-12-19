@@ -92,13 +92,9 @@ function bullhorn_job_board_form( $form, &$form_state ) {
         '#title'         => t('Job Board Cron Inveral'),
         '#default_value' => variable_get('bullhorn_job_board_cron_interval', 60 * 60 ),
         '#options' => array(
-//            60 => t('1 minute'),
-//            300 => t('5 minutes'),
             3600 => t('1 hour'),
             60 * 60 * 24 => t('1 day'),
         ),
-//        '#size'          => 55,
-//        '#maxlength'     => 55,
         '#description'   => t('Please select a time after which cron will respond to a processing request.'),
         '#required'      => TRUE,
     );
@@ -177,6 +173,7 @@ function bullhorn_job_board_list_jobs () {
     $job_orders = json_decode($response);
 
 //    dpm( $job_orders );
+//    object_log( 'bullhorn job board list jobs', $job_orders );
 
     $output = '';
     $rows = array();
@@ -264,6 +261,8 @@ function bullhorn_job_board_subscribed_events_request_by_id( $request_id = 0 ) {
     }
 
     $result = job_board_get_subscribed_events( $session_obj, $bullhorn_event_request_id );
+
+//    dpm( $result, 'result' );
 
     if( !$result || empty($result) ) {
         watchdog( 'bullhorn job board', 'Ran subscribed events fore request id ( %id )and result was empty.', array( '%id' => $bullhorn_event_request_id ), WATCHDOG_INFO );
@@ -354,6 +353,7 @@ function bullhorn_job_board_subscribed_events() {
     $result = job_board_get_subscribed_events( $session_obj );
 
     if( !$result || empty($result) ) {
+        object_log( 'bullhorn_job_board_subscribed_events_' . $_SERVER['REQUEST_TIME'], $result );
         watchdog( 'bullhorn job board', 'Ran subscribed events and request failed or result was empty.', array(), WATCHDOG_INFO );
         return null;
     }
@@ -479,7 +479,7 @@ function bullhorn_job_board_get_inserts( $inserted, &$inserts, $session ) {
     // then end the execution
     if( empty( $entity_ids ) ) {
 
-        watchdog( 'bullhorn job board', 'Found INSERTED event and either there was/were no entityId(s) or there was/were node(s) with matching job_order_id(s)', array(), WATCHDOG_NOTICE );
+        watchdog( 'bullhorn job board', 'Found INSERTED event and either there were no entityId(s) or there were node(s) with matching job_order_id(s)', array(), WATCHDOG_NOTICE );
         return false;
 
     }
