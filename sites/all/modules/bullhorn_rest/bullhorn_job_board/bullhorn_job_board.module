@@ -1039,7 +1039,7 @@ function bullhorn_job_board_job_order_update( $node, $data, $property ) {
  * @param $inserts
  */
 
-function bullhorn_job_board_insert( $inserts, $request_id=null ) {
+function bullhorn_job_board_insert( $inserts, $request_id='temp' ) {
 
 //    // If $response is empty then end execution
 //    if( empty( $response ) || !$response->count ) {
@@ -1087,7 +1087,7 @@ function bullhorn_job_board_insert( $inserts, $request_id=null ) {
  * @param $updates
  */
 
-function bullhorn_job_board_update( $updates, $request_id=null ) {
+function bullhorn_job_board_update( $updates, $request_id='temp' ) {
 
     // Loop through the $updates  and update job_order nodes
     foreach( $updates as $update ) {
@@ -1130,7 +1130,7 @@ function bullhorn_job_board_update( $updates, $request_id=null ) {
 
 }
 
-function bullhorn_job_board_delete( $deletes, $request_id=null ) {
+function bullhorn_job_board_delete( $deletes, $request_id='temp' ) {
 
     // Delete the job_order node using the entity_id
     try {
