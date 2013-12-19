@@ -173,7 +173,7 @@ function bullhorn_job_board_list_jobs () {
     $job_orders = json_decode($response);
 
 //    dpm( $job_orders );
-//    object_log( 'bullhorn job board list jobs', $job_orders );
+    object_log( 'bullhorn job board list jobs ' . date("Y-m-d H:i:s"), $job_orders );
 
     $output = '';
     $rows = array();
@@ -353,7 +353,7 @@ function bullhorn_job_board_subscribed_events() {
     $result = job_board_get_subscribed_events( $session_obj );
 
     if( !$result || empty($result) ) {
-        object_log( 'bullhorn_job_board_subscribed_events_' . $_SERVER['REQUEST_TIME'], $result );
+        object_log( 'bullhorn_job_board_subscribed_events_' . date("Y-m-d_H:i:s"), $result );
         watchdog( 'bullhorn job board', 'Ran subscribed events and request failed or result was empty.', array(), WATCHDOG_INFO );
         return null;
     }
