@@ -303,13 +303,17 @@ Networking pays off in many ways. And at Tundra Technical Solutions, your networ
  * @param type $message
  */
 function bullhorn_job_board_apply_mail_alter(&$message) {
-    if( $message['id'] == 'bullhorn_job_board_apply_candidate_message') {
+    if( $message['id'] == 'bullhorn_job_board_apply_employee_message' || $message['id'] == 'bullhorn_job_board_apply_candidate_message') {
         $site_name  = variable_get('site_name','Tundra Technical');
         $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
         $domain_pos = (strpos($site_mail,'@')+1);
         $domain     = ($domain_pos !== FALSE) ? substr($site_mail,$domain_pos) : 'tundratechnical.ca';
         $message['headers']['Return-Path'] = $site_name . ' <noreply@'.$domain.'>';
         $message['headers']['Sender']      = $site_name . ' <noreply@'.$domain.'>';
+
+    }
+
+    if( $message['id'] == 'bullhorn_job_board_apply_candidate_message' ) {
         $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
     }
 }
