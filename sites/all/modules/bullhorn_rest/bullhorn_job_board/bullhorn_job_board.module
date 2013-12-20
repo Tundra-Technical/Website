@@ -373,6 +373,10 @@ function bullhorn_job_board_subscribed_events() {
     // Set the events Array
     $events = $result_obj->events;
 
+    // Save the Object to the object_log for debugging
+    // TODO remove after assured that everything operates accordingly
+    object_log( 'subscribe_events_events_' . $request_id, $events );
+
     // Set and Array
     // to collect all
     // event inserts
