@@ -1127,6 +1127,10 @@ function bullhorn_job_board_update( $updates, $request_id='temp' ) {
             watchdog( 'bullhorn job board', 'Found UPDATED event ( ID: %id ) and updated node title: %title.', array( '%id' => $request_id, '%title' => $updated_node->title ), WATCHDOG_INFO );
 
         } catch( Exception $e ) {
+            object_log('update_updates_' . $request_id, $updates);
+            object_log('update_update_' . $request_id, $update);
+            object_log('update_node_' . $request_id, $node );
+            object_log('update_updated_node_' . $request_id, $updated_node );
             watchdog( 'bullhorn job board', 'Found UPDATED event ( ID: %id ) and failed to save node ( %nid ). Exception: %e, Function: %function, File: %file',
                 array(
                     '%e'        => $e,
