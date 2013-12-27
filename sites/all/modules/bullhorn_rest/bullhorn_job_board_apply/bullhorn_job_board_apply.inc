@@ -196,8 +196,7 @@ function bullhorn_job_board_apply_employee_mail_send($values) {
     $key = 'employee_message';
 
     // Specify 'to' and 'from' addresses.
-//    $to = 'Jeff Sacco <jeffsacco@gmail.com>';//'Julian Schwaiger <jschwaiger@tundratechnical.ca>'; //$values['email'];
-    $to = 'John Napoleone <john.napoleon@gmail.com>';
+    $to = 'Jeff Sacco <jeffsacco@gmail.com>';//'Julian Schwaiger <jschwaiger@tundratechnical.ca>'; //$values['email'];
     $site_name = variable_get('site_name','Tundra Technical');
     $site_mail  = variable_get('site_mail','noreply@tundratechnical.ca');
     $domain_pos = (strpos($site_mail,'@')+1);
@@ -314,6 +313,6 @@ function bullhorn_job_board_apply_mail_alter(&$message) {
     }
 
     if( $message['id'] == 'bullhorn_job_board_apply_candidate_message' ) {
-        $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
+//        $message['headers']['Bcc']         = 'John Napoleone <john.napoleon@gmail.com>';
     }
 }

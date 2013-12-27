@@ -182,6 +182,14 @@ function bullhorn_job_board_apply_action( $job_order_id ) {
     // Send an confirmation email to tche Candidate and an alert to Tundra of the Job application
     $values = array('first_name' => $first_name,'last_name' => $last_name,'email' => $email,'job_title' => $title);
     bullhorn_job_board_apply_candidate_mail_send( $values );
+
+    // Note: Originally this email was being sent to Julian
+    // Schwaiger. When working to fix the issue with Job
+    // Orders not being deleted or updated it was noticed
+    // that Julian was removed and replaced with Jeff Sacco.
+    // Ed Tornberg was notified about this and was asked if
+    // Julian should be put back as recipient of of these
+    // emails to which he did not respond.
     bullhorn_job_board_apply_employee_mail_send( $values );
 
     drupal_set_message( t( 'Thank you for applying for the position of :title.', array( ':title' => $title ) ), 'status' );
