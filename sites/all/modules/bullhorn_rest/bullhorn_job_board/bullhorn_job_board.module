@@ -720,8 +720,8 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
             if( !empty( $node ) ) {
 //                foreach( $updates as $entity_id => $update ) {
 //                    if( $update_data->id == $entity_id ) {
-                        debug( $update_data->id . ' added.' );
-                        $updates[$update_data->id]['updated_properties'] = $_updates[$updated_data->id]['updated_properties'];
+//                        debug( $update_data->id . ' added.' );
+                        $updates[$update_data->id]['updated_properties'] = $_updates[$update_data->id]['updated_properties'];
                         $updates[$update_data->id]['updated_data']       = $update_data;
                         $updates[$update_data->id]['node']               = $node;
 //                    }
