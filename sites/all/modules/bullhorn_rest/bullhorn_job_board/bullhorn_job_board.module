@@ -266,7 +266,7 @@ function bullhorn_job_board_query_job_order_status () {
     foreach( $job_orders as $key => $job_order ) {
         $rows[] = array(
             $job_order->id,
-            l( $job_order->title, 'http://drupal7.tundratechnical.ca' . url( 'node/'.$job_order->nid ) ),
+            l( $job_order->title, 'http://' . $_SERVER['SERVER_NAME'] . url( 'node/'.$job_order->nid ) ),
             date( 'D, d M Y H:i:s', $job_order->dateEnd ),
             ( ( $job_order->isPublic == 1 ) ? '1' : '0'),
             ( ( $job_order->isOpen ) ? 'true' : 'false' ),
