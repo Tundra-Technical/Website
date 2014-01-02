@@ -22,7 +22,7 @@ function bullhorn_job_board_menu() {
     );
 
     $items['admin/config/content/bullhorn/bullhorn_get_subscribed_events'] = array(
-        'title'            => 'Get Subscribed Events (Runs in Cron)',
+        'title'            => 'Get Subscribed Events Manual (Runs in Cron)',
         'description'      => 'Get subscribed events from Bullhorn.',
         'page callback'    => 'bullhorn_job_board_subscribed_events',
         'access arguments' => array('access administration pages'),
@@ -57,14 +57,14 @@ function bullhorn_job_board_menu() {
         'type'             => MENU_NORMAL_ITEM,
     );
 
-    $items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
+    /*$items['admin/config/content/bullhorn/bullhorn_get_jobs'] = array(
         'title'            => 'Get all Jobs (Deprecated - Remove)',
         'description'      => 'Get Jobs from Bullhorn',
         'page callback'    => 'bullhorn_job_board_get_jobs',
         'access arguments' => array('access administration pages'),
         'weight'           => 6,
         'type'             => MENU_NORMAL_ITEM,
-    );
+    );*/
 
     $items['admin/config/content/bullhorn/bullhorn_list_jobs'] = array(
         'title'            => 'List all Jobs (Remove)',
@@ -72,6 +72,15 @@ function bullhorn_job_board_menu() {
         'page callback'    => 'bullhorn_job_board_list_jobs',
         'access arguments' => array('access administration pages'),
         'weight'           => 7,
+        'type'             => MENU_NORMAL_ITEM,
+    );
+
+    $items['admin/config/content/bullhorn/query_job_order_status'] = array(
+        'title'            => 'Query JobOrder status (Remove)',
+        'description'      => 'List all Jobs in the system and get their status from Bullhorn',
+        'page callback'    => 'bullhorn_job_board_query_job_order_status',
+        'access arguments' => array('access administration pages'),
+        'weight'           => 8,
         'type'             => MENU_NORMAL_ITEM,
     );
 
@@ -173,7 +182,7 @@ function bullhorn_job_board_list_jobs () {
     $job_orders = json_decode($response);
 
 //    dpm( $job_orders );
-    object_log( 'bullhorn job board list jobs ' . date("Y-m-d H:i:s"), $job_orders );
+//    object_log( 'bullhorn job board list jobs ' . date("Y-m-d H:i:s"), $job_orders );
 
     $output = '';
     $rows = array();
@@ -194,6 +203,81 @@ function bullhorn_job_board_list_jobs () {
 //    debug( $output );
 
     // Print out dpm
+    return '';
+}
+
+function bullhorn_job_board_query_job_order_status () {
+
+    // Log in to Bullhorn REST API
+    $session = bullhorn_rest_api_login();
+
+    // Get the JobOrderId(s) from the database
+
+    $job_order_id_values = db_query( 'SELECT field_job_order_id_value FROM {field_data_field_job_order_id}')->fetchAllAssoc( 'field_job_order_id_value' );
+
+//    dpm( $job_order_id_values );
+
+    $job_order_ids = array_keys( $job_order_id_values );
+
+//    dpm( $job_order_ids );
+
+    $job_order_id_chunks = array_chunk( $job_order_ids, 15 );
+
+//    dpm( $job_order_id_chunks );
+
+    // Request Data for JobOrderId(s) from Bullhorn
+    $job_orders = array();
+    foreach( $job_order_id_chunks as $job_order_id_chunk ) {
+
+        $ids_in = implode( ',', $job_order_id_chunk );
+        $ids_in = trim( $ids_in );
+
+        // Build a REST request to retrieve data for the inserted JobOrder
+        $bh_rest_token = $session->BhRestToken;
+        $fields = job_board_job_order_fields_clause();
+        $uri = 'query/JobOrder?fields=' . $fields . ',isOpen,isDeleted,status&where=id%20IN%20(' . $ids_in . ')&BhRestToken=' . $bh_rest_token;
+        $url = $session->restUrl . $uri;
+
+        // Do the REST request
+        $response = bullhorn_rest_api_get_request( $url );
+//        dpm( $response );
+
+        $job_orders = array_merge( $job_orders, $response->data );
+    }
+
+    // Get the nid for each field_job_order_id
+    foreach( $job_orders as $job_order ) {
+        $query = new EntityFieldQuery();
+        $query->entityCondition( 'entity_type', 'node' )
+            ->entityCondition( 'bundle', 'job_order' )
+            ->fieldCondition( 'field_job_order_id', 'value', $job_order->id );
+        $result = $query->execute();
+
+//        dpm( $result );
+        $nid = array_keys( $result['node'] );
+        $job_order->nid = $nid[0];
+    }
+
+//    dpm( $job_orders );
+
+    // Build a table listing the isPublic, isOpen, isDeleted, expiry data and status for each JobOrder
+    $rows = array();
+    $header = array( 'id', 'Title', 'dateEnd', 'isPublic', 'isOpen', 'isDeleted', 'Status' );
+    foreach( $job_orders as $key => $job_order ) {
+        $rows[] = array(
+            $job_order->id,
+            l( $job_order->title, 'http://drupal7.tundratechnical.ca' . url( 'node/'.$job_order->nid ) ),
+            date( 'D, d M Y H:i:s', $job_order->dateEnd ),
+            ( ( $job_order->isPublic == 1 ) ? '1' : '0'),
+            ( ( $job_order->isOpen ) ? 'true' : 'false' ),
+            ( ( $job_order->isDeleted ) ? 'true' : 'false' ),
+            $job_order->status
+        );
+    }
+
+    return theme( 'table', array( 'header' => $header, 'rows' => $rows, 'empty' => 'No Job Orders' ) );
+
+    // Print any debug output
     return '';
 }
 
