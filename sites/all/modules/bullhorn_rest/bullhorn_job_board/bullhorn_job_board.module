@@ -258,7 +258,7 @@ function bullhorn_job_board_query_job_order_status () {
         $job_order->nid = $nid[0];
     }
 
-//    dpm( $job_orders );
+    dpm( $job_orders );
 
     // Build a table listing the isPublic, isOpen, isDeleted, expiry data and status for each JobOrder
     $rows = array();
@@ -267,7 +267,7 @@ function bullhorn_job_board_query_job_order_status () {
         $rows[] = array(
             $job_order->id,
             l( $job_order->title, 'http://' . $_SERVER['SERVER_NAME'] . url( 'node/'.$job_order->nid ) ),
-            date( 'D, d M Y H:i:s', $job_order->dateEnd ) . '(' . $job_order->dateEnd . ')',
+            date( 'D, d M Y H:i:s', $job_order->dateEnd ) . ' (' . $job_order->dateEnd . ')',
             ( ( $job_order->isPublic == 1 ) ? '1' : '0'),
             ( ( $job_order->isOpen ) ? 'true' : 'false' ),
             ( ( $job_order->isDeleted ) ? 'true' : 'false' ),
