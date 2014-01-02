@@ -235,7 +235,7 @@ function bullhorn_job_board_query_job_order_status () {
         // Build a REST request to retrieve data for the inserted JobOrder
         $bh_rest_token = $session->BhRestToken;
         $fields = job_board_job_order_fields_clause();
-        $uri = 'query/JobOrder?fields=' . $fields . ',isOpen,isDeleted,status&where=id%20IN%20(' . $ids_in . ')&BhRestToken=' . $bh_rest_token;
+        $uri = 'query/JobOrder?fields=' . $fields . ',dateClosed,isOpen,isDeleted,status&where=id%20IN%20(' . $ids_in . ')&BhRestToken=' . $bh_rest_token;
         $url = $session->restUrl . $uri;
 
         // Do the REST request
