@@ -1181,7 +1181,7 @@ function bullhorn_job_board_update( $updates, $request_id='temp' ) {
     foreach( $updates as $update ) {
         // Get the nid which must be a scalar value
         // for node_load()
-        $nid          = array_keys( $update['node'] );
+        $nid          = array_keys( $update['node']['node'] );
         $nid          = array_shift( $nid );
 
         // Load the node
