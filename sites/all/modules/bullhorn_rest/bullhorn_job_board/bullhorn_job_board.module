@@ -807,7 +807,7 @@ function bullhorn_job_board_get_updates( $updated, &$updates, &$inserts, $sessio
 //                        debug( $update_data->id . ' added.' );
                         $updates[$update_data->id]['updated_properties'] = $_updates[$update_data->id]['updated_properties'];
                         $updates[$update_data->id]['updated_data']       = $update_data;
-                        $updates[$update_data->id]['node']               = $node;
+                        $updates[$update_data->id]['node']               = $node['node'];
 //                    }
 //                }
             }
@@ -1181,7 +1181,7 @@ function bullhorn_job_board_update( $updates, $request_id='temp' ) {
     foreach( $updates as $update ) {
         // Get the nid which must be a scalar value
         // for node_load()
-        $nid          = array_keys( $update['node']['node'] );
+        $nid          = array_keys( $update['node'] );
         $nid          = array_shift( $nid );
 
         // Load the node
