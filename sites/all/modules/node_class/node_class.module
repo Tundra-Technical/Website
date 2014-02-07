@@ -27,9 +27,11 @@ function node_class($node) {
  * Gets CSS class information for a given node.
  */
 function node_class_attributes($node) {
-  $ret = db_query('SELECT css_class FROM {node_class} WHERE nid = :nid', 
-    array(':nid' => $node->nid))->fetchField();
-  return $ret ? $ret : '';
+	if (isset($node->nid)) {
+  	$ret = db_query('SELECT css_class FROM {node_class} WHERE nid = :nid', 
+    	array(':nid' => $node->nid))->fetchField();
+	}
+  return isset($ret) ? $ret : '';
 }
 
 /**
@@ -68,35 +70,39 @@ function node_class_form_alter(&$form, &$form_state, $form_id) {
       '#title' => t('CSS class(es)'),
       '#default_value' => $attributes,
       '#description' => t('Separate classes with a space.'));
-    
-    // Add submit handler for node_class module
-    $form['#submit'][] = 'node_class_form_submit';
   }
 }
 
 /**
- * Form submission handler for node form.
+ * Implementation of hook_node_insert().
  */
-function node_class_form_submit($form, &$form_state) {
-  if ($form_state['values']['form_id'] == $form['#node']->type . '_node_form') {
-    if (isset($form_state['values']['node_class']['css_class']) &&
-       user_access('administer nodes')) {
-      $nid = $form_state['values']['nid'];
-      $class = check_plain($form_state['values']['node_class']['css_class']);
-      
-      // CRUD test
-      if (! isset($form_state['values']['node_class']['existing_css'])) {
-        if (! empty($class)) {
-          $id = db_insert('node_class')->fields(
-            array('nid' => $nid,'css_class' => $class))->execute();
-        }
-      }
-      else {
-        db_update('node_class')->fields(array('css_class' => $class))->condition(
-          'nid', $nid)->execute();
-      }
-    }
-  }
+function node_class_node_insert($node) {
+	if (isset($node->node_class['css_class'])) {
+		$nid = $node->nid;
+		$class = check_plain($node->node_class['css_class']);
+		node_class_upsert($nid, $class);
+	} 
+}
+
+/**
+ * Implementation of hook_node_update().
+ */
+function node_class_node_update($node) {
+	if (isset($node->node_class['css_class'])) {
+		$nid = $node->nid;
+		$class = check_plain($node->node_class['css_class']);
+		node_class_upsert($nid, $class);
+	} 
+}
+
+
+function node_class_upsert($nid, $class) {
+	if (!db_query("SELECT COUNT(*) FROM {node_class} WHERE nid = :nid", array(':nid' => $nid))->fetchField()) {
+		$id = db_insert('node_class')->fields(array('nid' => $nid,'css_class' => $class))->execute();
+	}
+	else {
+		db_update('node_class')->fields(array('css_class' => $class))->condition('nid', $nid)->execute();
+	}
 }
 
 /**

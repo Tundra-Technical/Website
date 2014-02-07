@@ -6,7 +6,7 @@
   
   
   -----------------------------------------------------------------------------------------
-                                    HOW TO USE NODE CLASS
+                                    HOW TO USE NODE CLASS - Drupal 6 Only
   -----------------------------------------------------------------------------------------
   Open your node.tpl.php in your theme and add the following :
   <?php print node_class($node) ?>
